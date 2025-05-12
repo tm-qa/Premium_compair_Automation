@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="All Test Suite">
+    <test verbose="2" preserve-order="true"
+          name="/Users/hemant/Downloads/FrontendAutomation/src/test/java/com/qa/turtlemint/testcases">
+        <method-selectors>
+            <method-selector>
+                <script language="beanshell">
+                    <![CDATA[
+                    String myTestGroup = System.getProperty("groupName");
+                    groups.containsKey(myTestGroup);
+                ]]>
+                </script>
+            </method-selector>
+        </method-selectors>
+
+        <!--        <groups>-->
+        <!--            <run>-->
+        <!--                <include name="${groupName}"></include>-->
+        <!--            </run>-->
+        <!--        </groups>-->
+        <classes>
+            <class name="com.qa.turtlemint.testcases.Mintpro.MintproGrowPageTest"></class>
+            <class name="com.qa.turtlemint.testcases.ResultPageTestCase"></class>
+            <class name="com.qa.turtlemint.testcases.Health.HealthLoginPageTest"></class>
+            <class name="com.qa.turtlemint.testcases.TW.TW_ResultAndCheckoutPageTest"></class>
+            <class name="com.qa.turtlemint.testcases.LoginPageTest"></class>
+            <class name="com.qa.turtlemint.testcases.CV_ResultAndCheckoutPage"></class>
+            <class name="com.qa.turtlemint.testcases.Life.LifeResultAndCheckoutTest"></class>
+            <class name="com.qa.turtlemint.testcases.Ninja.NinjaLoginPageTest"></class>
+            <class name="com.qa.turtlemint.testcases.Ninja.NinjaMISMotorTest"></class>
+            <class name="com.qa.turtlemint.testcases.Health.HealthResultAndCheckOutPageTest"></class>
+            <class name="com.qa.turtlemint.testcases.Ninja.NinjaBranchIssuanceMotorTest"></class>
+            <class name="com.qa.turtlemint.testcases.Ninja.NinjaBranchIssuanceTWTest"></class>
+            <class name="com.qa.turtlemint.testcases.all_vertical.EntireSuite"></class>
+            <class name="com.qa.turtlemint.testcases.Ninja.NinjaFull"></class>
+
+        </classes>
+
+
+
+    </test>
+</suite>
