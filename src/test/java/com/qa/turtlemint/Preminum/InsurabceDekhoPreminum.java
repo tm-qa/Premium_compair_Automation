@@ -29,7 +29,6 @@ public class InsurabceDekhoPreminum extends TestBase
     }
     @Test
     public void totalPremi () throws InterruptedException {
-        insurancedekho.insuranceDekho();
-        insurancedekho.conformDetails();
+        insurancedekho.iddekho();
     }
 }
