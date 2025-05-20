@@ -107,7 +107,6 @@ public class renewbuy_page extends TestBase {
         driver.switchTo().window(tabs.get(1));
         TestUtil.sendKeys(registrationNumber , "MH43AJ7461", "entered resitration number");
         TestUtil.click(getVehicleDetailsIdButton , "click on vehiv=cle details button");
-
         String vehicleMake = make.getText();
         String vehicleModel = model.getText();
         String vehicleVariant = variant.getText();
