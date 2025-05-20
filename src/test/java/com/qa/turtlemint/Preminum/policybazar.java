@@ -1,6 +1,7 @@
 package com.qa.turtlemint.Preminum;
 
 import com.qa.turtlemint.base.TestBase;
+import com.qa.turtlemint.pages.LoginPage;
 import com.qa.turtlemint.premiunPages.policybazarpage;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -8,6 +9,7 @@ import org.testng.annotations.Test;
 public class policybazar extends TestBase {
 
     policybazarpage pb;
+    LoginPage lp;
 
     public policybazar()
     {
@@ -18,6 +20,7 @@ public class policybazar extends TestBase {
     public void start() throws InterruptedException {
         initialization();
         pb = new policybazarpage();
+        lp = new LoginPage();
 
     }
     @Test

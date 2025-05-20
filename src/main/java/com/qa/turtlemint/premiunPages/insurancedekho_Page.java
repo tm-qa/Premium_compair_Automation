@@ -12,7 +12,7 @@ public class insurancedekho_Page extends TestBase {
     @FindBy(xpath = "//p[text()=\"Car\"]")
     WebElement selectcar;
 
-    @FindBy(xpath = "//label[text()=\"Enter your car number ex DL12AB2345\"]//parent::div")
+    @FindBy(xpath = "//label[text()=\"Enter your car number ex DL12AB2345\"]")
     WebElement registrationNumber;
     @FindBy(xpath = "//button[text()=\"Get Vehicle Details\"]")
     WebElement getvehicledetails;
@@ -79,8 +79,6 @@ public class insurancedekho_Page extends TestBase {
     @FindBy(xpath = "//div[@class=\"centerRadio\"]//child::div//child::div//following-sibling::div//child::div[@name=\"owner_changedundefined\"]//child::label//div[text()=\"No\"]")
     WebElement carowner;
 
-
-
     @FindBy(xpath = "//div[text()=\"View Plans\"]")
     WebElement viewPlnas;
 
@@ -89,46 +87,53 @@ public class insurancedekho_Page extends TestBase {
         PageFactory.initElements(driver, this);
     }
 
-    public void iddekho() {
+    public void iddekho() throws InterruptedException {
         TestUtil.click(selectcar,"");
+        Thread.sleep(3000);
+        registrationNumber.click();
+        System.out.println("CLICK");
         TestUtil.sendKeys(registrationNumber,"MH21DE3232","");
+        Thread.sleep(3000);
         TestUtil.click(getvehicledetails,"");
+        Thread.sleep(5000);
         TestUtil.click(customerName,"");
         TestUtil.click(mobileNumber,"");
         TestUtil.click(checkbox,"");
         TestUtil.click(viewPricesButton,"");
+        Thread.sleep(5000);
         TestUtil.click(claim,"");
         TestUtil.click(carowner,"");
         TestUtil.click(viewplans,"");
+        Thread.sleep(5000);
 
 
     }
 
-//    public void insuranceDekho() throws InterruptedException {
-//        Thread.sleep(3000);
-//        TestUtil.sendKeys(registrationNumber, "MH21DE3232", "enter registration no");
-//        Thread.sleep(3000);
-//        TestUtil.click(selectMake, "click on make");
-//        TestUtil.click(selectModel, "select model");
-//        TestUtil.click(fule, "select fuel");
-//        TestUtil.click(variantType, "select variant");
-//        TestUtil.click(regYear, "select reg year");
-//        TestUtil.sendKeys(customerName, "customer name", "enter name");
-//        TestUtil.sendKeys(mobileNumber, "6543217869", "enter mb no");
-//        TestUtil.click(checkbox, "chick on checkbox");
-//        TestUtil.click(viewPricesButton, "click on view button");
-//    }
-//
-//    public void conformDetails() {
-//        TestUtil.click(expiryDate, " click on I know my expiry date");
-//        TestUtil.click(prevPolicy, "");
-//        TestUtil.click(after15days, "");
-//        TestUtil.click(previousInsurer, " click on prev insurer");
-//        TestUtil.click(selectPreviousInsurer, "select prev insurer");
-//        TestUtil.click(confirmDetailsButton, "gf");
-//        TestUtil.click(claim, "");
-//        TestUtil.click(viewPlnas, "");
-//    }
+    public void insuranceDekho() throws InterruptedException {
+        Thread.sleep(3000);
+        TestUtil.sendKeys(registrationNumber, "MH21DE3232", "enter registration no");
+        Thread.sleep(3000);
+        TestUtil.click(selectMake, "click on make");
+        TestUtil.click(selectModel, "select model");
+        TestUtil.click(fule, "select fuel");
+        TestUtil.click(variantType, "select variant");
+        TestUtil.click(regYear, "select reg year");
+        TestUtil.sendKeys(customerName, "customer name", "enter name");
+        TestUtil.sendKeys(mobileNumber, "6543217869", "enter mb no");
+        TestUtil.click(checkbox, "chick on checkbox");
+        TestUtil.click(viewPricesButton, "click on view button");
+    }
+
+    public void conformDetails() {
+        TestUtil.click(expiryDate, " click on I know my expiry date");
+        TestUtil.click(prevPolicy, "");
+        TestUtil.click(after15days, "");
+        TestUtil.click(previousInsurer, " click on prev insurer");
+        TestUtil.click(selectPreviousInsurer, "select prev insurer");
+        TestUtil.click(confirmDetailsButton, "gf");
+        TestUtil.click(claim, "");
+        TestUtil.click(viewPlnas, "");
+    }
 
 
 }

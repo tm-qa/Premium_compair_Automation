@@ -15,6 +15,7 @@ import static com.qa.turtlemint.base.TestBase.initialization;
 public class InsurabceDekhoPreminum extends TestBase
 {
     public insurancedekho_Page insurancedekho;
+    LoginPage lp;
 
     public InsurabceDekhoPreminum()
     {
@@ -25,10 +26,12 @@ public class InsurabceDekhoPreminum extends TestBase
     public void start() throws InterruptedException {
         initialization();
         insurancedekho = new insurancedekho_Page();
+        lp = new LoginPage();
 
     }
     @Test
     public void totalPremi () throws InterruptedException {
+        lp.LoginInsurancedekho("9159358159","");
         insurancedekho.iddekho();
     }
 }
