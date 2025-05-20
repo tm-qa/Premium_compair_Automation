@@ -38,12 +38,10 @@ public class InsurabceDekhoPreminum extends TestBase
         insurancedekho.insuranceDekho();
         insurancedekho.conformDetails();
     }
-
     @Test
     public void totalPremiTm () throws InterruptedException {
         turtlemint.login();
     }
-
     @Test
     public void totalPremiRenewBuy () throws InterruptedException {
         renewbuyPage.logIn();
