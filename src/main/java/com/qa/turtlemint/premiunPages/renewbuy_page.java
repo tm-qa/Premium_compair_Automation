@@ -113,7 +113,6 @@ public class renewbuy_page extends TestBase {
         String vehicleVariant = variant.getText();
         String vehicleFuel = fuelType.getText();
 
-
         TestUtil.click(policyExiry , "click");
         TestUtil.click(policyExiryType,"hjgdfj");
         TestUtil.click(aboveDetailsAreCorrectButton , "hd");
