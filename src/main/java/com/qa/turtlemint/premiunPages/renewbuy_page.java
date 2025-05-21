@@ -199,7 +199,6 @@ public class renewbuy_page extends TestBase {
                 failedRegs.add(reg);
             }
         }
-
         String date = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
         // ✅ Save successful data
         String outputExcel = "/Users/sayali/Desktop/RenewBuy_premium" + date + ".xlsx";
