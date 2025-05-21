@@ -17,6 +17,8 @@ import org.testng.annotations.Test;
 import java.io.IOException;
 import java.io.InputStream;
 import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -108,11 +110,11 @@ public class renewbuy_page extends TestBase {
 
         TestUtil.sendKeys(enterSum, totalSum, "entered sum");
         TestUtil.click(logIn, "click on login button");
-
     }
 
     public void motorPreminum() throws InterruptedException, IOException {
         String excelPath = "/Users/sayali/Documents/insurer/Premium_compair_Automation/src/test/resources/registration_data.xlsx";
+//        String excelPath = "/Users/nitinrathod/Downloads/Premium_compair_Automation/src/test/resources/registration_data.xlsx";
         List<String> regNumbers = TestUtil.getRegistrationNumbers(excelPath);
 
         List<String[]> premiumData = new ArrayList<>(); // successful data
@@ -198,8 +200,9 @@ public class renewbuy_page extends TestBase {
             }
         }
 
+        String date = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
         // ✅ Save successful data
-        String outputExcel = "/Users/sayali/Desktop/RenewBuy_premium_output.xlsx";
+        String outputExcel = "/Users/sayali/Desktop/RenewBuy_premium" + date + ".xlsx";
         if (!premiumData.isEmpty()) {
             TestUtil.writePremiumData(outputExcel, premiumData);
             System.out.println("✅ Premium data written to Excel successfully.");
