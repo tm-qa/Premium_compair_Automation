@@ -3,10 +3,7 @@ package com.qa.turtlemint.premiunPages;
 import com.qa.turtlemint.base.TestBase;
 import com.qa.turtlemint.util.TestUtil;
 import org.bouncycastle.jcajce.provider.asymmetric.X509;
-import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.Keys;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -86,6 +83,12 @@ public class turtlemint_page extends TestBase {
 
     @FindBy(xpath = "//span[@ng-click=\"infoCar = !infoCar\"]")
     WebElement closedButton;
+
+    @FindBy(xpath = "//div[@data-auto=\"previousinsurer-uiSelect\"]//span")
+    WebElement previousinsureruiSelect;
+
+    @FindBy(xpath = "//span[text()=\"Bajaj Allianz\"]")
+    WebElement getPreviousinsureruiSelect;
     public turtlemint_page() {
         PageFactory.initElements(driver, this);
     }
@@ -124,7 +127,7 @@ public class turtlemint_page extends TestBase {
                     Thread.sleep(2000);
                     String futuredate = TestUtil.ninjaFutureDate(3);
                     System.out.println(futuredate);
-                    SimpleDateFormat inputFormat = new SimpleDateFormat("ddMMyyyy");
+                    SimpleDateFormat inputFormat = new SimpleDateFormat("dd-MM-yyyy");
                     SimpleDateFormat outputFormat = new SimpleDateFormat("dd/MM/yyyy");
                     String formattedDate = outputFormat.format(inputFormat.parse(futuredate));
                     System.out.println(formattedDate);
@@ -140,9 +143,55 @@ public class turtlemint_page extends TestBase {
                 TestUtil.click(prevClaim , "select prev Claim as No");
                 TestUtil.click(ncb , "click on ncb dropdown");
                 TestUtil.click(zeroNCB , " NCB : 0% selected");
+
+                /////
+
+                try {
+
+                    WebDriverWait shortWait = new WebDriverWait(driver, Duration.ofSeconds(5));
+
+                    List<WebElement> insurerElements = driver.findElements(
+                            By.xpath("//div[@data-auto='previousinsurer-uiSelect']//span")
+                    );
+
+                    if (!insurerElements.isEmpty()) {
+                        WebElement previousinsureruiSelect = insurerElements.get(0);
+
+                        shortWait.until(ExpectedConditions.visibilityOf(previousinsureruiSelect));
+
+                        String selectedValue = previousinsureruiSelect.getText().trim();
+                        System.out.println("Current selected value: " + selectedValue);
+
+                        if (selectedValue.isEmpty() || selectedValue.equalsIgnoreCase("Select")) {
+                            System.out.println("No value is selected, selecting one from dropdown.");
+
+                            TestUtil.click(previousinsureruiSelect, "Clicking to open dropdown");
+
+                            WebElement option = shortWait.until(ExpectedConditions.elementToBeClickable(
+                                    By.xpath("//span[text()=\"Bajaj Allianz\"]")
+                            ));
+                            TestUtil.click(option, "Selecting Bajaj from dropdown");
+                        }
+                    } else {
+                        System.out.println("Previous insurer dropdown is not present on this page.");
+                    }
+
+                } catch (TimeoutException e) {
+                    System.out.println("Timed out waiting for the previous insurer field or dropdown option.");
+                } catch (StaleElementReferenceException e) {
+                    System.out.println("The element became stale, retry logic can be added here.");
+                } catch (Exception e) {
+                    System.out.println("Unexpected error occurred: " + e.getMessage());
+                }
+
+
+                ///////
                 TestUtil.click(saveAndCon, "");
-                TestUtil.click(gotIt, "");
-                ;
+                try {
+                TestUtil.click(gotIt, ""); }
+                catch (Exception e) {
+                    System.out.println("'Got It' button not present, skipping.");
+                }
                 Thread.sleep(20000);
                 js.executeScript("arguments[0].click();" , editButton);
                 String vehicleMakeModel = makeModel.getText();
