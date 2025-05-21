@@ -27,7 +27,7 @@ public class insurancedekho_Page extends TestBase {
     @FindBy(xpath = "//label[text()=\"Previous Insurer\"]")
     WebElement previousinsurer;
     @FindBy(xpath = "//div[text()=\"View Plans\"]")
-    WebElement viewplans ;
+    WebElement viewplans;
 
 
     @FindBy(xpath = "//h2[text()=\"Select Brand\"]")
@@ -104,13 +104,6 @@ public class insurancedekho_Page extends TestBase {
     WebElement Tp;
 
 
-
-
-
-
-
-
-
     //label[text()="Policy Expiry Date"]
 
 
@@ -118,22 +111,24 @@ public class insurancedekho_Page extends TestBase {
         PageFactory.initElements(driver, this);
     }
 
-    public void iddekho() throws InterruptedException {
+    public void
+    iddekho() throws InterruptedException {
 
-//        List<String> regNumbers = TestUtil.getRegistrationNumbers("registration_data.xlsx");
-//
-//        for (String reg : regNumbers) {
         Thread.sleep(5000);
-            TestUtil.click(selectcar, "");
+        TestUtil.click(selectcar, "");
+        Thread.sleep(3000);
+
+        List<String> regNumbers = TestUtil.getRegistrationNumbers("registration_data.xlsx");
+
+        for (String reg : regNumbers) {
+
             Thread.sleep(3000);
-           // registrationNumber.click();
-            System.out.println("CLICK");
-           // TestUtil.sendKeys(regiNumber,reg "entered registration number");
-            TestUtil.sendKeys(regiNumber, "KA41MB0144", "");
+            TestUtil.sendKeys(regiNumber, reg, "entered registration number");
+            // TestUtil.sendKeys(regiNumber, "KA41MB0144", "");
             Thread.sleep(3000);
             TestUtil.click(getvehicledetails, "");
-        Thread.sleep(3000);
-            TestUtil.click(confandgetquotes,"");
+            Thread.sleep(3000);
+            TestUtil.click(confandgetquotes, "");
             Thread.sleep(5000);
             TestUtil.click(calendar1, "");
             Thread.sleep(1000);
@@ -151,6 +146,17 @@ public class insurancedekho_Page extends TestBase {
             Thread.sleep(3000);
 
         }
+
+
+
+
+
+
+
+
+
+
+
 //        TestUtil.click(customerName,"");
 //        TestUtil.click(mobileNumber,"");
 //        TestUtil.click(checkbox,"");
@@ -161,8 +167,6 @@ public class insurancedekho_Page extends TestBase {
 //        TestUtil.click(viewplans,"");
 //        Thread.sleep(5000);
 
-
-        }
 
 //    public void insuranceDekho() throws InterruptedException {
 //        Thread.sleep(3000);
@@ -192,4 +196,5 @@ public class insurancedekho_Page extends TestBase {
 //    }
 
 
-
+    }
+}

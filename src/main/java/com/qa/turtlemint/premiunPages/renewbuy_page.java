@@ -113,8 +113,9 @@ public class renewbuy_page extends TestBase {
     }
     public void motorPreminum() throws InterruptedException, IOException {
 
-        List<String> regNumbers = TestUtil.getRegistrationNumbers("registration_data.xlsx");
 
+        String excelPath = "/Users/nitinrathod/Downloads/Premium_compair_Automation/src/test/resources/registration_data.xlsx";
+        List<String> regNumbers = TestUtil.getRegistrationNumbers(excelPath);
             System.out.println(regNumbers);
 
             TestUtil.click(closedButton, "click on close button");
@@ -192,7 +193,6 @@ public class renewbuy_page extends TestBase {
                 TestUtil.click(motorback,"click back");
 
         }
-
 
 
     }
