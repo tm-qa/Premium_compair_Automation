@@ -199,10 +199,10 @@ public class renewbuy_page extends TestBase {
                 failedRegs.add(reg);
             }
         }
-        String date = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+        String dateTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss"));
         // ✅ Save successful data
-     //   String outputExcel = "/Users/sayali/Desktop/RenewBuy_premium" + date + ".xlsx";
-        String outputExcel = "/Users/nitinrathod/Desktop/RenewBuy_premium" + date + ".xlsx";
+     //   String outputExcel = "/Users/sayali/Desktop/RenewBuy_premium" + dateTime + ".xlsx";
+        String outputExcel = "/Users/nitinrathod/Desktop/RenewBuy_premium" + dateTime + ".xlsx";
         if (!premiumData.isEmpty()) {
             TestUtil.writePremiumData(outputExcel, premiumData);
             System.out.println("✅ Premium data written to Excel successfully.");

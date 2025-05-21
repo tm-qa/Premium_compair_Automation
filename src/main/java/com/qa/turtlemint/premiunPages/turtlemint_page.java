@@ -264,11 +264,11 @@ public class turtlemint_page extends TestBase {
             System.out.println("jwh");
         }
 
+        String dateTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss"));
 
-        String date = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
         // ✅ Save successful data
-        //   String outputExcel = "/Users/sayali/Desktop/RenewBuy_premium" + date + ".xlsx";
-        String outputExcel = "/Users/nitinrathod/Desktop/Turtlemint_premium" + date + ".xlsx";
+        //   String outputExcel = "/Users/sayali/Desktop/RenewBuy_premium" + dateTime + ".xlsx";
+        String outputExcel = "/Users/nitinrathod/Desktop/Turtlemint_premium" + dateTime + ".xlsx";
 
         TestUtil.writePremiumDataTm(outputExcel, premiumData);
         // Optional: Print or save failed registrations
