@@ -6,6 +6,11 @@ import com.github.javafaker.Faker;
 import io.qameta.allure.Allure;
 import io.qameta.allure.Attachment;
 import org.apache.commons.io.FileUtils;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
@@ -17,11 +22,14 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 import static com.qa.turtlemint.base.TestBase.driver;
@@ -178,5 +186,48 @@ public class TestUtil {
         plno = sb.toString();
         return plno;
     }
+    public static List<String> getRegistrationNumbers(String fileName) {
+        List<String> regNumbers = new ArrayList<>();
+
+        try (InputStream fis = TestUtil.class.getClassLoader().getResourceAsStream(fileName)) {
+
+            if (fis == null) {
+                throw new RuntimeException("File not found in resources: " + fileName);
+            }
+
+            Workbook workbook = new XSSFWorkbook(fis);
+            Sheet sheet = workbook.getSheetAt(0);
+            Row headerRow = sheet.getRow(0);
+
+            int regColIndex = -1;
+            for (int i = 0; i < headerRow.getLastCellNum(); i++) {
+                Cell cell = headerRow.getCell(i);
+                if (cell != null && cell.getStringCellValue().trim().equalsIgnoreCase("RegistrationNumber")) {
+                    regColIndex = i;
+                    break;
+                }
+            }
+
+            if (regColIndex == -1) {
+                throw new RuntimeException("RegistrationNumber column not found");
+            }
+
+            for (int i = 1; i <= sheet.getLastRowNum(); i++) {
+                Row row = sheet.getRow(i);
+                if (row != null) {
+                    Cell cell = row.getCell(regColIndex);
+                    if (cell != null) {
+                        regNumbers.add(cell.toString().trim());
+                    }
+                }
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return regNumbers;
+    }
+
 
 }

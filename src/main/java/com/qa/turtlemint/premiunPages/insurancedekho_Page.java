@@ -7,6 +7,8 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 
+import java.util.List;
+
 public class insurancedekho_Page extends TestBase {
 
     @FindBy(xpath = "//p[text()=\"Car\"]")
@@ -14,6 +16,8 @@ public class insurancedekho_Page extends TestBase {
 
     @FindBy(xpath = "//label[text()=\"Enter your car number ex DL12AB2345\"]")
     WebElement registrationNumber;
+    @FindBy(xpath = "//input[@name=\"regNo\"]")
+    WebElement regiNumber;
     @FindBy(xpath = "//button[text()=\"Get Vehicle Details\"]")
     WebElement getvehicledetails;
     @FindBy(xpath = "//button[text()=\"Confirm & Get Quotes\"]")
@@ -81,6 +85,33 @@ public class insurancedekho_Page extends TestBase {
 
     @FindBy(xpath = "//div[text()=\"View Plans\"]")
     WebElement viewPlnas;
+    @FindBy(xpath = "//button[text()=\"Confirm & Proceed\"]")
+    WebElement confirm;
+
+    @FindBy(xpath = "//label[text()=\"Policy Expiry Date\"]")
+    WebElement calendar1;
+    @FindBy(xpath = "//h3[text()=\"Policy Expiry Date\"]//..//li[not(contains(@class,\" year disabled\"))]")
+    WebElement currentyear;
+    @FindBy(xpath = "(//h3[text()=\"Policy Expiry Date\"]//..//li[not(contains(@class,\" month disabled\"))])[4]")
+    WebElement currentmonth;
+    @FindBy(xpath = "(//li[@class=\"active day\"]//following-sibling::li)[3]")
+    WebElement currentdate;
+    @FindBy(xpath = "//label[text()=\"Previous Policy Type\"]")
+    WebElement previousdrop;
+    @FindBy(xpath = "//li[text()=\"Comprehensive\"]")
+    WebElement comp;
+    @FindBy(xpath = " //li[text()=\"Third Party\"]")
+    WebElement Tp;
+
+
+
+
+
+
+
+
+
+    //label[text()="Policy Expiry Date"]
 
 
     public insurancedekho_Page() {
@@ -88,52 +119,77 @@ public class insurancedekho_Page extends TestBase {
     }
 
     public void iddekho() throws InterruptedException {
-        TestUtil.click(selectcar,"");
-        Thread.sleep(3000);
-        registrationNumber.click();
-        System.out.println("CLICK");
-        TestUtil.sendKeys(registrationNumber,"MH21DE3232","");
-        Thread.sleep(3000);
-        TestUtil.click(getvehicledetails,"");
+
+//        List<String> regNumbers = TestUtil.getRegistrationNumbers("registration_data.xlsx");
+//
+//        for (String reg : regNumbers) {
         Thread.sleep(5000);
-        TestUtil.click(customerName,"");
-        TestUtil.click(mobileNumber,"");
-        TestUtil.click(checkbox,"");
-        TestUtil.click(viewPricesButton,"");
-        Thread.sleep(5000);
-        TestUtil.click(claim,"");
-        TestUtil.click(carowner,"");
-        TestUtil.click(viewplans,"");
-        Thread.sleep(5000);
-
-
-    }
-
-    public void insuranceDekho() throws InterruptedException {
+            TestUtil.click(selectcar, "");
+            Thread.sleep(3000);
+           // registrationNumber.click();
+            System.out.println("CLICK");
+           // TestUtil.sendKeys(regiNumber,reg "entered registration number");
+            TestUtil.sendKeys(regiNumber, "KA41MB0144", "");
+            Thread.sleep(3000);
+            TestUtil.click(getvehicledetails, "");
         Thread.sleep(3000);
-        TestUtil.sendKeys(registrationNumber, "MH21DE3232", "enter registration no");
-        Thread.sleep(3000);
-        TestUtil.click(selectMake, "click on make");
-        TestUtil.click(selectModel, "select model");
-        TestUtil.click(fule, "select fuel");
-        TestUtil.click(variantType, "select variant");
-        TestUtil.click(regYear, "select reg year");
-        TestUtil.sendKeys(customerName, "customer name", "enter name");
-        TestUtil.sendKeys(mobileNumber, "6543217869", "enter mb no");
-        TestUtil.click(checkbox, "chick on checkbox");
-        TestUtil.click(viewPricesButton, "click on view button");
-    }
+            TestUtil.click(confandgetquotes,"");
+            Thread.sleep(5000);
+            TestUtil.click(calendar1, "");
+            Thread.sleep(1000);
+            TestUtil.click(currentyear, "");
+            Thread.sleep(3000);
+            TestUtil.click(currentmonth, "");
+            Thread.sleep(3000);
+            TestUtil.click(currentdate, "");
+            Thread.sleep(3000);
+            TestUtil.click(previousdrop, "");
+            Thread.sleep(3000);
+            TestUtil.click(comp, "");
+            Thread.sleep(3000);
+            TestUtil.click(confirm, "");
+            Thread.sleep(3000);
 
-    public void conformDetails() {
-        TestUtil.click(expiryDate, " click on I know my expiry date");
-        TestUtil.click(prevPolicy, "");
-        TestUtil.click(after15days, "");
-        TestUtil.click(previousInsurer, " click on prev insurer");
-        TestUtil.click(selectPreviousInsurer, "select prev insurer");
-        TestUtil.click(confirmDetailsButton, "gf");
-        TestUtil.click(claim, "");
-        TestUtil.click(viewPlnas, "");
-    }
+        }
+//        TestUtil.click(customerName,"");
+//        TestUtil.click(mobileNumber,"");
+//        TestUtil.click(checkbox,"");
+//        TestUtil.click(viewPricesButton,"");
+//        Thread.sleep(5000);
+//        TestUtil.click(claim,"");
+//        TestUtil.click(carowner,"");
+//        TestUtil.click(viewplans,"");
+//        Thread.sleep(5000);
 
 
-}
+        }
+
+//    public void insuranceDekho() throws InterruptedException {
+//        Thread.sleep(3000);
+//        TestUtil.click(registrationNumber,"");
+//        TestUtil.sendKeys(regiNumber, "MH21DE3232", "enter registration no");
+//        Thread.sleep(3000);
+//        TestUtil.click(selectMake, "click on make");
+//        TestUtil.click(selectModel, "select model");
+//        TestUtil.click(fule, "select fuel");
+//        TestUtil.click(variantType, "select variant");
+//        TestUtil.click(regYear, "select reg year");
+//        TestUtil.sendKeys(customerName, "customer name", "enter name");
+//        TestUtil.sendKeys(mobileNumber, "6543217869", "enter mb no");
+//        TestUtil.click(checkbox, "chick on checkbox");
+//        TestUtil.click(viewPricesButton, "click on view button");
+//    }
+//
+//    public void conformDetails() {
+//        TestUtil.click(expiryDate, " click on I know my expiry date");
+//        TestUtil.click(prevPolicy, "");
+//        TestUtil.click(after15days, "");
+//        TestUtil.click(previousInsurer, " click on prev insurer");
+//        TestUtil.click(selectPreviousInsurer, "select prev insurer");
+//        TestUtil.click(confirmDetailsButton, "gf");
+//        TestUtil.click(claim, "");
+//        TestUtil.click(viewPlnas, "");
+//    }
+
+
+
