@@ -22,11 +22,11 @@ public class turtlemint_page extends TestBase {
     WebElement mobileNumber;
 
     @FindBy(xpath = "//span[text()=\"GET OTP\"]//parent::button")
-    WebElement getOtpButton ;
+    WebElement getOtpButton;
 
 
     @FindBy(xpath = "//input[@class=\"OTPInput\"]")
-    WebElement getOtp ;
+    WebElement getOtp;
 
     @FindBy(xpath = "//span[text()=\"Verify OTP\"]")
     WebElement verifyOtp;
@@ -39,71 +39,101 @@ public class turtlemint_page extends TestBase {
     WebElement registrationNumber;
 
     @FindBy(xpath = "//button[@ng-disabled=\"!registrationNumber\"]")
-    WebElement registrationNumberButton ;
+    WebElement registrationNumberButton;
 
     @FindBy(xpath = "//input[@id=\"policyType-comprehensive\"]//following-sibling::span")
     WebElement policyType;
 
-    @FindBy(xpath = "//label[@for=\"calendarCheckbox\"]")
-    WebElement calender ;
+    @FindBy(xpath = "//input[@id=\"expiryDate-datepicker\"]")
+    WebElement calender;
 
     @FindBy(xpath = "//button[text()=\"Save & Continue\"]")
-    WebElement saveAndCon ;
+    WebElement saveAndCon;
 
-        @FindBy(xpath = "//p[text()=\"Car Insurance\"]")
-    WebElement carInsurance ;
+    @FindBy(xpath = "//p[text()=\"Car Insurance\"]")
+    WebElement carInsurance;
 
-        @FindBy(xpath = "//div[text()=\"Got It!\"]")
-        WebElement gotIt;
+    @FindBy(xpath = "//div[text()=\"Got It!\"]")
+    WebElement gotIt;
+    @FindBy(xpath = "//div[@class=\"logo\"]")
+    WebElement logoback;
 
-    public turtlemint_page() {PageFactory.initElements(driver, this);}
+
+    public turtlemint_page() {
+        PageFactory.initElements(driver, this);
+    }
 
     public void login() throws InterruptedException {
+
+       // String excelPath = "/Users/nitinrathod/Downloads/Premium_compair_Automation/src/test/resources/registration_data.xlsx";
+        List<String> regNumbers = TestUtil.getRegistrationNumbers("/Users/nitinrathod/Downloads/Premium_compair_Automation/src/test/resources/registration_data.xlsx");
+        System.out.println(regNumbers);
         Thread.sleep(3000);
-        TestUtil.sendKeys(mobileNumber , "6999912345","");
-        TestUtil.click(getOtpButton , "");
-        TestUtil.sendKeys(getOtp , "1234","");
-        TestUtil.click(verifyOtp , "");
-        TestUtil.click(sellButton , "ed");
+        TestUtil.sendKeys(mobileNumber, "6999912345", "");
+        TestUtil.click(getOtpButton, "");
+        TestUtil.sendKeys(getOtp, "1234", "");
+        TestUtil.click(verifyOtp, "");
+        TestUtil.click(sellButton, "ed");
         Thread.sleep(3000);
-        TestUtil.click(carInsurance , "");
-        TestUtil.sendKeys(registrationNumber , "MH43AJ7461", "");
-        TestUtil.click(registrationNumberButton ,  "");
-        TestUtil.click(policyType , "");
-        TestUtil.click(calender , "");
-        TestUtil.click(saveAndCon , "");
-        Thread.sleep(2000);
-        TestUtil.click(gotIt , "");
+        TestUtil.click(carInsurance, "");
 
 
+        for (String reg : regNumbers) {
 
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//img[@class=\"client-logo-img\"]")));
+            TestUtil.sendKeys(registrationNumber, reg,"picked 1st");
+            TestUtil.click(registrationNumberButton, "");
+            TestUtil.click(policyType, "");
 
-        List<WebElement> insurerLogos = driver.findElements(By.xpath("//img[@class=\"client-logo-img\"]"));
+            String existingValue = calender.getAttribute("value");
+            System.out.println(existingValue);
 
-        List<String> insurerNames = new ArrayList<>();
-        List<String> totalPremiums = new ArrayList<>();
+            if (existingValue == null || existingValue.trim().isEmpty()) {
+                System.out.println(existingValue);
+                Thread.sleep(2000);
+                // Value not present → send keys
+                String futuredate = TestUtil.ninjaFutureDate(3);
+                TestUtil.sendKeys(calender,futuredate,"entered");
+                Thread.sleep(2000);
 
-        for (WebElement logo : insurerLogos) {
+
+            } else {
+                // Value present → move forward
+                System.out.println("Existing value: " + existingValue);
+            }
+
+            TestUtil.click(saveAndCon, "");
             Thread.sleep(2000);
-            String srcValue = logo.getAttribute("src");
-            String[] parts = srcValue.split("/");
-            String insurerName = parts[parts.length - 1].replace(".png", ""); // Extracting file name without extension
-            insurerNames.add(insurerName);
-            WebElement premiumElement = logo.findElement(By.xpath("//button[@class=\"premium-breakup-amount cursor-pointer text-center premium-breakup-amount-btn ng-star-inserted\"]"));
-            String premium = premiumElement.getText();
-            totalPremiums.add(premium);
+            TestUtil.click(gotIt, "");
+
+
+            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+            wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//img[@class=\"client-logo-img\"]")));
+
+            List<WebElement> insurerLogos = driver.findElements(By.xpath("//img[@class=\"client-logo-img\"]"));
+
+            List<String> insurerNames = new ArrayList<>();
+            List<String> totalPremiums = new ArrayList<>();
+
+            for (WebElement logo : insurerLogos) {
+                Thread.sleep(2000);
+                String srcValue = logo.getAttribute("src");
+                String[] parts = srcValue.split("/");
+                String insurerName = parts[parts.length - 1].replace(".png", ""); // Extracting file name without extension
+                insurerNames.add(insurerName);
+                WebElement premiumElement = logo.findElement(By.xpath("//button[@class=\"premium-breakup-amount cursor-pointer text-center premium-breakup-amount-btn ng-star-inserted\"]"));
+                String premium = premiumElement.getText();
+                totalPremiums.add(premium);
+            }
+
+            System.out.println("Insurer Names and Premiums:");
+            for (int i = 0; i < insurerNames.size(); i++) {
+                System.out.println("Insurer: " + insurerNames.get(i) + " | Premium: " + totalPremiums.get(i));
+            }
+            TestUtil.click(logoback,"");
+            TestUtil.click(sellButton,"");
+            TestUtil.click(carInsurance,"");
+
         }
-
-        System.out.println("Insurer Names and Premiums:");
-        for (int i = 0; i < insurerNames.size(); i++) {
-            System.out.println("Insurer: " + insurerNames.get(i) + " | Premium: " + totalPremiums.get(i));
-        }
-
-
-
-    }
 
 
 //    @FindBy(xpath = "//p[text()=\"Car Insurance\"]")
@@ -183,4 +213,5 @@ public class turtlemint_page extends TestBase {
 //
 //    }
 
+    }
 }

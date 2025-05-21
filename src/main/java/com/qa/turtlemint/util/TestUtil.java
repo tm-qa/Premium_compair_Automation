@@ -19,10 +19,7 @@ import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.time.Duration;
@@ -186,15 +183,10 @@ public class TestUtil {
         plno = sb.toString();
         return plno;
     }
-    public static List<String> getRegistrationNumbers(String fileName) {
+    public static List<String> getRegistrationNumbers(String filePath) {
         List<String> regNumbers = new ArrayList<>();
 
-        try (InputStream fis = TestUtil.class.getClassLoader().getResourceAsStream(fileName)) {
-
-            if (fis == null) {
-                throw new RuntimeException("File not found in resources: " + fileName);
-            }
-
+        try (FileInputStream fis = new FileInputStream(filePath)) {
             Workbook workbook = new XSSFWorkbook(fis);
             Sheet sheet = workbook.getSheetAt(0);
             Row headerRow = sheet.getRow(0);
@@ -228,6 +220,34 @@ public class TestUtil {
 
         return regNumbers;
     }
+    public static void writePremiumData(String filePath, List<String[]> dataRows) {
+        Workbook workbook = new XSSFWorkbook();
+        Sheet sheet = workbook.createSheet("PremiumData");
+
+        // Header row
+        Row header = sheet.createRow(0);
+        String[] headers = { "RegistrationNumber", "Make", "Model", "Variant", "Fuel", "Insurer", "Premium" };
+        for (int i = 0; i < headers.length; i++) {
+            header.createCell(i).setCellValue(headers[i]);
+        }
+
+        // Data rows
+        int rowIndex = 1;
+        for (String[] rowData : dataRows) {
+            Row row = sheet.createRow(rowIndex++);
+            for (int i = 0; i < rowData.length; i++) {
+                row.createCell(i).setCellValue(rowData[i]);
+            }
+        }
+
+        try (FileOutputStream fos = new FileOutputStream(filePath)) {
+            workbook.write(fos);
+            workbook.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 
 
 }
