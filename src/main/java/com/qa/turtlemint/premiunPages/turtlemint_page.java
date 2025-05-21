@@ -4,6 +4,7 @@ import com.qa.turtlemint.base.TestBase;
 import com.qa.turtlemint.util.TestUtil;
 import org.bouncycastle.jcajce.provider.asymmetric.X509;
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -81,6 +82,9 @@ public class turtlemint_page extends TestBase {
 
     @FindBy(xpath = "//li[@ng-if=\"config.policyType\"]//p[@class=\"ng-binding\"]")
     WebElement getPolicyType;
+
+    @FindBy(xpath = "//span[@ng-click=\"infoCar = !infoCar\"]")
+    WebElement closedButton;
     public turtlemint_page() {
         PageFactory.initElements(driver, this);
     }
@@ -119,29 +123,28 @@ public class turtlemint_page extends TestBase {
                     TestUtil.sendKeys(calender, futuredate, "entered");
                     Thread.sleep(2000);
                 }
-                WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
-                wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.xpath("//input[@id=\"previousPolicyType-COMPREHENSIVE\"]//following-sibling::span[text()=\"Comprehensive\"]")));
 
-
-                TestUtil.click(previousPolicyType , "select previous Policy Type as Comprehensive");
+                Thread.sleep(2000);
+                JavascriptExecutor js = ( JavascriptExecutor) driver;
+                js.executeScript("arguments[0].click();" , previousPolicyType);
+//                TestUtil.click(previousPolicyType , "select previous Policy Type as Comprehensive");
+                Thread.sleep(2000);
                 TestUtil.click(prevClaim , "select prev Claim as No");
                 TestUtil.click(ncb , "click on ncb dropdown");
                 TestUtil.click(zeroNCB , " NCB : 0% selected");
-
                 TestUtil.click(saveAndCon, "");
-                Thread.sleep(2000);
                 TestUtil.click(gotIt, "");
-
-                Thread.sleep(6000);
-                TestUtil.click(editButton , "click on edit button");
+                ;
+                Thread.sleep(20000);
+                js.executeScript("arguments[0].click();" , editButton);
                 String vehicleMakeModel = makeModel.getText();
                 String vehicleFuelType = fuel.getText();
                 String vehicleVarient = variant.getText();
                 String prePolicy = getPolicyType.getText();
-
-
-
-
+                System.out.println(vehicleMakeModel +" ---" + vehicleFuelType + "--- " + vehicleVarient + " ____" + prePolicy  );
+                TestUtil.click(closedButton , "");
+                Thread.sleep(15000);
+                WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
                 wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.xpath("//img[@class=\"client-logo-img\"]")));
                 wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.xpath("//div[@class=\"priceArea hidden-xs text-center\"]//span[contains(@ng-if , \"multiPlanDropDown[insurer.insurerProvider\")]")));
 
