@@ -1,0 +1,29 @@
+package com.qa.turtlemint.Preminum;
+
+import com.qa.turtlemint.base.TestBase;
+import com.qa.turtlemint.premiunPages.policybazar_page;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
+
+public class PolicyBazar extends TestBase {
+
+    policybazar_page pbp;
+
+    public PolicyBazar() {
+        super();
+    }
+
+    @BeforeMethod()
+    public void start() throws InterruptedException {
+        initialization();
+        pbp = new policybazar_page();
+
+
+    }
+
+    @Test
+    public void totalPremi() throws InterruptedException {
+        pbp.premiumPB();
+    }
+}
+

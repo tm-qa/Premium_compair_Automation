@@ -11,6 +11,8 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.text.SimpleDateFormat;
 import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -47,10 +49,10 @@ public class turtlemint_page extends TestBase {
     WebElement previousPolicyType;
 
     @FindBy(xpath = "//input[@id=\"prevClaim-false\"]//following-sibling::span")
-    WebElement prevClaim ;
+    WebElement prevClaim;
 
     @FindBy(xpath = "//span[@aria-label=\"Select box activate\"]")
-    WebElement ncb ;
+    WebElement ncb;
 
     @FindBy(xpath = "//span[text()=\"0%\"]")
     WebElement zeroNCB;
@@ -72,7 +74,7 @@ public class turtlemint_page extends TestBase {
     WebElement editButton;
 
     @FindBy(xpath = "//li[@ng-if=\"motorDetail.make && motorDetail.model\"]//p[@ng-click=\"onCopylink()\"]")
-    WebElement makeModel ;
+    WebElement makeModel;
     @FindBy(xpath = "//li[@ng-if=\"motorDetail.fuel\"]//p[@ng-click=\"onCopylink()\"]")
     WebElement fuel;
     @FindBy(xpath = "//li[@ng-if=\"motorDetail.variant\"]//p[@ng-click=\"onCopylink()\"]")
@@ -89,25 +91,34 @@ public class turtlemint_page extends TestBase {
 
     @FindBy(xpath = "//span[text()=\"Bajaj Allianz\"]")
     WebElement getPreviousinsureruiSelect;
+    @FindBy(xpath = "(//img[@class=\"img-file\"])[2]")
+    WebElement random;
+
+
     public turtlemint_page() {
         PageFactory.initElements(driver, this);
     }
 
-    public void login() throws InterruptedException {
 
-    String excelPath = "/Users/sayali/Documents/insurer/Premium_compair_Automation/src/test/resources/registration_data.xlsx";
-//        String excelPath = "/Users/nitinrathod/Downloads/Premium_compair_Automation/src/test/resources/registration_data.xlsx";
+    public void logintm() {
+
+        TestUtil.sendKeys(mobileNumber, "6999912345", "");
+        TestUtil.click(getOtpButton, "");
+        TestUtil.sendKeys(getOtp, "1234", "");
+        TestUtil.click(verifyOtp, "");
+    }
+
+
+    public void premiumtm() throws InterruptedException {
+
+        // String excelPath = "/Users/sayali/Documents/insurer/Premium_compair_Automation/src/test/resources/registration_data.xlsx";
+        String excelPath = "/Users/nitinrathod/Documents/registration_data.xlsx";
         List<String> regNumbers = TestUtil.getRegistrationNumbers(excelPath);
         System.out.println(regNumbers);
 
         List<String[]> premiumData = new ArrayList<>();
         List<String> failedRegs = new ArrayList<>();
-
         Thread.sleep(3000);
-        TestUtil.sendKeys(mobileNumber, "6999912345", "");
-        TestUtil.click(getOtpButton, "");
-        TestUtil.sendKeys(getOtp, "1234", "");
-        TestUtil.click(verifyOtp, "");
         TestUtil.click(sellButton, "ed");
         Thread.sleep(3000);
         TestUtil.click(carInsurance, "");
@@ -133,16 +144,17 @@ public class turtlemint_page extends TestBase {
                     System.out.println(formattedDate);
                     TestUtil.sendKeys(calender, formattedDate, "entered");
                     Thread.sleep(2000);
+                    TestUtil.click(random, "");
                 }
 
                 Thread.sleep(2000);
-                JavascriptExecutor js = ( JavascriptExecutor) driver;
-                js.executeScript("arguments[0].click();" , previousPolicyType);
+                JavascriptExecutor js = (JavascriptExecutor) driver;
+                js.executeScript("arguments[0].click();", previousPolicyType);
 //                TestUtil.click(previousPolicyType , "select previous Policy Type as Comprehensive");
                 Thread.sleep(2000);
-                TestUtil.click(prevClaim , "select prev Claim as No");
-                TestUtil.click(ncb , "click on ncb dropdown");
-                TestUtil.click(zeroNCB , " NCB : 0% selected");
+                TestUtil.click(prevClaim, "select prev Claim as No");
+                TestUtil.click(ncb, "click on ncb dropdown");
+                TestUtil.click(zeroNCB, " NCB : 0% selected");
 
                 /////
 
@@ -188,18 +200,18 @@ public class turtlemint_page extends TestBase {
                 ///////
                 TestUtil.click(saveAndCon, "");
                 try {
-                TestUtil.click(gotIt, ""); }
-                catch (Exception e) {
+                    TestUtil.click(gotIt, "");
+                } catch (Exception e) {
                     System.out.println("'Got It' button not present, skipping.");
                 }
                 Thread.sleep(20000);
-                js.executeScript("arguments[0].click();" , editButton);
+                js.executeScript("arguments[0].click();", editButton);
                 String vehicleMakeModel = makeModel.getText();
                 String vehicleFuelType = fuel.getText();
                 String vehicleVarient = variant.getText();
                 String prePolicy = getPolicyType.getText();
-                System.out.println(vehicleMakeModel +" ---" + vehicleFuelType + "--- " + vehicleVarient + " ____" + prePolicy  );
-                TestUtil.click(closedButton , "");
+                System.out.println(vehicleMakeModel + " ---" + vehicleFuelType + "--- " + vehicleVarient + " ____" + prePolicy);
+                TestUtil.click(closedButton, "");
                 Thread.sleep(15000);
                 WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
                 wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.xpath("//div[@class='logoArea col-xs-6 col-sm-3 text-left']//img[contains(@class, 'client-logo-img')]")));
@@ -252,8 +264,12 @@ public class turtlemint_page extends TestBase {
             System.out.println("jwh");
         }
 
-        // ✅ Write success data to ExcelString outputExcel = "/Users/sayali/Desktop/TM_premium_output.xlsx";
-        String outputExcel = "/Users/sayali/Desktop/premium_output.xlsx";
+
+        String date = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+        // ✅ Save successful data
+        //   String outputExcel = "/Users/sayali/Desktop/RenewBuy_premium" + date + ".xlsx";
+        String outputExcel = "/Users/nitinrathod/Desktop/Turtlemint_premium" + date + ".xlsx";
+
         TestUtil.writePremiumDataTm(outputExcel, premiumData);
         // Optional: Print or save failed registrations
         if (!failedRegs.isEmpty()) {
@@ -265,83 +281,5 @@ public class turtlemint_page extends TestBase {
     }
 
 
-
-//    @FindBy(xpath = "//p[text()=\"Car Insurance\"]")
-//    WebElement carInsurance ;
-//
-//    @FindBy(xpath = "//input[@id='registrationNo']/following::p[contains(text(),'I do not have a registration number')]")
-//    WebElement dontHaveRegNo ;
-//
-//    @FindBy(xpath = "//div[@id=\"rto-uiSelect\"]//input")
-//    WebElement enterRto;
-//
-//    @FindBy(xpath = "//span[text()=\"MH-01-Tardeo\"]")
-//    WebElement rto;
-//
-//    @FindBy(xpath = "//label[@for=\"calendarCheckbox\"]")
-//    WebElement registartionDateCheckbox ;
-//
-//    @FindBy(xpath = "//button[@id=\"container-next-btn\"]")
-//    WebElement nextButton;
-//
-//    @FindBy(xpath = "//div[@data-auto=\"makemodel-uiSelect\"]//input[@type=\"search\"]")
-//    WebElement makeModel;
-//
-//    @FindBy(xpath = "//span[text()=\"2024\"]")
-//    WebElement manuafYear ;
-//
-//    @FindBy(xpath = "//input[@value=\"Petrol\"]//following-sibling::span")
-//    WebElement fuelType;
-//
-//    @FindBy(xpath = "//div[@data-auto=\"variant\"]")
-//    WebElement variant;
-//
-//
-//    @FindBy(xpath = "//input[@placeholder=\"Type name or select\"]")
-//    WebElement variantEntered;
-//
-//    @FindBy(xpath = "//input[@id=\"customerName\"]")
-//    WebElement customerName;
-//
-//    @FindBy(xpath = "//span[text()=\"Hyundai I20\"]")
-//    WebElement getMakeModel;
-//
-//    @FindBy(xpath = "//span[text()=\"Asta (1197 CC)\"]")
-//    WebElement getVariant;
-//
-//    @FindBy(xpath = "//input[@id=\"paidUserMobile\"]")
-//    WebElement userMobile ;
-//
-//    @FindBy(xpath = "//input[@id=\"paidUserEmail\"]")
-//    WebElement userEmail;
-//
-//    public turtlemint_page() {PageFactory.initElements(driver, this);}
-//
-//    public void getPreminum() throws InterruptedException {
-//        TestUtil.click(carInsurance , "click on car");
-//        Set<String> windowHandles = driver.getWindowHandles();
-//        ArrayList<String> tabs = new ArrayList<>(windowHandles);
-//        driver.switchTo().window(tabs.get(1));
-//        TestUtil.click(dontHaveRegNo , " click sont have registation no");
-//        TestUtil.sendKeys(enterRto , "MH-01-Tardeo"," entered rto");
-//        TestUtil.click(rto , "select rto");
-//        TestUtil.click(registartionDateCheckbox , "click on checkbox");
-//        TestUtil.click(nextButton , "click on next button");
-//        TestUtil.sendKeys(makeModel , "Hyundai I20","entered make & model");
-//        TestUtil.click(getMakeModel , " make model selected");
-//        TestUtil.click(manuafYear , "click on mang year");
-//        TestUtil.click(fuelType , "select fuel type");
-//        Thread.sleep(2000);
-//        TestUtil.click(variant , "click on variant");
-//        TestUtil.sendKeys(variantEntered , "Asta (1197 CC) ","entered make & model");
-//        TestUtil.click(getVariant , "select variant");
-//        TestUtil.click(nextButton , "click on next button");
-//        TestUtil.sendKeys(customerName , "test lead" , "lead name enterd");
-//        TestUtil.sendKeys(userMobile , "6999912345" , "lead name enterd");
-//        TestUtil.sendKeys(userEmail , "testtest@test.com" , "lead name enterd");
-//        TestUtil.click(nextButton , "click on next button");
-//
-//    }
-
-    }
+}
 

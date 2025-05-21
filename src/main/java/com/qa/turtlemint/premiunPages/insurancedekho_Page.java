@@ -1,6 +1,7 @@
 package com.qa.turtlemint.premiunPages;
 
 import com.qa.turtlemint.base.TestBase;
+import com.qa.turtlemint.util.LogUtils;
 import com.qa.turtlemint.util.TestUtil;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
@@ -103,16 +104,50 @@ public class insurancedekho_Page extends TestBase {
     @FindBy(xpath = " //li[text()=\"Third Party\"]")
     WebElement Tp;
 
+    @FindBy(name = "mobileNumber")
+    WebElement MobileNumber;
+    @FindBy(xpath = "//div[@id='common-login']//div[@class='otpLogin']//div[@id='OTPLogin']//input[@type='tel' and @name='mobileNumber' and @autocomplete='phone']")
+    WebElement MobileNumberID;
+
+    @FindBy(xpath = "//span[text()='Continue']")
+    WebElement ContinueBtn;
+
+    @FindBy(xpath = "//span[text()='GET OTP']")
+    WebElement GetOTP;
+    @FindBy(xpath = "(//span[text()=\"Start Earning Now\"])[3]")
+    WebElement startearning;
+
+    @FindBy(xpath = "//input[@class='OTPInput']")
+    WebElement OTPField;
+
+    @FindBy(xpath = "//span[text()='Verify OTP']")
+    WebElement VerifyOTPBtn;
+    @FindBy(xpath = "//span[text()=\"Verify OTP\"]")
+    WebElement VerifyOTPBtnID;
+
 
     //label[text()="Policy Expiry Date"]
-
 
     public insurancedekho_Page() {
         PageFactory.initElements(driver, this);
     }
 
-    public void
-    iddekho() throws InterruptedException {
+    public void loginID(String username) throws InterruptedException {
+        String strUrl = driver.getCurrentUrl();
+        LogUtils.info("Opened Website: " + strUrl);
+        Thread.sleep(3000);
+        // TestUtil.click(MobileNumberID,"");
+        TestUtil.sendKeys(MobileNumberID, username, "Mobile Number Entered");
+        // MobileNumberID.sendKeys(username + Keys.ENTER);
+        TestUtil.click(startearning, "Start earning pressed");
+        Thread.sleep(20000);
+        // TestUtil.click(VerifyOTPBtnID, "Login Successful");
+        Thread.sleep(5000);
+        TestUtil.getScreenShot();
+
+    }
+
+    public void premiumID() throws InterruptedException {
 
         Thread.sleep(5000);
         TestUtil.click(selectcar, "");

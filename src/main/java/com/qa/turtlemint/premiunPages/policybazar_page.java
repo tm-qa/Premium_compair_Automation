@@ -9,7 +9,7 @@ import org.openqa.selenium.support.PageFactory;
 import java.util.ArrayList;
 import java.util.Set;
 
-public class policybazarpage extends TestBase {
+public class policybazar_page extends TestBase {
 
 
     @FindBy(xpath = "//small[text()=\"Car\"]//parent::a")
@@ -29,11 +29,15 @@ public class policybazarpage extends TestBase {
     @FindBy(xpath = "//label[text()=\"Third Party Only\"]//following-sibling::label[@class=\"switch\"]")
    WebElement tpcomptoggle ;
 
-    public policybazarpage() {
+    public policybazar_page() {
         PageFactory.initElements(driver, this);
     }
 
-public void pbdetails(){
+    public void logininPB(){
+
+    }
+
+public void premiumPB(){
     TestUtil.click(selectCar,"");
     Set<String> windowHandles = driver.getWindowHandles();
     ArrayList<String> tabs = new ArrayList<>(windowHandles);
@@ -44,7 +48,6 @@ public void pbdetails(){
     TestUtil.sendKeys(calendar,futuredate,"entered");
     TestUtil.click(viewpquotes,"");
 
-
-}
+   }
 
 }

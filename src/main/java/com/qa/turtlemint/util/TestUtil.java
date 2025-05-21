@@ -106,7 +106,7 @@ public class TestUtil {
     }
     public static String ninjaFutureDate(int days) {
         LocalDateTime currentDateTime = LocalDateTime.now().plusDays(days);
-        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd-MMM-yyyy");
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
         return dateTimeFormatter.format(currentDateTime);
     }
 
