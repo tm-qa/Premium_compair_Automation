@@ -65,7 +65,8 @@ public class turtlemint_page extends TestBase {
 
     public void login() throws InterruptedException {
 
-        List<String> regNumbers = TestUtil.getRegistrationNumbers("/Users/nitinrathod/Downloads/Premium_compair_Automation/src/test/resources/registration_data.xlsx");
+        String excelPath = "/Users/nitinrathod/Downloads/Premium_compair_Automation/src/test/resources/registration_data.xlsx";
+        List<String> regNumbers = TestUtil.getRegistrationNumbers(excelPath);
         System.out.println(regNumbers);
 
         List<String[]> premiumData = new ArrayList<>();
