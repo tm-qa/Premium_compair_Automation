@@ -87,7 +87,8 @@ public class turtlemint_page extends TestBase {
 
     public void login() throws InterruptedException {
 
-        String excelPath = "/Users/sayali/Documents/insurer/Premium_compair_Automation/src/test/resources/registration_data.xlsx";
+      //  String excelPath = "/Users/sayali/Documents/insurer/Premium_compair_Automation/src/test/resources/registration_data.xlsx";
+        String excelPath = "/Users/nitinrathod/Downloads/Premium_compair_Automation/src/test/resources/registration_data.xlsx";
         List<String> regNumbers = TestUtil.getRegistrationNumbers(excelPath);
         System.out.println(regNumbers);
 
@@ -190,9 +191,9 @@ public class turtlemint_page extends TestBase {
         }
 
         // ✅ Write success data to Excel
-        String outputExcel = "/Users/sayali/Desktop/TM_premium_output.xlsx";
+    //    String outputExcel = "/Users/sayali/Desktop/TM_premium_output.xlsx";
+        String outputExcel = "/Users/nitinrathod/Desktop/premium_output.xlsx";
         TestUtil.writePremiumDataTm(outputExcel, premiumData);
-
         // Optional: Print or save failed registrations
         if (!failedRegs.isEmpty()) {
             System.out.println("Failed registrations:");
