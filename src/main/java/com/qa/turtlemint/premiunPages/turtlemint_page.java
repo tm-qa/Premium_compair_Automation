@@ -12,6 +12,7 @@ import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.text.SimpleDateFormat;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
@@ -91,8 +92,8 @@ public class turtlemint_page extends TestBase {
 
     public void login() throws InterruptedException {
 
-      //  String excelPath = "/Users/sayali/Documents/insurer/Premium_compair_Automation/src/test/resources/registration_data.xlsx";
-        String excelPath = "/Users/nitinrathod/Downloads/Premium_compair_Automation/src/test/resources/registration_data.xlsx";
+    String excelPath = "/Users/sayali/Documents/insurer/Premium_compair_Automation/src/test/resources/registration_data.xlsx";
+//        String excelPath = "/Users/nitinrathod/Downloads/Premium_compair_Automation/src/test/resources/registration_data.xlsx";
         List<String> regNumbers = TestUtil.getRegistrationNumbers(excelPath);
         System.out.println(regNumbers);
 
@@ -110,7 +111,9 @@ public class turtlemint_page extends TestBase {
 
         for (String reg : regNumbers) {
             try {
+                Thread.sleep(3000);
                 TestUtil.sendKeys(registrationNumber, reg, "picked 1st");
+                Thread.sleep(3000);
                 TestUtil.click(registrationNumberButton, "");
                 TestUtil.click(policyType, "");
 
@@ -121,7 +124,11 @@ public class turtlemint_page extends TestBase {
                     Thread.sleep(2000);
                     String futuredate = TestUtil.ninjaFutureDate(3);
                     System.out.println(futuredate);
-                    TestUtil.sendKeys(calender, futuredate, "entered");
+                    SimpleDateFormat inputFormat = new SimpleDateFormat("ddMMyyyy");
+                    SimpleDateFormat outputFormat = new SimpleDateFormat("dd/MM/yyyy");
+                    String formattedDate = outputFormat.format(inputFormat.parse(futuredate));
+                    System.out.println(formattedDate);
+                    TestUtil.sendKeys(calender, formattedDate, "entered");
                     Thread.sleep(2000);
                 }
 
@@ -146,11 +153,14 @@ public class turtlemint_page extends TestBase {
                 TestUtil.click(closedButton , "");
                 Thread.sleep(15000);
                 WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
-                wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.xpath("//img[@class=\"client-logo-img\"]")));
+                wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.xpath("//div[@class='logoArea col-xs-6 col-sm-3 text-left']//img[contains(@class, 'client-logo-img')]")));
                 wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.xpath("//div[@class=\"priceArea hidden-xs text-center\"]//span[contains(@ng-if , \"multiPlanDropDown[insurer.insurerProvider\")]")));
 
-                List<WebElement> insurerLogos = driver.findElements(By.xpath("//img[@class=\"client-logo-img\"]"));
+                List<WebElement> insurerLogos = driver.findElements(By.xpath("//div[@class='logoArea col-xs-6 col-sm-3 text-left']//img[contains(@class, 'client-logo-img')]"));
                 List<WebElement> insurerPremiums = driver.findElements(By.xpath("//div[@class=\"priceArea hidden-xs text-center\"]//span[contains(@ng-if , \"multiPlanDropDown[insurer.insurerProvider\")]"));
+
+                System.out.println("Logos found: " + insurerLogos.size());
+                System.out.println("Premiums found: " + insurerPremiums.size());
 
                 if (insurerLogos.size() == insurerPremiums.size()) {
                     for (int i = 0; i < insurerLogos.size(); i++) {
@@ -193,9 +203,8 @@ public class turtlemint_page extends TestBase {
             System.out.println("jwh");
         }
 
-        // ✅ Write success data to Excel
-    //    String outputExcel = "/Users/sayali/Desktop/TM_premium_output.xlsx";
-        String outputExcel = "/Users/nitinrathod/Desktop/premium_output.xlsx";
+        // ✅ Write success data to ExcelString outputExcel = "/Users/sayali/Desktop/TM_premium_output.xlsx";
+        String outputExcel = "/Users/sayali/Desktop/premium_output.xlsx";
         TestUtil.writePremiumDataTm(outputExcel, premiumData);
         // Optional: Print or save failed registrations
         if (!failedRegs.isEmpty()) {
