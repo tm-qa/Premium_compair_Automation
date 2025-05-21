@@ -44,6 +44,18 @@ public class turtlemint_page extends TestBase {
     @FindBy(xpath = "//input[@id=\"policyType-comprehensive\"]//following-sibling::span")
     WebElement policyType;
 
+    @FindBy(xpath = "//input[@id=\"previousPolicyType-COMPREHENSIVE\"]//following-sibling::span[text()=\"Comprehensive\"]")
+    WebElement previousPolicyType;
+
+    @FindBy(xpath = "//input[@id=\"prevClaim-false\"]//following-sibling::span")
+    WebElement prevClaim ;
+
+    @FindBy(xpath = "//span[@aria-label=\"Select box activate\"]")
+    WebElement ncb ;
+
+    @FindBy(xpath = "//span[text()=\"0%\"]")
+    WebElement zeroNCB;
+
     @FindBy(xpath = "//input[@id=\"expiryDate-datepicker\"]")
     WebElement calender;
 
@@ -57,15 +69,25 @@ public class turtlemint_page extends TestBase {
     WebElement gotIt;
     @FindBy(xpath = "//div[@class=\"logo\"]")
     WebElement logoback;
+    @FindBy(xpath = "//a[text()=\"Edit\"]")
+    WebElement editButton;
 
+    @FindBy(xpath = "//li[@ng-if=\"motorDetail.make && motorDetail.model\"]//p[@ng-click=\"onCopylink()\"]")
+    WebElement makeModel ;
+    @FindBy(xpath = "//li[@ng-if=\"motorDetail.fuel\"]//p[@ng-click=\"onCopylink()\"]")
+    WebElement fuel;
+    @FindBy(xpath = "//li[@ng-if=\"motorDetail.variant\"]//p[@ng-click=\"onCopylink()\"]")
+    WebElement variant;
 
+    @FindBy(xpath = "//li[@ng-if=\"config.policyType\"]//p[@class=\"ng-binding\"]")
+    WebElement getPolicyType;
     public turtlemint_page() {
         PageFactory.initElements(driver, this);
     }
 
     public void login() throws InterruptedException {
 
-        String excelPath = "/Users/nitinrathod/Downloads/Premium_compair_Automation/src/test/resources/registration_data.xlsx";
+        String excelPath = "/Users/sayali/Documents/insurer/Premium_compair_Automation/src/test/resources/registration_data.xlsx";
         List<String> regNumbers = TestUtil.getRegistrationNumbers(excelPath);
         System.out.println(regNumbers);
 
@@ -93,43 +115,62 @@ public class turtlemint_page extends TestBase {
                 if (existingValue == null || existingValue.trim().isEmpty()) {
                     Thread.sleep(2000);
                     String futuredate = TestUtil.ninjaFutureDate(3);
+                    System.out.println(futuredate);
                     TestUtil.sendKeys(calender, futuredate, "entered");
                     Thread.sleep(2000);
                 }
+                WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+                wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.xpath("//input[@id=\"previousPolicyType-COMPREHENSIVE\"]//following-sibling::span[text()=\"Comprehensive\"]")));
+
+
+                TestUtil.click(previousPolicyType , "select previous Policy Type as Comprehensive");
+                TestUtil.click(prevClaim , "select prev Claim as No");
+                TestUtil.click(ncb , "click on ncb dropdown");
+                TestUtil.click(zeroNCB , " NCB : 0% selected");
 
                 TestUtil.click(saveAndCon, "");
                 Thread.sleep(2000);
                 TestUtil.click(gotIt, "");
 
-                WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-                wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//img[@class=\"client-logo-img\"]")));
+                Thread.sleep(6000);
+                TestUtil.click(editButton , "click on edit button");
+                String vehicleMakeModel = makeModel.getText();
+                String vehicleFuelType = fuel.getText();
+                String vehicleVarient = variant.getText();
+                String prePolicy = getPolicyType.getText();
+
+
+
+
+                wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.xpath("//img[@class=\"client-logo-img\"]")));
+                wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.xpath("//div[@class=\"priceArea hidden-xs text-center\"]//span[contains(@ng-if , \"multiPlanDropDown[insurer.insurerProvider\")]")));
 
                 List<WebElement> insurerLogos = driver.findElements(By.xpath("//img[@class=\"client-logo-img\"]"));
-                List<String> insurerNames = new ArrayList<>();
-                List<String> totalPremiums = new ArrayList<>();
+                List<WebElement> insurerPremiums = driver.findElements(By.xpath("//div[@class=\"priceArea hidden-xs text-center\"]//span[contains(@ng-if , \"multiPlanDropDown[insurer.insurerProvider\")]"));
 
-                for (WebElement logo : insurerLogos) {
-                    Thread.sleep(2000);
-                    String srcValue = logo.getAttribute("src");
-                    String[] parts = srcValue.split("/");
-                    String insurerName = parts[parts.length - 1].replace(".png", "");
-                    insurerNames.add(insurerName);
+                if (insurerLogos.size() == insurerPremiums.size()) {
+                    for (int i = 0; i < insurerLogos.size(); i++) {
+                        WebElement logo = insurerLogos.get(i);
+                        WebElement premiumBtn = insurerPremiums.get(i);
 
-                    WebElement premiumElement = logo.findElement(By.xpath("//button[@class=\"premium-breakup-amount cursor-pointer text-center premium-breakup-amount-btn ng-star-inserted\"]"));
-                    String premium = premiumElement.getText();
-                    totalPremiums.add(premium);
-                }
+                        String srcValue = logo.getAttribute("src");
+                        String[] parts = srcValue.split("/");
+                        String insurerName = parts[parts.length - 1].replace(".png", "");
+                        String premium = premiumBtn.getText();
 
-                if (!insurerNames.isEmpty() && insurerNames.size() == totalPremiums.size()) {
-                    for (int i = 0; i < insurerNames.size(); i++) {
                         String[] row = {
                                 reg,
-                                insurerNames.get(i),
-                                totalPremiums.get(i)
+                                vehicleMakeModel,
+                                vehicleFuelType,
+                                vehicleVarient,
+                                prePolicy,
+                                insurerName,
+                                premium
                         };
                         premiumData.add(row);
                     }
                 } else {
+                    System.err.println("Mismatch in insurer and premium count for Reg: " + reg);
                     failedRegs.add(reg);
                 }
 
@@ -141,13 +182,16 @@ public class turtlemint_page extends TestBase {
 
             // Move to next
             TestUtil.click(logoback, "");
+            Thread.sleep(4000);
             TestUtil.click(sellButton, "");
+            Thread.sleep(2000);
             TestUtil.click(carInsurance, "");
+            System.out.println("jwh");
         }
 
         // ✅ Write success data to Excel
-        String outputExcel = "/Users/nitinrathod/Desktop/premium_output_login.xlsx";
-        TestUtil.writePremiumData(outputExcel, premiumData);
+        String outputExcel = "/Users/sayali/Desktop/TM_premium_output.xlsx";
+        TestUtil.writePremiumDataTm(outputExcel, premiumData);
 
         // Optional: Print or save failed registrations
         if (!failedRegs.isEmpty()) {
