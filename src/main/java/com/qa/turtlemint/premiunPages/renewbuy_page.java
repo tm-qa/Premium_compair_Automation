@@ -26,16 +26,16 @@ public class renewbuy_page extends TestBase {
 
 
     @FindBy(xpath = "//button[text()=\" Sign In with Password \"]")
-    WebElement singInWithPassword ;
+    WebElement singInWithPassword;
 
     @FindBy(xpath = "//input[@id=\"form_email\"]")
-    WebElement formEmail ;
+    WebElement formEmail;
 
     @FindBy(xpath = "//input[@id=\"form_password\"]")
-    WebElement formPassword ;
+    WebElement formPassword;
 
     @FindBy(xpath = "//input[@placeholder=\"Enter answer\"]//preceding-sibling::label")
-    WebElement quetion ;
+    WebElement quetion;
 
     @FindBy(xpath = "//input[@id=\"sum\"]")
     WebElement enterSum;
@@ -46,7 +46,7 @@ public class renewbuy_page extends TestBase {
     @FindBy(xpath = "//div[@class=\"close-button\"]//img")
     WebElement closedButton;
     @FindBy(xpath = "//div[text()=\" Motor \"]")
-    WebElement motor ;
+    WebElement motor;
     @FindBy(xpath = "//input[@id-automation=\"registration_number\"]")
     WebElement registrationNumber;
 
@@ -69,7 +69,6 @@ public class renewbuy_page extends TestBase {
     WebElement ackoinsurer;
 
 
-
     @FindBy(xpath = "//input[@formcontrolname=\"vehicle_make\"]")
     WebElement make;
 
@@ -87,15 +86,15 @@ public class renewbuy_page extends TestBase {
     //a[text()="Motor Insurance"]
 
 
-
     public renewbuy_page() throws IOException {
-        PageFactory.initElements(driver, this);}
+        PageFactory.initElements(driver, this);
+    }
 
 
-    public void logIn(){
-        TestUtil.click(singInWithPassword , "click on sing In with password");
-        TestUtil.sendKeys(formEmail , "jagadinsurance@gmail.com", "entered email");
-        TestUtil.sendKeys(formPassword , "Jagad@321", "entered password");
+    public void logIn() {
+        TestUtil.click(singInWithPassword, "click on sing In with password");
+        TestUtil.sendKeys(formEmail, "jagadinsurance@gmail.com", "entered email");
+        TestUtil.sendKeys(formPassword, "Jagad@321", "entered password");
         String mathText = quetion.getText();
         System.out.println(mathText);
 
@@ -107,93 +106,112 @@ public class renewbuy_page extends TestBase {
         String totalSum = String.valueOf(sum);
         System.out.println("The sum of " + num1 + " and " + num2 + " is: " + sum);
 
-        TestUtil.sendKeys(enterSum ,totalSum , "entered sum");
-        TestUtil.click(logIn , "click on login button");
+        TestUtil.sendKeys(enterSum, totalSum, "entered sum");
+        TestUtil.click(logIn, "click on login button");
 
     }
-    public void motorPreminum() throws InterruptedException, IOException {
 
+    public void motorPreminum() throws InterruptedException, IOException {
 
         String excelPath = "/Users/nitinrathod/Downloads/Premium_compair_Automation/src/test/resources/registration_data.xlsx";
         List<String> regNumbers = TestUtil.getRegistrationNumbers(excelPath);
-            System.out.println(regNumbers);
 
-            TestUtil.click(closedButton, "click on close button");
-            Thread.sleep(3000);
+        List<String[]> premiumData = new ArrayList<>(); // successful data
+        List<String> failedRegs = new ArrayList<>();    // failed registrations
 
-            JavascriptExecutor js = (JavascriptExecutor) driver;
-            js.executeScript("window.scrollBy(0,800)");
-            js.executeScript("arguments[0].click();", motor);
+        TestUtil.click(closedButton, "click on close button");
+        Thread.sleep(3000);
 
-            Set<String> windowHandles = driver.getWindowHandles();
-            ArrayList<String> tabs = new ArrayList<>(windowHandles);
-            driver.switchTo().window(tabs.get(1));
+        JavascriptExecutor js = (JavascriptExecutor) driver;
+        js.executeScript("window.scrollBy(0,800)");
+        js.executeScript("arguments[0].click();", motor);
 
+        Set<String> windowHandles = driver.getWindowHandles();
+        ArrayList<String> tabs = new ArrayList<>(windowHandles);
+        driver.switchTo().window(tabs.get(1));
 
-            for (String reg : regNumbers) {
+        for (String reg : regNumbers) {
+            try {
+                TestUtil.sendKeys(registrationNumber, reg, "entered registration number");
+                TestUtil.click(getVehicleDetailsIdButton, "click on vehicle details button");
 
-            //  Use registration number from Excel
-            TestUtil.sendKeys(registrationNumber, reg, "entered registration number");
-            TestUtil.click(getVehicleDetailsIdButton, "click on vehicle details button");
+                String vehicleMake = make.getText();
+                String vehicleModel = model.getText();
+                String vehicleVariant = variant.getText();
+                String vehicleFuel = fuelType.getText();
 
-            // The rest of your test logic remains the same
-            String vehicleMake = make.getText();
-            String vehicleModel = model.getText();
-            String vehicleVariant = variant.getText();
-            String vehicleFuel = fuelType.getText();
-
-            TestUtil.click(policyExiry, "click");
-            TestUtil.click(policyExiryType, "expiry type");
+                TestUtil.click(policyExiry, "click");
+                TestUtil.click(policyExiryType, "expiry type");
 
                 String existingValue = previousinsurer.getAttribute("value");
-                System.out.println(existingValue);
+                if (existingValue == null || existingValue.trim().isEmpty()) {
+                    Thread.sleep(2000);
+                    previousinsurer.sendKeys("acko");
+                    Thread.sleep(2000);
+                    TestUtil.click(ackoinsurer, "");
+                }
 
-                    if (existingValue == null || existingValue.trim().isEmpty()) {
-                        System.out.println(existingValue);
-                        Thread.sleep(2000);
-                        // Value not present → send keys
-                        previousinsurer.sendKeys("acko");
-                        Thread.sleep(2000);
-                        TestUtil.click(ackoinsurer,"");
+                TestUtil.click(aboveDetailsAreCorrectButton, "confirm vehicle");
+                Thread.sleep(15000);
 
-                    } else {
-                        // Value present → move forward
-                        System.out.println("Existing value: " + existingValue);
+                WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+                wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//img[@class='insurer-logo']")));
+
+                List<WebElement> insurerLogos = driver.findElements(By.xpath("//img[@class='insurer-logo']"));
+                List<String> insurerNames = new ArrayList<>();
+                List<String> totalPremiums = new ArrayList<>();
+
+                for (WebElement logo : insurerLogos) {
+                    Thread.sleep(6000);
+                    String srcValue = logo.getAttribute("src");
+                    String[] parts = srcValue.split("/");
+                    String insurerName = parts[parts.length - 1].replace(".png", "");
+                    insurerNames.add(insurerName);
+
+                    WebElement premiumElement = logo.findElement(By.xpath("//button[@class=\"premium-breakup-amount cursor-pointer text-center premium-breakup-amount-btn ng-star-inserted\"]"));
+                    String premium = premiumElement.getText();
+                    totalPremiums.add(premium);
+                }
+
+                // ✅ Only add if premium data collected
+                if (!insurerNames.isEmpty() && insurerNames.size() == totalPremiums.size()) {
+                    for (int i = 0; i < insurerNames.size(); i++) {
+                        String[] row = {
+                                reg,
+                                vehicleMake,
+                                vehicleModel,
+                                vehicleVariant,
+                                vehicleFuel,
+                                insurerNames.get(i),
+                                totalPremiums.get(i)
+                        };
+                        premiumData.add(row);
                     }
+                } else {
+                    failedRegs.add(reg);
+                }
 
+                TestUtil.click(motorback, "click back");
 
-            TestUtil.click(aboveDetailsAreCorrectButton, "confirm vehicle");
-
-            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-            wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//img[@class='insurer-logo']")));
-
-            List<WebElement> insurerLogos = driver.findElements(By.xpath("//img[@class='insurer-logo']"));
-            List<String> insurerNames = new ArrayList<>();
-            List<String> totalPremiums = new ArrayList<>();
-
-            for (WebElement logo : insurerLogos) {
-                Thread.sleep(6000);
-                String srcValue = logo.getAttribute("src");
-                String[] parts = srcValue.split("/");
-                String insurerName = parts[parts.length - 1].replace(".png", "");
-                insurerNames.add(insurerName);
-                Thread.sleep(7000);
-
-                WebElement premiumElement = logo.findElement(By.xpath("//button[@class=\"premium-breakup-amount cursor-pointer text-center premium-breakup-amount-btn ng-star-inserted\"]"));
-                String premium = premiumElement.getText();
-                totalPremiums.add(premium);
-                Thread.sleep(12000);
+            } catch (Exception e) {
+                System.err.println("❌ Failed for Reg Number: " + reg);
+                e.printStackTrace();
+                failedRegs.add(reg);
             }
-
-            System.out.println("Insurer Names and Premiums:");
-            for (int i = 0; i < insurerNames.size(); i++) {
-                System.out.println("Insurer: " + insurerNames.get(i) + " | Premium: " + totalPremiums.get(i));
-                Thread.sleep(4000);
-            }
-                TestUtil.click(motorback,"click back");
-
         }
 
 
+        // ✅ Save successful data
+        String outputExcel = "/Users/nitinrathod/Desktop/premium_output.xlsx";
+        TestUtil.writePremiumData(outputExcel, premiumData);
+
+        // Optional: print failed registration numbers
+        if (!failedRegs.isEmpty()) {
+            System.out.println("Failed registrations:");
+            for (String reg : failedRegs) {
+                System.out.println(reg);
+            }
+        }
     }
+
 }
