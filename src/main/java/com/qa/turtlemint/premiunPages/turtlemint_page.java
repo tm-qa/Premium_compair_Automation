@@ -65,9 +65,12 @@ public class turtlemint_page extends TestBase {
 
     public void login() throws InterruptedException {
 
-       // String excelPath = "/Users/nitinrathod/Downloads/Premium_compair_Automation/src/test/resources/registration_data.xlsx";
         List<String> regNumbers = TestUtil.getRegistrationNumbers("/Users/nitinrathod/Downloads/Premium_compair_Automation/src/test/resources/registration_data.xlsx");
         System.out.println(regNumbers);
+
+        List<String[]> premiumData = new ArrayList<>();
+        List<String> failedRegs = new ArrayList<>();
+
         Thread.sleep(3000);
         TestUtil.sendKeys(mobileNumber, "6999912345", "");
         TestUtil.click(getOtpButton, "");
@@ -77,63 +80,83 @@ public class turtlemint_page extends TestBase {
         Thread.sleep(3000);
         TestUtil.click(carInsurance, "");
 
-
         for (String reg : regNumbers) {
+            try {
+                TestUtil.sendKeys(registrationNumber, reg, "picked 1st");
+                TestUtil.click(registrationNumberButton, "");
+                TestUtil.click(policyType, "");
 
-            TestUtil.sendKeys(registrationNumber, reg,"picked 1st");
-            TestUtil.click(registrationNumberButton, "");
-            TestUtil.click(policyType, "");
-
-            String existingValue = calender.getAttribute("value");
-            System.out.println(existingValue);
-
-            if (existingValue == null || existingValue.trim().isEmpty()) {
+                String existingValue = calender.getAttribute("value");
                 System.out.println(existingValue);
-                Thread.sleep(2000);
-                // Value not present → send keys
-                String futuredate = TestUtil.ninjaFutureDate(3);
-                TestUtil.sendKeys(calender,futuredate,"entered");
-                Thread.sleep(2000);
 
+                if (existingValue == null || existingValue.trim().isEmpty()) {
+                    Thread.sleep(2000);
+                    String futuredate = TestUtil.ninjaFutureDate(3);
+                    TestUtil.sendKeys(calender, futuredate, "entered");
+                    Thread.sleep(2000);
+                }
 
-            } else {
-                // Value present → move forward
-                System.out.println("Existing value: " + existingValue);
+                TestUtil.click(saveAndCon, "");
+                Thread.sleep(2000);
+                TestUtil.click(gotIt, "");
+
+                WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+                wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//img[@class=\"client-logo-img\"]")));
+
+                List<WebElement> insurerLogos = driver.findElements(By.xpath("//img[@class=\"client-logo-img\"]"));
+                List<String> insurerNames = new ArrayList<>();
+                List<String> totalPremiums = new ArrayList<>();
+
+                for (WebElement logo : insurerLogos) {
+                    Thread.sleep(2000);
+                    String srcValue = logo.getAttribute("src");
+                    String[] parts = srcValue.split("/");
+                    String insurerName = parts[parts.length - 1].replace(".png", "");
+                    insurerNames.add(insurerName);
+
+                    WebElement premiumElement = logo.findElement(By.xpath("//button[@class=\"premium-breakup-amount cursor-pointer text-center premium-breakup-amount-btn ng-star-inserted\"]"));
+                    String premium = premiumElement.getText();
+                    totalPremiums.add(premium);
+                }
+
+                if (!insurerNames.isEmpty() && insurerNames.size() == totalPremiums.size()) {
+                    for (int i = 0; i < insurerNames.size(); i++) {
+                        String[] row = {
+                                reg,
+                                insurerNames.get(i),
+                                totalPremiums.get(i)
+                        };
+                        premiumData.add(row);
+                    }
+                } else {
+                    failedRegs.add(reg);
+                }
+
+            } catch (Exception e) {
+                System.err.println("❌ Failed for Reg Number: " + reg);
+                e.printStackTrace();
+                failedRegs.add(reg);
             }
 
-            TestUtil.click(saveAndCon, "");
-            Thread.sleep(2000);
-            TestUtil.click(gotIt, "");
-
-
-            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-            wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//img[@class=\"client-logo-img\"]")));
-
-            List<WebElement> insurerLogos = driver.findElements(By.xpath("//img[@class=\"client-logo-img\"]"));
-
-            List<String> insurerNames = new ArrayList<>();
-            List<String> totalPremiums = new ArrayList<>();
-
-            for (WebElement logo : insurerLogos) {
-                Thread.sleep(2000);
-                String srcValue = logo.getAttribute("src");
-                String[] parts = srcValue.split("/");
-                String insurerName = parts[parts.length - 1].replace(".png", ""); // Extracting file name without extension
-                insurerNames.add(insurerName);
-                WebElement premiumElement = logo.findElement(By.xpath("//button[@class=\"premium-breakup-amount cursor-pointer text-center premium-breakup-amount-btn ng-star-inserted\"]"));
-                String premium = premiumElement.getText();
-                totalPremiums.add(premium);
-            }
-
-            System.out.println("Insurer Names and Premiums:");
-            for (int i = 0; i < insurerNames.size(); i++) {
-                System.out.println("Insurer: " + insurerNames.get(i) + " | Premium: " + totalPremiums.get(i));
-            }
-            TestUtil.click(logoback,"");
-            TestUtil.click(sellButton,"");
-            TestUtil.click(carInsurance,"");
-
+            // Move to next
+            TestUtil.click(logoback, "");
+            TestUtil.click(sellButton, "");
+            TestUtil.click(carInsurance, "");
         }
+
+        // ✅ Write success data to Excel
+        String outputExcel = "/Users/nitinrathod/Desktop/premium_output_login.xlsx";
+        TestUtil.writePremiumData(outputExcel, premiumData);
+
+        // Optional: Print or save failed registrations
+        if (!failedRegs.isEmpty()) {
+            System.out.println("Failed registrations:");
+            for (String reg : failedRegs) {
+                System.out.println(reg);
+            }
+        }
+    }
+
 
 
 //    @FindBy(xpath = "//p[text()=\"Car Insurance\"]")
@@ -214,4 +237,4 @@ public class turtlemint_page extends TestBase {
 //    }
 
     }
-}
+
