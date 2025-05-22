@@ -45,7 +45,7 @@ public class turtlemint_page extends TestBase {
     @FindBy(xpath = "//input[@id=\"policyType-comprehensive\"]//following-sibling::span")
     WebElement policyType;
 
-    @FindBy(xpath = "//input[@id=\"previousPolicyType-COMPREHENSIVE\"]//following-sibling::span[text()=\"Comprehensive\"]")
+    @FindBy(xpath = "//input[@id=\"previousPolicyType-TP\"]//following-sibling::span[text()=\"Third Party\"]")
     WebElement previousPolicyType;
 
     @FindBy(xpath = "//input[@id=\"prevClaim-false\"]//following-sibling::span")
@@ -101,7 +101,6 @@ public class turtlemint_page extends TestBase {
 
 
     public void logintm() {
-
         TestUtil.sendKeys(mobileNumber, "6999912345", "");
         TestUtil.click(getOtpButton, "");
         TestUtil.sendKeys(getOtp, "1234", "");
@@ -152,9 +151,9 @@ public class turtlemint_page extends TestBase {
                 js.executeScript("arguments[0].click();", previousPolicyType);
 //                TestUtil.click(previousPolicyType , "select previous Policy Type as Comprehensive");
                 Thread.sleep(2000);
-                TestUtil.click(prevClaim, "select prev Claim as No");
-                TestUtil.click(ncb, "click on ncb dropdown");
-                TestUtil.click(zeroNCB, " NCB : 0% selected");
+//                TestUtil.click(prevClaim, "select prev Claim as No");
+//                TestUtil.click(ncb, "click on ncb dropdown");
+//                TestUtil.click(zeroNCB, " NCB : 0% selected");
 
                 /////
 
@@ -238,7 +237,7 @@ public class turtlemint_page extends TestBase {
                                 vehicleMakeModel,
                                 vehicleFuelType,
                                 vehicleVarient,
-                                prePolicy,
+                               // prePolicy,
                                 insurerName,
                                 premium
                         };

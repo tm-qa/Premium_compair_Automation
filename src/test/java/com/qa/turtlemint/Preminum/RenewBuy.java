@@ -26,6 +26,7 @@ public class RenewBuy extends TestBase {
 
     @Test
     public void PremiumRB() throws InterruptedException, IOException {
+        driver.get("https://partners.renewbuy.com/v2/");
         rbp.loginRB();
         rbp.premiumRB();
 

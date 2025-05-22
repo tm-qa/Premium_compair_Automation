@@ -91,8 +91,8 @@ public class TestBase {
             driver.manage().timeouts().implicitlyWait(TestUtil.implicit_wait, TimeUnit.SECONDS);
 
 
-        //       driver.get(System.getProperty("url"));
-            driver.get(prop.getProperty("url"));
+        //  driver.get(System.getProperty("url"));
+        //    driver.get(prop.getProperty("url"));
 
         }
 

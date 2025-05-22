@@ -2,9 +2,6 @@ package com.qa.turtlemint.premiunPages;
 
 import com.qa.turtlemint.base.TestBase;
 import com.qa.turtlemint.util.TestUtil;
-import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.jaxen.pattern.Pattern;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebElement;
@@ -12,16 +9,12 @@ import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import org.testng.annotations.Test;
-
 import java.io.IOException;
-import java.io.InputStream;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Set;
 
 public class renewbuy_page extends TestBase {
@@ -204,7 +197,7 @@ public class renewbuy_page extends TestBase {
      //   String outputExcel = "/Users/sayali/Desktop/RenewBuy_premium" + dateTime + ".xlsx";
         String outputExcel = "/Users/nitinrathod/Desktop/RenewBuy_premium" + dateTime + ".xlsx";
         if (!premiumData.isEmpty()) {
-            TestUtil.writePremiumData(outputExcel, premiumData);
+            TestUtil.writePremiumDataRB(outputExcel, premiumData);
             System.out.println("✅ Premium data written to Excel successfully.");
         } else {
             System.out.println("⚠️ No premium data collected to write.");

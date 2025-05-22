@@ -25,6 +25,7 @@ public class Turtlemint extends TestBase {
 
     @Test
     public void PremiumTm() throws InterruptedException {
+        driver.get("https://app.mintpro.in/signup");
         tmp.logintm();
         tmp.premiumtm();
     }

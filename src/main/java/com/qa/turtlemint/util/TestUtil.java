@@ -220,7 +220,7 @@ public class TestUtil {
 
         return regNumbers;
     }
-    public static void writePremiumData(String filePath, List<String[]> dataRows) {
+    public static void writePremiumDataRB(String filePath, List<String[]> dataRows) {
         Workbook workbook = new XSSFWorkbook();
         Sheet sheet = workbook.createSheet("PremiumData");
 
@@ -254,7 +254,7 @@ public class TestUtil {
 
         // Header row
         Row header = sheet.createRow(0);
-        String[] headers = { "RegistrationNumber", "Make and Model", "Fuel","Variant" , "Previous Policy Type", "Insurer", "Premium" };
+        String[] headers = { "RegistrationNumber", "Make and Model", "Fuel","Variant" , "Insurer", "Premium" };
         for (int i = 0; i < headers.length; i++) {
             header.createCell(i).setCellValue(headers[i]);
         }
