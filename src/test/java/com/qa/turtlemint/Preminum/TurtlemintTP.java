@@ -7,11 +7,11 @@ import org.testng.annotations.Test;
 
 import java.io.IOException;
 
-public class Turtlemint extends TestBase {
+public class TurtlemintTP extends TestBase {
 
     public turtlemint_page tmp;
 
-    public Turtlemint() {
+    public TurtlemintTP() {
         super();
     }
 
@@ -27,6 +27,6 @@ public class Turtlemint extends TestBase {
     public void PremiumTm() throws InterruptedException {
         driver.get("https://app.mintpro.in/signup");
         tmp.logintm();
-        tmp.premiumtm();
+        tmp.Tppremiumtm();
     }
 }
