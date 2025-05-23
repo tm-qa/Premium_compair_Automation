@@ -3,6 +3,7 @@ package com.qa.turtlemint.premiunPages;
 import com.qa.turtlemint.base.TestBase;
 import com.qa.turtlemint.util.TestUtil;
 import org.openqa.selenium.*;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -70,6 +71,9 @@ public class turtlemint_page extends TestBase {
 
     @FindBy(xpath = "//div[text()=\"Got It!\"]")
     WebElement gotIt;
+    @FindBy(xpath = "//input[@name=\"isMaxIdv\"]//..\n")
+    WebElement maxidv;
+
     @FindBy(xpath = "//div[@class=\"logo\"]")
     WebElement logoback;
     @FindBy(xpath = "//a[text()=\"Edit\"]")
@@ -86,6 +90,8 @@ public class turtlemint_page extends TestBase {
     WebElement getPolicyType;
     @FindBy(xpath = "//li[@ng-if=\"motorDetail.registrationDate\"]//p[@class=\"ng-binding\"]")
     WebElement resgisdate;
+    @FindBy(xpath = "//a[text()=\" Update Results\"]")
+    WebElement updateresult;
 
     @FindBy(xpath = "//span[@class=\"bold vehicleIdv ng-binding\"]")
     WebElement premiumIDV;
@@ -101,6 +107,17 @@ public class turtlemint_page extends TestBase {
     WebElement getPreviousinsureruiSelect;
     @FindBy(xpath = "(//img[@class=\"img-file\"])[2]")
     WebElement random;
+    @FindBy(xpath = "//div[@ng-mouseenter=\"hoverIn()\"]")
+    WebElement hoverIn;
+    @FindBy(xpath = "//div[contains(@class,'maskOnMouseOut')]")
+    WebElement hoverOut;
+
+
+    @FindBy(xpath = "//input[@name=\"isMaxIdv\"]//parent::label[text()=\" Maximum IDV \"]")
+    WebElement isMaxId;
+
+    @FindBy(xpath = "//a[text()=\" Update Results\"]")
+    WebElement updateedresult ;
 
 
     public turtlemint_page() {
@@ -207,6 +224,21 @@ public class turtlemint_page extends TestBase {
                 } catch (Exception e) {
                     System.out.println("'Got It' button not present, skipping.");
                 }
+
+                Thread.sleep(15000);
+
+                Actions actions = new Actions(driver);
+                actions.moveToElement(hoverIn).perform();
+                TestUtil.click(isMaxId , "click on max id");
+                actions.moveByOffset(65,0).perform();
+                Thread.sleep(3000);
+                System.out.println("Line added");
+                actions.moveToElement(hoverOut).perform();
+                Thread.sleep(2000);
+                TestUtil.click(updateedresult , "ejd");
+                System.out.println("clicked on updated results");
+
+
                 Thread.sleep(20000);
                 js.executeScript("arguments[0].click();", editButton);
                 String vehicleMakeModel = makeModel.getText();
@@ -296,7 +328,7 @@ public class turtlemint_page extends TestBase {
         }
     }
 
-
+//----------------------------------------------------
 
 
 
