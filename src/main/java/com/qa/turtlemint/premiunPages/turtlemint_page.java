@@ -84,6 +84,12 @@ public class turtlemint_page extends TestBase {
 
     @FindBy(xpath = "//li[@ng-if=\"config.policyType\"]//p[@class=\"ng-binding\"]")
     WebElement getPolicyType;
+    @FindBy(xpath = "//li[@ng-if=\"motorDetail.registrationDate\"]//p[@class=\"ng-binding\"]")
+    WebElement resgisdate;
+
+    @FindBy(xpath = "//span[@class=\"bold vehicleIdv ng-binding\"]")
+    WebElement premiumIDV;
+
 
     @FindBy(xpath = "//span[@ng-click=\"infoCar = !infoCar\"]")
     WebElement closedButton;
@@ -207,28 +213,35 @@ public class turtlemint_page extends TestBase {
                 String vehicleFuelType = fuel.getText();
                 String vehicleVarient = variant.getText();
                 String prePolicy = getPolicyType.getText();
+                String resgistrationdate = resgisdate.getText();
                 System.out.println(vehicleMakeModel + " ---" + vehicleFuelType + "--- " + vehicleVarient + " ____" + prePolicy);
                 TestUtil.click(closedButton, "");
                 Thread.sleep(15000);
                 WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
                 wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.xpath("//div[@class='logoArea col-xs-6 col-sm-3 text-left']//img[contains(@class, 'client-logo-img')]")));
                 wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.xpath("//div[@class=\"priceArea hidden-xs text-center\"]//span[contains(@ng-if , \"multiPlanDropDown[insurer.insurerProvider\")]")));
+                wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.xpath("//span[@class=\"bold vehicleIdv ng-binding\"]")));
 
                 List<WebElement> insurerLogos = driver.findElements(By.xpath("//div[@class='logoArea col-xs-6 col-sm-3 text-left']//img[contains(@class, 'client-logo-img')]"));
                 List<WebElement> insurerPremiums = driver.findElements(By.xpath("//div[@class=\"priceArea hidden-xs text-center\"]//span[contains(@ng-if , \"multiPlanDropDown[insurer.insurerProvider\")]"));
+                List<WebElement> premiumIdv = driver.findElements(By.xpath("//span[@class=\"bold vehicleIdv ng-binding\"]"));
 
                 System.out.println("Logos found: " + insurerLogos.size());
                 System.out.println("Premiums found: " + insurerPremiums.size());
+                System.out.println("Premiums IDV: " + premiumIdv.size());
 
-                if (insurerLogos.size() == insurerPremiums.size()) {
+                if (insurerLogos.size() == insurerPremiums.size() && insurerLogos.size() == premiumIdv.size()) {
                     for (int i = 0; i < insurerLogos.size(); i++) {
                         WebElement logo = insurerLogos.get(i);
                         WebElement premiumBtn = insurerPremiums.get(i);
+                        WebElement idvElement = premiumIdv.get(i);
 
                         String srcValue = logo.getAttribute("src");
                         String[] parts = srcValue.split("/");
                         String insurerName = parts[parts.length - 1].replace(".png", "");
-                        String premium = premiumBtn.getText();
+
+                        String premium = premiumBtn.getText().replace(",", "").replace("₹", "").trim();
+                        String premiumidv = idvElement.getText().replace(",", "").replace("₹", "").trim();
 
                         String[] row = {
                                 reg,
@@ -236,12 +249,18 @@ public class turtlemint_page extends TestBase {
                                 vehicleFuelType,
                                 vehicleVarient,
                                 prePolicy,
+                                resgistrationdate,
                                 insurerName,
-                                premium
+                                premium,
+                                premiumidv
+
                         };
                         premiumData.add(row);
                     }
-                } else {
+                }
+
+
+                else {
                     System.err.println("Mismatch in insurer and premium count for Reg: " + reg);
                     failedRegs.add(reg);
                 }

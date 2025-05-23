@@ -254,7 +254,9 @@ public class TestUtil {
 
         // Header row
         Row header = sheet.createRow(0);
-        String[] headers = { "RegistrationNumber", "Make and Model", "Fuel","Variant" , "Insurer", "Premium" };
+        String[] headers = {
+                "RegistrationNumber", "Make and Model", "Fuel","Variant", "Previous Policy Type", "Registration Date", "Insurer", "Premium","PremiumIDV"
+        };
         for (int i = 0; i < headers.length; i++) {
             header.createCell(i).setCellValue(headers[i]);
         }
