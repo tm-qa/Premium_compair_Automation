@@ -316,7 +316,7 @@ public class turtlemint_page extends TestBase {
 
         // ✅ Save successful data
         //   String outputExcel = "/Users/sayali/Desktop/RenewBuy_premium" + dateTime + ".xlsx";
-        String outputExcel = "/Users/nitinrathod/Desktop/Turtlemint_premium" + dateTime + ".xlsx";
+        String outputExcel = "/Users/nitinrathod/Desktop/Turtlemint_COMP_premium" + dateTime + ".xlsx";
 
         TestUtil.writePremiumDataTm(outputExcel, premiumData);
         // Optional: Print or save failed registrations
@@ -433,6 +433,7 @@ public class turtlemint_page extends TestBase {
                 String vehicleFuelType = fuel.getText();
                 String vehicleVarient = variant.getText();
                 String prePolicy = getPolicyType.getText();
+                String resgistrationdate = resgisdate.getText();
                 System.out.println(vehicleMakeModel + " ---" + vehicleFuelType + "--- " + vehicleVarient + " ____" + prePolicy);
                 TestUtil.click(closedButton, "");
                 Thread.sleep(15000);
@@ -462,6 +463,7 @@ public class turtlemint_page extends TestBase {
                                 vehicleFuelType,
                                 vehicleVarient,
                                 prePolicy,
+                                resgistrationdate,
                                 insurerName,
                                 premium
                         };
@@ -491,7 +493,7 @@ public class turtlemint_page extends TestBase {
 
         // ✅ Save successful data
         //   String outputExcel = "/Users/sayali/Desktop/RenewBuy_premium" + dateTime + ".xlsx";
-        String outputExcel = "/Users/nitinrathod/Desktop/Turtlemint_premium" + dateTime + ".xlsx";
+        String outputExcel = "/Users/nitinrathod/Desktop/Turtlemint_TP_premium" + dateTime + ".xlsx";
 
         TestUtil.writePremiumDataTm(outputExcel, premiumData);
         // Optional: Print or save failed registrations

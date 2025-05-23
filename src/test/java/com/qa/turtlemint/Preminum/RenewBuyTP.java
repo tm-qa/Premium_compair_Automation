@@ -8,11 +8,11 @@ import org.testng.annotations.Test;
 import java.io.IOException;
 
 
-public class RenewBuy extends TestBase {
+public class RenewBuyTP extends TestBase {
 
     public renewbuy_page rbp;
 
-    public RenewBuy() {
+    public RenewBuyTP() {
         super();
     }
 
@@ -28,7 +28,7 @@ public class RenewBuy extends TestBase {
     public void PremiumRB() throws InterruptedException, IOException {
         driver.get("https://partners.renewbuy.com/v2/");
         rbp.loginRB();
-        rbp.premiumRB();
+        rbp.premiumRBTp();
 
     }
 }
