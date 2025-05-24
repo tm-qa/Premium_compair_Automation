@@ -27,6 +27,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 import static com.qa.turtlemint.base.TestBase.driver;
@@ -278,6 +279,85 @@ public class TestUtil {
         }
     }
 
+    public static void writeCombinedSheet(String filePath, List<String[]> premiumData, List<String[]> maxIDV) {
+        Workbook workbook = new XSSFWorkbook();
+        Sheet sheet = workbook.createSheet("Premium and Max IDV Data");
+
+        // Define headers
+        String[] headers = {
+                "RegistrationNumber", "Make and Model", "Fuel","Variant", "Previous Policy Type", "Registration Date", "Insurer",
+                "Min_IDV" , "MinIDV_Premium","Insurer",
+                "Max_IDV" , "MaxIDV_Premium"
+        };
+
+        // Write headers
+        Row headerRow = sheet.createRow(0);
+        for (int i = 0; i < headers.length; i++) {
+            headerRow.createCell(i).setCellValue(headers[i]);
+        }
+
+        // Determine max size to align rows
+        int maxRows = Math.max(premiumData.size(), maxIDV.size());
+
+        // Write combined data
+        for (int i = 0; i < maxRows; i++) {
+            Row row = sheet.createRow(i + 1); // +1 because row 0 is header
+
+            if (i < premiumData.size()) {
+                String[] premiumRow = premiumData.get(i);
+                for (int j = 0; j < premiumRow.length; j++) {
+                    row.createCell(j).setCellValue(premiumRow[j]);
+                }
+            }
+
+            if (i < maxIDV.size()) {
+                String[] idvRow = maxIDV.get(i);
+                for (int j = 0; j < idvRow.length; j++) {
+                    row.createCell(9 + j).setCellValue(idvRow[j]); // Starting after premium columns
+                }
+            }
+        }
+
+        // Save to file
+        try (FileOutputStream fos = new FileOutputStream(filePath)) {
+            workbook.write(fos);
+            workbook.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
 
-}
+
+//    public static void writeMultipleSheets(String filePath, List<String[]> premiumData, List<String[]> maxIDV) {
+//        Workbook workbook = new XSSFWorkbook();
+//
+//        // Sheet 1: Premium Data
+//        Sheet premiumSheet = workbook.createSheet("Premium Data");
+//        for (int i = 0; i < premiumData.size(); i++) {
+//            Row row = premiumSheet.createRow(i);
+//            String[] data = premiumData.get(i);
+//            for (int j = 0; j < data.length; j++) {
+//                row.createCell(j).setCellValue(data[j]);
+//            }
+//        }
+//
+//        // Sheet 2: Max IDV Data
+//        Sheet idvSheet = workbook.createSheet("Max IDV Data");
+//        for (int i = 0; i < maxIDV.size(); i++) {
+//            Row row = idvSheet.createRow(i);
+//            String[] data = maxIDV.get(i);
+//            for (int j = 0; j < data.length; j++) {
+//                row.createCell(j).setCellValue(data[j]);
+//            }
+//        }
+//
+//        try (FileOutputStream fos = new FileOutputStream(filePath)) {
+//            workbook.write(fos);
+//            workbook.close();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+    }
+
+

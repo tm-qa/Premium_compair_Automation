@@ -135,13 +135,14 @@ public class turtlemint_page extends TestBase {
 
     public void Comppremiumtm() throws InterruptedException {
 
-        // String excelPath = "/Users/sayali/Documents/insurer/Premium_compair_Automation/src/test/resources/registration_data.xlsx";
-        String excelPath = "/Users/nitinrathod/Documents/registration_data.xlsx";
+       String excelPath = "/Users/sayali/Documents/insurer/Premium_compair_Automation/src/test/resources/registration_data.xlsx";
+//        String excelPath = "/Users/nitinrathod/Documents/registration_data.xlsx";
         List<String> regNumbers = TestUtil.getRegistrationNumbers(excelPath);
         System.out.println(regNumbers);
 
         List<String[]> premiumData = new ArrayList<>();
         List<String> failedRegs = new ArrayList<>();
+        List<String[]> maxIDV = new ArrayList<>();
         Thread.sleep(3000);
         TestUtil.click(sellButton, "ed");
         Thread.sleep(3000);
@@ -226,20 +227,6 @@ public class turtlemint_page extends TestBase {
                 }
 
                 Thread.sleep(15000);
-
-                Actions actions = new Actions(driver);
-                actions.moveToElement(hoverIn).perform();
-                TestUtil.click(isMaxId , "click on max id");
-                actions.moveByOffset(65,0).perform();
-                Thread.sleep(3000);
-                System.out.println("Line added");
-                actions.moveToElement(hoverOut).perform();
-                Thread.sleep(2000);
-                TestUtil.click(updateedresult , "ejd");
-                System.out.println("clicked on updated results");
-
-
-                Thread.sleep(20000);
                 js.executeScript("arguments[0].click();", editButton);
                 String vehicleMakeModel = makeModel.getText();
                 String vehicleFuelType = fuel.getText();
@@ -283,19 +270,69 @@ public class turtlemint_page extends TestBase {
                                 prePolicy,
                                 resgistrationdate,
                                 insurerName,
+                                premiumidv,
                                 premium,
-                                premiumidv
+
 
                         };
                         premiumData.add(row);
                     }
                 }
 
+              ///////////////
+
 
                 else {
                     System.err.println("Mismatch in insurer and premium count for Reg: " + reg);
                     failedRegs.add(reg);
                 }
+                Actions actions = new Actions(driver);
+                actions.moveToElement(hoverIn).perform();
+                TestUtil.click(isMaxId , "click on max id");
+                actions.moveByOffset(50 , 0).perform();
+                actions.moveToElement(hoverOut).perform();
+                TestUtil.click(updateedresult , "ejd");
+
+                Thread.sleep(15000);
+                wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.xpath("//div[@class='logoArea col-xs-6 col-sm-3 text-left']//img[contains(@class, 'client-logo-img')]")));
+                wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.xpath("//div[@class=\"priceArea hidden-xs text-center\"]//span[contains(@ng-if , \"multiPlanDropDown[insurer.insurerProvider\")]")));
+                wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.xpath("//span[@class=\"bold vehicleIdv ng-binding\"]")));
+
+                List<WebElement> insurerLogos1 = driver.findElements(By.xpath("//div[@class='logoArea col-xs-6 col-sm-3 text-left']//img[contains(@class, 'client-logo-img')]"));
+                List<WebElement> insurerPremiums1 = driver.findElements(By.xpath("//div[@class=\"priceArea hidden-xs text-center\"]//span[contains(@ng-if , \"multiPlanDropDown[insurer.insurerProvider\")]"));
+                List<WebElement> premiumIdv1 = driver.findElements(By.xpath("//span[@class=\"bold vehicleIdv ng-binding\"]"));
+
+                System.out.println("Logos found: " + insurerLogos1.size());
+                System.out.println("Premiums found: " + insurerPremiums1.size());
+                System.out.println("Premiums IDV: " + premiumIdv1.size());
+
+                if (insurerLogos1.size() == insurerPremiums1.size() && insurerLogos1.size() == premiumIdv1.size()) {
+                    for (int i = 0; i < insurerLogos1.size(); i++) {
+                        WebElement logo = insurerLogos1.get(i);
+                        WebElement premiumBtn = insurerPremiums1.get(i);
+                        WebElement idvElement = premiumIdv1.get(i);
+
+                        String srcValue = logo.getAttribute("src");
+                        String[] parts = srcValue.split("/");
+                        String insurerName = parts[parts.length - 1].replace(".png", "");
+
+                        String premium1 = premiumBtn.getText().replace(",", "").replace("₹", "").trim();
+                        String premiumidv1 = idvElement.getText().replace(",", "").replace("₹", "").trim();
+
+                        String[] row1 = {
+
+                                insurerName,
+                                premiumidv1,
+                                premium1,
+
+                        };
+                        maxIDV.add(row1);
+                    }
+                }
+
+
+
+                /////
 
             } catch (Exception e) {
                 System.err.println("❌ Failed for Reg Number: " + reg);
@@ -315,10 +352,10 @@ public class turtlemint_page extends TestBase {
         String dateTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss"));
 
         // ✅ Save successful data
-        //   String outputExcel = "/Users/sayali/Desktop/RenewBuy_premium" + dateTime + ".xlsx";
-        String outputExcel = "/Users/nitinrathod/Desktop/Turtlemint_premium" + dateTime + ".xlsx";
+       String outputExcel = "/Users/sayali/Desktop/RenewBuy_premium" + dateTime + ".xlsx";
+//        String outputExcel = "/Users/nitinrathod/Desktop/Turtlemint_premium" + dateTime + ".xlsx";
 
-        TestUtil.writePremiumDataTm(outputExcel, premiumData);
+        TestUtil.writeCombinedSheet(outputExcel, premiumData , maxIDV);
         // Optional: Print or save failed registrations
         if (!failedRegs.isEmpty()) {
             System.out.println("Failed registrations:");
@@ -339,8 +376,8 @@ public class turtlemint_page extends TestBase {
 
     public void Tppremiumtm() throws InterruptedException {
 
-        // String excelPath = "/Users/sayali/Documents/insurer/Premium_compair_Automation/src/test/resources/registration_data.xlsx";
-        String excelPath = "/Users/nitinrathod/Documents/registration_data.xlsx";
+        String excelPath = "/Users/sayali/Documents/insurer/Premium_compair_Automation/src/test/resources/registration_data.xlsx";
+//        String excelPath = "/Users/nitinrathod/Documents/registration_data.xlsx";
         List<String> regNumbers = TestUtil.getRegistrationNumbers(excelPath);
         System.out.println(regNumbers);
 
@@ -490,8 +527,8 @@ public class turtlemint_page extends TestBase {
         String dateTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss"));
 
         // ✅ Save successful data
-        //   String outputExcel = "/Users/sayali/Desktop/RenewBuy_premium" + dateTime + ".xlsx";
-        String outputExcel = "/Users/nitinrathod/Desktop/Turtlemint_premium" + dateTime + ".xlsx";
+          String outputExcel = "/Users/sayali/Desktop/RenewBuy_premium" + dateTime + ".xlsx";
+//        String outputExcel = "/Users/nitinrathod/Desktop/Turtlemint_premium" + dateTime + ".xlsx";
 
         TestUtil.writePremiumDataTm(outputExcel, premiumData);
         // Optional: Print or save failed registrations
