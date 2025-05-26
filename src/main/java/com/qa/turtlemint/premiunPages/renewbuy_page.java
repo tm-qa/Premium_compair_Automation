@@ -159,13 +159,9 @@ public class renewbuy_page extends TestBase {
                 String vehicleFuel = fuelType.getText();
                 String regisdate = registrationyear.getAttribute("value");
 
-
-
                 TestUtil.click(policyExiry, "click");
                 TestUtil.click(policyExiryTypeCOMP, "expiry type");
                 String prepolicytype = policyExiryTypeCOMP.getText();
-
-
 
                 Thread.sleep(4000);
                 String existingValue = previousinsurer.getAttribute("value");
@@ -204,9 +200,6 @@ public class renewbuy_page extends TestBase {
                         String premium = premiumBtn.getText().replaceAll("[^0-9]", "");
                         String IDVrange = "(" + idvrange.getText().split("₹")[1].split("-")[0].replaceAll("[^0-9]", "") + " - " + idvrange.getText().split("₹")[2].replaceAll("[^0-9]", "") + ")";
                         String IDVactual = idvactual.getText().replaceAll("[^0-9]", "");
-
-
-
 
 
                         String[] row = {
@@ -335,13 +328,7 @@ public class renewbuy_page extends TestBase {
                         String srcValue = logo.getAttribute("src");
                         String[] parts = srcValue.split("/");
                         String insurerName = parts[parts.length - 1].replace(".png", "");
-
-
                         String premium = premiumBtn.getText().replaceAll("[^0-9]", "");
-
-
-
-
 
                         String[] row = {
                                 reg,

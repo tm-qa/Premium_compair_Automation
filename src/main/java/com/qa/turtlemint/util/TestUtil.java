@@ -340,7 +340,7 @@ public class TestUtil {
         // Header row
         Row header = sheet.createRow(0);
         String[] headers = {
-                "RegistrationNumber", "Make and Model", "Fuel","Variant", "Previous Policy Type", "Registration Date", "Insurer", "Premium","PremiumIDV"
+                "RegistrationNumber", "Make and Model", "Fuel","Variant", "Previous Policy Type", "Registration Date", "Insurer", "Premium"
         };
         for (int i = 0; i < headers.length; i++) {
             header.createCell(i).setCellValue(headers[i]);
@@ -391,6 +391,52 @@ public class TestUtil {
         }
     }
 
+    public static void writeCombinedSheetTM_Comp(String filePath, List<String[]> premiumData, List<String[]> maxIDV) {
+        Workbook workbook = new XSSFWorkbook();
+        Sheet sheet = workbook.createSheet("Premium and Max IDV Data");
+
+
+        String[] headers = {
+                "RegistrationNumber", "Make and Model", "Fuel","Variant", "Previous Policy Type", "Registration Date", "Insurer",
+                "Min_IDV" , "MinIDV_Premium","Insurer",
+                "Max_IDV" , "MaxIDV_Premium"
+        };
+
+
+        Row headerRow = sheet.createRow(0);
+        for (int i = 0; i < headers.length; i++) {
+            headerRow.createCell(i).setCellValue(headers[i]);
+        }
+
+
+        int maxRows = Math.max(premiumData.size(), maxIDV.size());
+
+
+        for (int i = 0; i < maxRows; i++) {
+            Row row = sheet.createRow(i + 1); // +1 because row 0 is header
+
+            if (i < premiumData.size()) {
+                String[] premiumRow = premiumData.get(i);
+                for (int j = 0; j < premiumRow.length; j++) {
+                    row.createCell(j).setCellValue(premiumRow[j]);
+                }
+            }
+
+            if (i < maxIDV.size()) {
+                String[] idvRow = maxIDV.get(i);
+                for (int j = 0; j < idvRow.length; j++) {
+                    row.createCell(9 + j).setCellValue(idvRow[j]); // Starting after premium columns
+                }
+            }
+        }
+
+        try (FileOutputStream fos = new FileOutputStream(filePath)) {
+            workbook.write(fos);
+            workbook.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
 
 

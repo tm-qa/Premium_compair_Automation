@@ -102,6 +102,7 @@ public class insurancedekho_Page extends TestBase {
             for (String reg : regNumbers) {
                 try {
                     TestUtil.sendKeys(regiNumber, reg, "entered registration number");
+                    Thread.sleep(2000);
                     TestUtil.click(getvehicledetails, "click on vehicle details button");
 
                     Thread.sleep(4000);
@@ -179,8 +180,9 @@ public class insurancedekho_Page extends TestBase {
                         System.err.println("Mismatch in insurer and premium count for Reg: " + reg);
                         failedRegs.add(reg);
                     }
-
+                    Thread.sleep(3000);
                     TestUtil.click(sell, "click sell for new registration number");
+                    Thread.sleep(3000);
                     TestUtil.click(selectcar, "click car");
 
 
@@ -269,7 +271,7 @@ public class insurancedekho_Page extends TestBase {
                 System.out.println(prevpolicytype);
 
                 TestUtil.click(confirm, "");
-                Thread.sleep(25000);
+                Thread.sleep(30000);
 
                 wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.xpath("//span[@class=\"insurerNameAndButtonWrapper\"]//h2")));
                 wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.xpath("//button[@class=\"quoteButton\"]")));
@@ -304,8 +306,9 @@ public class insurancedekho_Page extends TestBase {
                     System.err.println("Mismatch in insurer and premium count for Reg: " + reg);
                     failedRegs.add(reg);
                 }
-
+                Thread.sleep(30000);
                 TestUtil.click(sell, "click sell for new registration number");
+                Thread.sleep(30000);
                 TestUtil.click(selectcar, "click car");
 
 
@@ -318,7 +321,7 @@ public class insurancedekho_Page extends TestBase {
         String dateTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss"));
         // ✅ Save successful data
         //   String outputExcel = "/Users/sayali/Desktop/RenewBuy_premium" + dateTime + ".xlsx";
-        String outputExcel = "/Users/nitinrathod/Desktop/InsuranceDekho_COMP_premium" + dateTime + ".xlsx";
+        String outputExcel = "/Users/nitinrathod/Desktop/InsuranceDekho_TP_premium" + dateTime + ".xlsx";
         if (!premiumData.isEmpty()) {
             TestUtil.writePremiumDataIDTP(outputExcel, premiumData);
             System.out.println("✅ Premium data written to Excel successfully.");

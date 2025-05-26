@@ -112,6 +112,7 @@ public class policybazar_page extends TestBase {
         for (String reg : regNumbers) {
             try {
                 TestUtil.sendKeys(regisnumber, reg, "entered registration number");
+                Thread.sleep(2000);
                 TestUtil.click(viewprice, "click on vehicle details button");
 
                 Thread.sleep(4000);
