@@ -304,6 +304,35 @@ public class TestUtil {
         }
     }
 
+
+    public static void writePremiumDataIDTP(String filePath, List<String[]> dataRows) {
+        Workbook workbook = new XSSFWorkbook();
+        Sheet sheet = workbook.createSheet("PremiumData");
+
+        // Header row
+        Row header = sheet.createRow(0);
+        String[] headers = { "RegistrationNumber", "MakeModel", "Variant", "Fuel","Previous_Policy_Type","Registration_Date", "Insurer", "Premium"};
+        for (int i = 0; i < headers.length; i++) {
+            header.createCell(i).setCellValue(headers[i]);
+        }
+
+        // Data rows
+        int rowIndex = 1;
+        for (String[] rowData : dataRows) {
+            Row row = sheet.createRow(rowIndex++);
+            for (int i = 0; i < rowData.length; i++) {
+                row.createCell(i).setCellValue(rowData[i]);
+            }
+        }
+
+        try (FileOutputStream fos = new FileOutputStream(filePath)) {
+            workbook.write(fos);
+            workbook.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     public static void writePremiumDataTm(String filePath, List<String[]> dataRows) {
         Workbook workbook = new XSSFWorkbook();
         Sheet sheet = workbook.createSheet("PremiumData");

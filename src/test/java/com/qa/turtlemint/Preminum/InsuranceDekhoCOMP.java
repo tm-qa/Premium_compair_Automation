@@ -27,7 +27,7 @@ public class InsuranceDekhoCOMP extends TestBase
     public void totalPremi () throws InterruptedException {
         driver.get("https://pos.insurancedekho.com");
         idp.loginID("7822002281");
-        idp.premiumID();
+        idp.premiumIDCOMP();
 
     }
 

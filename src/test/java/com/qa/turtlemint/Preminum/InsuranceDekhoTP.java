@@ -1,4 +1,35 @@
 package com.qa.turtlemint.Preminum;
 
-public class InsuranceDekhoTP {
+import com.qa.turtlemint.base.TestBase;
+
+import com.qa.turtlemint.premiunPages.insurancedekho_Page;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
+
+import java.io.IOException;
+
+public class InsuranceDekhoTP extends TestBase
+{
+    public insurancedekho_Page idp;
+    public InsuranceDekhoTP()
+    {
+        super();
+    }
+
+    @BeforeMethod()
+    public void start() throws InterruptedException, IOException {
+        initialization();
+        idp = new insurancedekho_Page();
+
+
+    }
+    @Test
+    public void totalPremi () throws InterruptedException {
+        driver.get("https://pos.insurancedekho.com");
+        idp.loginID("7822002281");
+        idp.premiumIDTP();
+
+    }
+
+
 }

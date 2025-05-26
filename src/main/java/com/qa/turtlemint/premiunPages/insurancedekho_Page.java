@@ -81,7 +81,7 @@ public class insurancedekho_Page extends TestBase {
 
     }
 
-    public void premiumID() throws InterruptedException {
+    public void premiumIDCOMP() throws InterruptedException {
 
         Thread.sleep(7000);
         JavascriptExecutor js = (JavascriptExecutor) driver;
@@ -132,7 +132,7 @@ public class insurancedekho_Page extends TestBase {
                         TestUtil.click(comp, "selected comp");
                         Thread.sleep(3000);
                     }
-                    String prevpolicytype = previousdrop.getAttribute("value");
+                    String prevpolicytype = "Comprehnesive";
                     System.out.println(prevpolicytype);
 
                     TestUtil.click(confirm, "");
@@ -196,6 +196,131 @@ public class insurancedekho_Page extends TestBase {
         String outputExcel = "/Users/nitinrathod/Desktop/InsuranceDekho_COMP_premium" + dateTime + ".xlsx";
         if (!premiumData.isEmpty()) {
             TestUtil.writePremiumDataIDCOMP(outputExcel, premiumData);
+            System.out.println("✅ Premium data written to Excel successfully.");
+        } else {
+            System.out.println("⚠️ No premium data collected to write.");
+        }
+
+        // Optional: print failed registration numbers
+        if (!failedRegs.isEmpty()) {
+            System.out.println("Failed registrations:");
+            for (String reg : failedRegs) {
+                System.out.println(reg);
+            }
+        }
+    }
+
+
+
+
+
+    public void premiumIDTP() throws InterruptedException {
+
+        Thread.sleep(7000);
+        JavascriptExecutor js = (JavascriptExecutor) driver;
+        js.executeScript("arguments[0].click();", selectcar);
+        TestUtil.click(selectcar, "");
+        Thread.sleep(3000);
+
+        String excelPath = "/Users/nitinrathod/Documents/registration_data.xlsx";
+        List<String> regNumbers = TestUtil.getRegistrationNumbers(excelPath);
+        List<String[]> premiumData = new ArrayList<>(); // successful data
+        List<String> failedRegs = new ArrayList<>();
+        System.out.println(regNumbers);
+
+
+        Actions actions = new Actions(driver);
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+
+        for (String reg : regNumbers) {
+            try {
+                TestUtil.sendKeys(regiNumber, reg, "entered registration number");
+                TestUtil.click(getvehicledetails, "click on vehicle details button");
+
+                Thread.sleep(4000);
+                String vehicleMakeModel = modelmodel.getText();
+                String vehicleVariant = variant.getText();
+                String vehicleFuel = fuelType.getText();
+                String regisdate = registrationyear.getText();
+
+                TestUtil.click(confandgetquotes, "");
+                Thread.sleep(5000);
+                actions.moveToElement(calendar).doubleClick().perform();
+                Thread.sleep(2000);
+                TestUtil.click(currentyear, "");
+                Thread.sleep(2000);
+                TestUtil.click(currentmonth, "");
+                Thread.sleep(2000);
+                TestUtil.click(currentdate, "");
+                Thread.sleep(3000);
+                String existingValue = previousdrop.getText();
+
+                if (existingValue == null || existingValue.trim().isEmpty()) {
+                    Thread.sleep(2000);
+                    System.out.println(existingValue + "blank");
+                    TestUtil.click(previousdrop,"");
+                    System.out.println("first click");
+                    actions.moveToElement(previousdrop).doubleClick().perform();
+                    Thread.sleep(3000);
+                    TestUtil.click(Tp, "selected comp");
+                    Thread.sleep(3000);
+                }
+                String prevpolicytype = "Third Party";
+                System.out.println(prevpolicytype);
+
+                TestUtil.click(confirm, "");
+                Thread.sleep(25000);
+
+                wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.xpath("//span[@class=\"insurerNameAndButtonWrapper\"]//h2")));
+                wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.xpath("//button[@class=\"quoteButton\"]")));
+
+                List<WebElement> insurerLogos = driver.findElements(By.xpath("//span[@class=\"insurerNameAndButtonWrapper\"]//h2"));
+                List<WebElement> insurerPremiums = driver.findElements(By.xpath("//button[@class=\"quoteButton\"]"));
+
+                if (insurerLogos.size() == insurerPremiums.size()) {
+                    for (int i = 0; i < insurerLogos.size(); i++) {
+                        WebElement logo = insurerLogos.get(i);
+                        WebElement premiumBtn = insurerPremiums.get(i);
+
+
+                        String insurerName = logo.getText();
+                        String premium = premiumBtn.getText().replaceAll("[^0-9]", "");
+
+                        String[] row = {
+                                reg,
+                                vehicleMakeModel,
+                                vehicleVariant,
+                                vehicleFuel,
+                                prevpolicytype,
+                                regisdate,
+                                insurerName,
+                                premium,
+
+
+                        };
+                        premiumData.add(row);
+                    }
+                } else {
+                    System.err.println("Mismatch in insurer and premium count for Reg: " + reg);
+                    failedRegs.add(reg);
+                }
+
+                TestUtil.click(sell, "click sell for new registration number");
+                TestUtil.click(selectcar, "click car");
+
+
+            } catch (Exception e) {
+                System.err.println("❌ Failed for Reg Number: " + reg);
+                e.printStackTrace();
+                failedRegs.add(reg);
+            }
+        }
+        String dateTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss"));
+        // ✅ Save successful data
+        //   String outputExcel = "/Users/sayali/Desktop/RenewBuy_premium" + dateTime + ".xlsx";
+        String outputExcel = "/Users/nitinrathod/Desktop/InsuranceDekho_COMP_premium" + dateTime + ".xlsx";
+        if (!premiumData.isEmpty()) {
+            TestUtil.writePremiumDataIDTP(outputExcel, premiumData);
             System.out.println("✅ Premium data written to Excel successfully.");
         } else {
             System.out.println("⚠️ No premium data collected to write.");

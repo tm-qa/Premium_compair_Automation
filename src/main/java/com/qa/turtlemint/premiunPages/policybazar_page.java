@@ -6,6 +6,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -24,7 +25,7 @@ public class policybazar_page extends TestBase {
 
     @FindBy(xpath = "//input[@id=\"user\"]")
     WebElement mobileno;
-    @FindBy(xpath = "//button[@id=\"send-otp-id\"]")
+    @FindBy(xpath = "//button[text()=\"Send OTP\" and @id=\"send-otp-id\"]")
     WebElement getotp;
 
 
@@ -76,9 +77,14 @@ public class policybazar_page extends TestBase {
         PageFactory.initElements(driver, this);
     }
 
-    public void logininPB(){
-        TestUtil.sendKeys(mobileno,"7822002281","");
-        TestUtil.click(getotp,"");
+    public void logininPB() throws InterruptedException {
+        TestUtil.sendKeys(mobileno,"9975655749","Mobile number entered");
+        Thread.sleep(2000);
+
+        Actions actions = new Actions(driver);
+        actions.moveToElement(getotp).doubleClick().perform();
+
+        System.out.println("OTP sent");
 
     }
 
@@ -91,7 +97,7 @@ public class policybazar_page extends TestBase {
         List<String[]> premiumData = new ArrayList<>(); // successful data
         List<String> failedRegs = new ArrayList<>();    // failed registrations
 
-        Thread.sleep(3000);
+        Thread.sleep(25000);
 
         JavascriptExecutor js = (JavascriptExecutor) driver;
         js.executeScript("window.scrollBy(0,800)");
