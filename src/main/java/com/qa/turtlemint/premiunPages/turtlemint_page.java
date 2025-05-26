@@ -171,6 +171,7 @@ public class turtlemint_page extends TestBase {
                     TestUtil.click(random, "");
                 }
 
+
                 Thread.sleep(2000);
                 JavascriptExecutor js = (JavascriptExecutor) driver;
                 js.executeScript("arguments[0].click();", previousPolicyTypeCOMP);
