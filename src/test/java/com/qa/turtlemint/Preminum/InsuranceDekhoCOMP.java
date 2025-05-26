@@ -8,10 +8,10 @@ import org.testng.annotations.Test;
 
 import java.io.IOException;
 
-public class InsuranceDekho extends TestBase
+public class InsuranceDekhoCOMP extends TestBase
 {
     public insurancedekho_Page idp;
-    public InsuranceDekho()
+    public InsuranceDekhoCOMP()
     {
         super();
     }

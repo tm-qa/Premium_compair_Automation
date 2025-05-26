@@ -7,11 +7,11 @@ import org.testng.annotations.Test;
 
 import java.io.IOException;
 
-public class PolicyBazar extends TestBase {
+public class PolicyBazarCOMP extends TestBase {
 
     policybazar_page pbp;
 
-    public PolicyBazar() {
+    public PolicyBazarCOMP() {
         super();
     }
 
