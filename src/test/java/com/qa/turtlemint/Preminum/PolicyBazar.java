@@ -5,6 +5,8 @@ import com.qa.turtlemint.premiunPages.policybazar_page;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import java.io.IOException;
+
 public class PolicyBazar extends TestBase {
 
     policybazar_page pbp;
@@ -22,8 +24,10 @@ public class PolicyBazar extends TestBase {
     }
 
     @Test
-    public void totalPremi() throws InterruptedException {
-        pbp.premiumPB();
+    public void totalPremi() throws InterruptedException, IOException {
+        driver.get("https://www.pbpartners.com/");
+        pbp.logininPB();
+        pbp.premiumPBComp();
     }
 }
 
