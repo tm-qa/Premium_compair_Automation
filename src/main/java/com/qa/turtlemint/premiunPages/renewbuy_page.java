@@ -198,9 +198,14 @@ public class renewbuy_page extends TestBase {
 
 
                         String premium = premiumBtn.getText().replaceAll("[^0-9]", "");
-                        String IDVrange = "(" + idvrange.getText().split("₹")[1].split("-")[0].replaceAll("[^0-9]", "") + " - " + idvrange.getText().split("₹")[2].replaceAll("[^0-9]", "") + ")";
                         String IDVactual = idvactual.getText().replaceAll("[^0-9]", "");
 
+                        String IDVrange =  idvrange.getText();
+
+                        String[] numbers = IDVrange.split("₹");
+
+                        String IdvMin = numbers[1].split("-")[0].replaceAll("[^0-9]", "");
+                        String IdvMax = numbers[2].replaceAll("[^0-9]", "");
 
                         String[] row = {
                                 reg,
@@ -213,7 +218,9 @@ public class renewbuy_page extends TestBase {
                                 insurerName,
                                 IDVactual,
                                 premium,
-                                IDVrange
+                                IdvMin,
+                                IdvMax
+
 
                         };
                         premiumData.add(row);
