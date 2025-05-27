@@ -201,7 +201,8 @@ public class policybazar_page extends TestBase {
         String dateTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss"));
         // ✅ Save successful data
         //   String outputExcel = "/Users/sayali/Desktop/RenewBuy_premium" + dateTime + ".xlsx";
-        String outputExcel = "/Users/nitinrathod/Desktop/RenewBuy_COMP_premium" + dateTime + ".xlsx";
+       // String outputExcel = "/Users/nitinrathod/Desktop/RenewBuy_COMP_premium" + dateTime + ".xlsx";
+        String outputExcel = "C:\\Users\\pradeep.u_turtlemint\\Downloads\\RenewBuy_COMP_premium" + dateTime + ".xlsx";
         if (!premiumData.isEmpty()) {
             TestUtil.writePremiumDataRBCOMP(outputExcel, premiumData);
             System.out.println("✅ Premium data written to Excel successfully.");

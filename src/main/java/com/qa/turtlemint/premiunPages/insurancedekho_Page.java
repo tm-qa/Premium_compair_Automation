@@ -89,7 +89,8 @@ public class insurancedekho_Page extends TestBase {
         TestUtil.click(selectcar, "");
         Thread.sleep(3000);
 
-        String excelPath = "/Users/nitinrathod/Documents/registration_data.xlsx";
+       // String excelPath = "/Users/nitinrathod/Documents/registration_data.xlsx";
+        String excelPath = "C:\\Users\\pradeep.u_turtlemint\\Downloads\\registration_data.xlsx";
         List<String> regNumbers = TestUtil.getRegistrationNumbers(excelPath);
         List<String[]> premiumData = new ArrayList<>(); // successful data
         List<String> failedRegs = new ArrayList<>();
@@ -208,7 +209,8 @@ public class insurancedekho_Page extends TestBase {
         String dateTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss"));
         // ✅ Save successful data
         //   String outputExcel = "/Users/sayali/Desktop/RenewBuy_premium" + dateTime + ".xlsx";
-        String outputExcel = "/Users/nitinrathod/Desktop/InsuranceDekho_COMP_premium" + dateTime + ".xlsx";
+       // String outputExcel = "/Users/nitinrathod/Desktop/InsuranceDekho_COMP_premium" + dateTime + ".xlsx";
+        String outputExcel = "C:\\Users\\pradeep.u_turtlemint\\Downloads\\InsuranceDekho_COMP_premium" + dateTime + ".xlsx";
         if (!premiumData.isEmpty()) {
             TestUtil.writePremiumDataIDCOMP(outputExcel, premiumData);
             System.out.println("✅ Premium data written to Excel successfully.");
@@ -237,7 +239,9 @@ public class insurancedekho_Page extends TestBase {
         TestUtil.click(selectcar, "");
         Thread.sleep(3000);
 
-        String excelPath = "/Users/nitinrathod/Documents/registration_data.xlsx";
+       // String excelPath = "/Users/nitinrathod/Documents/registration_data.xlsx";
+        String excelPath = "C:\\Users\\pradeep.u_turtlemint\\Downloads\\registration_data.xlsx";
+
         List<String> regNumbers = TestUtil.getRegistrationNumbers(excelPath);
         List<String[]> premiumData = new ArrayList<>(); // successful data
         List<String> failedRegs = new ArrayList<>();
@@ -288,18 +292,22 @@ public class insurancedekho_Page extends TestBase {
 
                 wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.xpath("//span[@class=\"insurerNameAndButtonWrapper\"]//h2")));
                 wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.xpath("//button[@class=\"quoteButton\"]")));
+                wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.xpath("//div[@class=\"pointEarn\"]//child::p//span")));
 
                 List<WebElement> insurerLogos = driver.findElements(By.xpath("//span[@class=\"insurerNameAndButtonWrapper\"]//h2"));
                 List<WebElement> insurerPremiums = driver.findElements(By.xpath("//button[@class=\"quoteButton\"]"));
+                List<WebElement> actpoint = driver.findElements(By.xpath("//div[@class=\"pointEarn\"]//child::p//span"));
 
                 if (insurerLogos.size() == insurerPremiums.size()) {
                     for (int i = 0; i < insurerLogos.size(); i++) {
                         WebElement logo = insurerLogos.get(i);
                         WebElement premiumBtn = insurerPremiums.get(i);
+                        WebElement activityp = actpoint.get(i);
 
 
                         String insurerName = logo.getText();
                         String premium = premiumBtn.getText().replaceAll("[^0-9]", "");
+                        String actp = activityp.getText();
 
                         String[] row = {
                                 reg,
@@ -310,6 +318,7 @@ public class insurancedekho_Page extends TestBase {
                                 regisdate,
                                 insurerName,
                                 premium,
+                                actp
 
 
                         };
@@ -334,7 +343,8 @@ public class insurancedekho_Page extends TestBase {
         String dateTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss"));
         // ✅ Save successful data
         //   String outputExcel = "/Users/sayali/Desktop/RenewBuy_premium" + dateTime + ".xlsx";
-        String outputExcel = "/Users/nitinrathod/Desktop/InsuranceDekho_TP_premium" + dateTime + ".xlsx";
+       // String outputExcel = "/Users/nitinrathod/Desktop/InsuranceDekho_TP_premium" + dateTime + ".xlsx";
+        String outputExcel = "C:\\Users\\pradeep.u_turtlemint\\Downloads\\InsuranceDekho_TP_premium" + dateTime + ".xlsx";
         if (!premiumData.isEmpty()) {
             TestUtil.writePremiumDataIDTP(outputExcel, premiumData);
             System.out.println("✅ Premium data written to Excel successfully.");
