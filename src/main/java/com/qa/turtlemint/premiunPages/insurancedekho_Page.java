@@ -143,11 +143,13 @@ public class insurancedekho_Page extends TestBase {
                     wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.xpath("//button[@class=\"quoteButton\"]")));
                     wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.xpath("//span[@class=\"insurerNameAndButtonWrapper\"]//span[@class=\"idvRangeValue\"]")));
                     wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.xpath("//h2[@class=\"idvCoverValue\"]//span")));
+                    wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.xpath("//div[@class=\"pointEarn\"]//child::p//span")));
 
                     List<WebElement> insurerLogos = driver.findElements(By.xpath("//span[@class=\"insurerNameAndButtonWrapper\"]//h2"));
                     List<WebElement> insurerPremiums = driver.findElements(By.xpath("//button[@class=\"quoteButton\"]"));
                     List<WebElement> IDVRange = driver.findElements(By.xpath("//span[@class=\"insurerNameAndButtonWrapper\"]//span[@class=\"idvRangeValue\"]"));
                     List<WebElement> IDVActual = driver.findElements(By.xpath("//h2[@class=\"idvCoverValue\"]//span"));
+                    List<WebElement> actpoint = driver.findElements(By.xpath("//div[@class=\"pointEarn\"]//child::p//span"));
 
                     if (insurerLogos.size() == insurerPremiums.size()) {
                         for (int i = 0; i < insurerLogos.size(); i++) {
@@ -155,6 +157,7 @@ public class insurancedekho_Page extends TestBase {
                             WebElement premiumBtn = insurerPremiums.get(i);
                             WebElement idvrange = IDVRange.get(i);
                             WebElement idvactual = IDVActual.get(i);
+                            WebElement activityp = actpoint.get(i);
 
                             String insurerName = logo.getText();
                             String premium = premiumBtn.getText().replaceAll("[^0-9]", "");
@@ -166,6 +169,7 @@ public class insurancedekho_Page extends TestBase {
 
                             String IdvMin = numbers[1].split("-")[0].replaceAll("[^0-9]", "");
                             String IdvMax = numbers[2].replaceAll("[^0-9]", "");
+                            String actp = activityp.getText();
 
                             String[] row = {
                                     reg,
@@ -177,6 +181,7 @@ public class insurancedekho_Page extends TestBase {
                                     insurerName,
                                     premiumIDV,
                                     premium,
+                                    actp,
                                     IdvMin,
                                     IdvMax
 
