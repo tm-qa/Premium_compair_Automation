@@ -19,10 +19,7 @@ import java.io.InputStream;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Set;
+import java.util.*;
 
 import static java.util.Collections.replaceAll;
 
@@ -201,13 +198,8 @@ public class renewbuy_page extends TestBase {
                 List<WebElement> IDVActual = driver.findElements(By.xpath("//span[contains(@class,\"idv-choose-amount\")]"));
                 List<WebElement> activityPoint = driver.findElements(By.xpath("//div[@class=\"payout-value pb-2\"]"));
 
-                List<WebElement> addOns = driver.findElements(By.xpath("//label[contains(@for, 'addon')]"));
+                List<WebElement> addOns = driver.findElements(By.xpath("(//div[contains(@id,\"cdk-accordion-child\")])[2]//span[@class='mat-checkbox-label']"));
 
-
-                for (WebElement addOn : addOns) {
-                    String addOnName = addOn.getText().trim();
-                    addOnsData.add(new String[] {addOnName});
-                }
 
                 if (insurerLogos.size() == insurerPremiums.size()) {
                     for (int i = 0; i < insurerLogos.size(); i++) {
@@ -258,6 +250,18 @@ public class renewbuy_page extends TestBase {
                     failedRegs.add(reg);
                 }
 
+                if (addOns.size() > 0) {
+                    for (WebElement addOn : addOns) {
+                        String addOnName = addOn.getText().trim();
+                        addOnsData.add(new String[] { reg, addOnName });
+                    }
+                } else {
+
+                    addOnsData.add(new String[] { reg, "No Add-Ons Found" });
+                }
+
+                Thread.sleep(3000);
+
                 TestUtil.click(motorback, "click back");
 
             } catch (Exception e) {
@@ -265,13 +269,16 @@ public class renewbuy_page extends TestBase {
                 e.printStackTrace();
                 failedRegs.add(reg);
             }
+
+
         }
+
         String dateTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss"));
         // ✅ Save successful data
         String outputExcel = "/Users/sayali/Desktop/RenewBuy_premium" + dateTime + ".xlsx";
 //        String outputExcel = "/Users/nitinrathod/Desktop/RenewBuy_COMP_premium" + dateTime + ".xlsx";
         if (!premiumData.isEmpty()) {
-            TestUtil.writePremiumDataRBCOMP_Add(outputExcel, premiumData , addOnsData);
+            TestUtil.writePremiumDataRBCOMP_Add1(outputExcel, premiumData , addOnsData);
             System.out.println("✅ Premium data written to Excel successfully.");
         } else {
             System.out.println("⚠️ No premium data collected to write.");
