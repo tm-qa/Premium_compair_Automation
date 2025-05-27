@@ -220,13 +220,70 @@ public class TestUtil {
 
         return regNumbers;
     }
+
+    public static void writePremiumDataRBCOMP_Add(String filePath, List<String[]> premiumDataRows, List<String[]> addOnsDataRows) {
+        Workbook workbook = new XSSFWorkbook();
+
+        // ---- Sheet 1: Premium Data ----
+        Sheet premiumSheet = workbook.createSheet("PremiumData");
+
+        // Header row for premium
+        Row premiumHeader = premiumSheet.createRow(0);
+        String[] headers = {
+                "RegistrationNumber", "Make", "Model", "Variant", "Fuel",
+                "Previous_Policy_Type", "Registration_Date", "Insurer",
+                "IDV_premium", "Premium", "Activity Points", "IDVmin", "IDVmax"
+        };
+        for (int i = 0; i < headers.length; i++) {
+            premiumHeader.createCell(i).setCellValue(headers[i]);
+        }
+
+        // Data rows for premium
+        int premiumRowIndex = 1;
+        for (String[] rowData : premiumDataRows) {
+            Row row = premiumSheet.createRow(premiumRowIndex++);
+            for (int i = 0; i < rowData.length; i++) {
+                row.createCell(i).setCellValue(rowData[i]);
+            }
+        }
+
+        // Auto-size premium sheet columns
+        for (int i = 0; i < headers.length; i++) {
+            premiumSheet.autoSizeColumn(i);
+        }
+
+        // ---- Sheet 2: Add Ons ----
+        Sheet addOnSheet = workbook.createSheet("AddOns");
+
+        int addOnRowIndex = 0;
+        for (String[] rowData : addOnsDataRows) {
+            Row row = addOnSheet.createRow(addOnRowIndex++);
+            for (int i = 0; i < rowData.length; i++) {
+                row.createCell(i).setCellValue(rowData[i]);
+            }
+        }
+
+        // Auto-size add-ons column
+        addOnSheet.autoSizeColumn(0);
+
+        // ---- Write to File ----
+        try (FileOutputStream fos = new FileOutputStream(filePath)) {
+            workbook.write(fos);
+            workbook.close();
+            System.out.println("✅ Excel file written: " + filePath);
+        } catch (IOException e) {
+            System.err.println("❌ Failed to write Excel file: " + e.getMessage());
+        }
+    }
+
+
     public static void writePremiumDataRBCOMP(String filePath, List<String[]> dataRows) {
         Workbook workbook = new XSSFWorkbook();
         Sheet sheet = workbook.createSheet("PremiumData");
 
         // Header row
         Row header = sheet.createRow(0);
-        String[] headers = { "RegistrationNumber", "Make", "Model", "Variant", "Fuel","Previous_Policy_Type","Registration_Date", "Insurer","IDV_premium", "Premium","IDVmin", "IDVmax"};
+        String[] headers = { "RegistrationNumber", "Make", "Model", "Variant", "Fuel","Previous_Policy_Type","Registration_Date", "Insurer","IDV_premium", "Premium","Activity Points" , "IDVmin", "IDVmax"};
         for (int i = 0; i < headers.length; i++) {
             header.createCell(i).setCellValue(headers[i]);
         }
@@ -247,7 +304,7 @@ public class TestUtil {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
+   }
 
     public static void writePremiumDataRBTP(String filePath, List<String[]> dataRows) {
         Workbook workbook = new XSSFWorkbook();
@@ -439,8 +496,60 @@ public class TestUtil {
         }
     }
 
+    public static void writePremiumDataRBCOMP_Add1(String filePath, List<String[]> premiumDataRows, List<String[]> addOnsDataRows) {
+        Workbook workbook = new XSSFWorkbook();
 
+        // ---- Sheet 1: Premium Data ----
+        Sheet premiumSheet = workbook.createSheet("PremiumData");
 
+        // Header row for premium
+        Row premiumHeader = premiumSheet.createRow(0);
+        String[] headers = {
+                "RegistrationNumber", "Make", "Model", "Variant", "Fuel",
+                "Previous_Policy_Type", "Registration_Date", "Insurer",
+                "IDV_premium", "Premium", "Activity Points", "IDVmin", "IDVmax"
+        };
+        for (int i = 0; i < headers.length; i++) {
+            premiumHeader.createCell(i).setCellValue(headers[i]);
+        }
+
+        // Data rows for premium
+        int premiumRowIndex = 1;
+        for (String[] rowData : premiumDataRows) {
+            Row row = premiumSheet.createRow(premiumRowIndex++);
+            for (int i = 0; i < rowData.length; i++) {
+                row.createCell(i).setCellValue(rowData[i]);
+            }
+        }
+
+        // Auto-size premium sheet columns
+        for (int i = 0; i < headers.length; i++) {
+            premiumSheet.autoSizeColumn(i);
+        }
+
+        // ---- Sheet 2: Add Ons ----
+        Sheet addOnSheet = workbook.createSheet("AddOns");
+
+        int addOnRowIndex = 0;
+        for (String[] rowData : addOnsDataRows) {
+            Row row = addOnSheet.createRow(addOnRowIndex++);
+            for (int i = 0; i < rowData.length; i++) {
+                row.createCell(i).setCellValue(rowData[i]);
+            }
+        }
+
+        // Auto-size add-ons column
+        addOnSheet.autoSizeColumn(0);
+
+        // ---- Write to File ----
+        try (FileOutputStream fos = new FileOutputStream(filePath)) {
+            workbook.write(fos);
+            workbook.close();
+            System.out.println("✅ Excel file written: " + filePath);
+        } catch (IOException e) {
+            System.err.println("❌ Failed to write Excel file: " + e.getMessage());
+        }
+    }
 
 
 }
