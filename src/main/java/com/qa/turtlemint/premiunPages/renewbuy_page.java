@@ -99,7 +99,14 @@ public class renewbuy_page extends TestBase {
     @FindBy(xpath = "//a[text()=\"Motor Insurance\"]")
     WebElement motorback;
 
-    //a[text()="Motor Insurance"]
+    @FindBy(xpath = "//mat-select[@formcontrolname=\"ncb_discount\"]")
+    WebElement prevYearNCB ;
+
+    @FindBy(xpath = "//span[text()=\" 0% \"]")
+    WebElement zeroNcb ;
+
+    @FindBy(xpath = "//div[contains(@id,\"cdk-accordion-child-1\")]//span[contains(@class,\"mat-checkbox-label\")]")
+    WebElement addOn;
 
 
     public renewbuy_page() throws IOException {
@@ -127,10 +134,11 @@ public class renewbuy_page extends TestBase {
     }
 
     public void premiumRBComp() throws InterruptedException, IOException {
-       // String excelPath = "/Users/sayali/Documents/insurer/Premium_compair_Automation/src/test/resources/registration_data.xlsx";
-        String excelPath = "/Users/nitinrathod/Documents/registration_data.xlsx";
+        String excelPath = "/Users/sayali/Documents/insurer/Premium_compair_Automation/src/test/resources/registration_data.xlsx";
+//        String excelPath = "/Users/nitinrathod/Documents/registration_data.xlsx";
         List<String> regNumbers = TestUtil.getRegistrationNumbers(excelPath);
 
+        List<String[]> addOnsData = new ArrayList<>();
         List<String[]> premiumData = new ArrayList<>(); // successful data
         List<String> failedRegs = new ArrayList<>();    // failed registrations
 
@@ -152,6 +160,7 @@ public class renewbuy_page extends TestBase {
                 TestUtil.sendKeys(registrationNumber, reg, "entered registration number");
                 TestUtil.click(getVehicleDetailsIdButton, "click on vehicle details button");
 
+
                 Thread.sleep(4000);
                 String vehicleMake = make.getAttribute("value");
                 String vehicleModel = model.getAttribute("value");
@@ -161,7 +170,12 @@ public class renewbuy_page extends TestBase {
 
                 TestUtil.click(policyExiry, "click");
                 TestUtil.click(policyExiryTypeCOMP, "expiry type");
+
+
                 String prepolicytype = policyExiryTypeCOMP.getText();
+                Thread.sleep(3000);
+                TestUtil.click(prevYearNCB , "click on prevYearNCB ");
+                TestUtil.click(zeroNcb , "select 0% ncb");
 
                 Thread.sleep(4000);
                 String existingValue = previousinsurer.getAttribute("value");
@@ -179,11 +193,21 @@ public class renewbuy_page extends TestBase {
                 wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.xpath("//button[contains(@class,'premium-breakup-amount')]")));
                 wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.xpath("//span[@class=\"idv-amount\"]")));
                 wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.xpath("//span[contains(@class,\"idv-choose-amount\")]")));
+                wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.xpath("//div[@class=\"payout-value pb-2\"]")));
 
                 List<WebElement> insurerLogos = driver.findElements(By.xpath("//img[@class='insurer-logo']"));
                 List<WebElement> insurerPremiums = driver.findElements(By.xpath("//button[contains(@class,'premium-breakup-amount')]"));
                 List<WebElement> IDVRange = driver.findElements(By.xpath("//span[@class=\"idv-amount\"]"));
                 List<WebElement> IDVActual = driver.findElements(By.xpath("//span[contains(@class,\"idv-choose-amount\")]"));
+                List<WebElement> activityPoint = driver.findElements(By.xpath("//div[@class=\"payout-value pb-2\"]"));
+
+                List<WebElement> addOns = driver.findElements(By.xpath("//label[contains(@for, 'addon')]"));
+
+
+                for (WebElement addOn : addOns) {
+                    String addOnName = addOn.getText().trim();
+                    addOnsData.add(new String[] {addOnName});
+                }
 
                 if (insurerLogos.size() == insurerPremiums.size()) {
                     for (int i = 0; i < insurerLogos.size(); i++) {
@@ -191,6 +215,7 @@ public class renewbuy_page extends TestBase {
                         WebElement premiumBtn = insurerPremiums.get(i);
                         WebElement idvrange = IDVRange.get(i);
                         WebElement idvactual = IDVActual.get(i);
+                        WebElement activityP = activityPoint.get(i);
 
                         String srcValue = logo.getAttribute("src");
                         String[] parts = srcValue.split("/");
@@ -207,6 +232,7 @@ public class renewbuy_page extends TestBase {
                         String IdvMin = numbers[1].split("-")[0].replaceAll("[^0-9]", "");
                         String IdvMax = numbers[2].replaceAll("[^0-9]", "");
 
+                        String actP = activityP.getText();
                         String[] row = {
                                 reg,
                                 vehicleMake,
@@ -218,8 +244,10 @@ public class renewbuy_page extends TestBase {
                                 insurerName,
                                 IDVactual,
                                 premium,
+                                actP,
                                 IdvMin,
                                 IdvMax
+
 
 
                         };
@@ -240,10 +268,10 @@ public class renewbuy_page extends TestBase {
         }
         String dateTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss"));
         // ✅ Save successful data
-     //   String outputExcel = "/Users/sayali/Desktop/RenewBuy_premium" + dateTime + ".xlsx";
-        String outputExcel = "/Users/nitinrathod/Desktop/RenewBuy_COMP_premium" + dateTime + ".xlsx";
+        String outputExcel = "/Users/sayali/Desktop/RenewBuy_premium" + dateTime + ".xlsx";
+//        String outputExcel = "/Users/nitinrathod/Desktop/RenewBuy_COMP_premium" + dateTime + ".xlsx";
         if (!premiumData.isEmpty()) {
-            TestUtil.writePremiumDataRBCOMP(outputExcel, premiumData);
+            TestUtil.writePremiumDataRBCOMP_Add(outputExcel, premiumData , addOnsData);
             System.out.println("✅ Premium data written to Excel successfully.");
         } else {
             System.out.println("⚠️ No premium data collected to write.");
