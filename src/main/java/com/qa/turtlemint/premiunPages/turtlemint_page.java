@@ -118,6 +118,10 @@ public class turtlemint_page extends TestBase {
 
     @FindBy(xpath = "//a[text()=\" Update Results\"]")
     WebElement updateedresult ;
+    @FindBy(xpath = "//div[@class=\"flex layout-align-space-between ng-scope\"]")
+    WebElement gettext ;
+    @FindBy(xpath = "//span[text()=\"Check Activity Points\"]")
+    WebElement actpointtext ;
 
 
     public turtlemint_page() {
@@ -241,13 +245,18 @@ public class turtlemint_page extends TestBase {
                 wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.xpath("//div[@class=\"priceArea hidden-xs text-center\"]//span[contains(@ng-if , \"multiPlanDropDown[insurer.insurerProvider\")]")));
                 wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.xpath("//span[@class=\"bold vehicleIdv ng-binding\"]")));
 
+
+
                 List<WebElement> insurerLogos = driver.findElements(By.xpath("//div[@class='logoArea col-xs-6 col-sm-3 text-left']//img[contains(@class, 'client-logo-img')]"));
                 List<WebElement> insurerPremiums = driver.findElements(By.xpath("//div[@class=\"priceArea hidden-xs text-center\"]//span[contains(@ng-if , \"multiPlanDropDown[insurer.insurerProvider\")]"));
                 List<WebElement> premiumIdv = driver.findElements(By.xpath("//span[@class=\"bold vehicleIdv ng-binding\"]"));
 
+
+
                 System.out.println("Logos found: " + insurerLogos.size());
                 System.out.println("Premiums found: " + insurerPremiums.size());
                 System.out.println("Premiums IDV: " + premiumIdv.size());
+
 
                 if (insurerLogos.size() == insurerPremiums.size() && insurerLogos.size() == premiumIdv.size()) {
                     for (int i = 0; i < insurerLogos.size(); i++) {
@@ -255,12 +264,15 @@ public class turtlemint_page extends TestBase {
                         WebElement premiumBtn = insurerPremiums.get(i);
                         WebElement idvElement = premiumIdv.get(i);
 
+
+
                         String srcValue = logo.getAttribute("src");
                         String[] parts = srcValue.split("/");
                         String insurerName = parts[parts.length - 1].replace(".png", "");
 
                         String premium = premiumBtn.getText().replace(",", "").replace("₹", "").trim();
                         String premiumidv = idvElement.getText().replace(",", "").replace("₹", "").trim();
+
 
                         String[] row = {
                                 reg,
@@ -286,6 +298,23 @@ public class turtlemint_page extends TestBase {
                     System.err.println("Mismatch in insurer and premium count for Reg: " + reg);
                     failedRegs.add(reg);
                 }
+
+
+
+                TestUtil.click(actpointtext,"");
+                Thread.sleep(10000);
+                List<String> ActivityP = new ArrayList<>();
+                List<WebElement> Activitypt = driver.findElements(By.xpath("//div[@class=\"flex layout-align-space-between ng-scope\"]"));
+                for (WebElement act : Activitypt) {
+                    String actp = act.getText();
+                    ActivityP.add(actp);
+                }
+                for (String value : ActivityP) {
+                    System.out.println(value);
+                }
+
+
+
                 Actions actions = new Actions(driver);
                 actions.moveToElement(hoverIn).perform();
                 TestUtil.click(isMaxId , "click on max id");
