@@ -127,8 +127,8 @@ public class renewbuy_page extends TestBase {
     }
 
     public void premiumRBComp() throws InterruptedException, IOException {
-       // String excelPath = "/Users/sayali/Documents/insurer/Premium_compair_Automation/src/test/resources/registration_data.xlsx";
-        String excelPath = "/Users/nitinrathod/Documents/registration_data.xlsx";
+     String excelPath = "/Users/sayali/Documents/insurer/Premium_compair_Automation/src/test/resources/registration_data.xlsx";
+//        String excelPath = "/Users/nitinrathod/Documents/registration_data.xlsx";
         List<String> regNumbers = TestUtil.getRegistrationNumbers(excelPath);
 
         List<String[]> premiumData = new ArrayList<>(); // successful data
@@ -198,7 +198,16 @@ public class renewbuy_page extends TestBase {
 
 
                         String premium = premiumBtn.getText().replaceAll("[^0-9]", "");
-                        String IDVrange = "(" + idvrange.getText().split("₹")[1].split("-")[0].replaceAll("[^0-9]", "") + " - " + idvrange.getText().split("₹")[2].replaceAll("[^0-9]", "") + ")";
+                        String IDVrange =  idvrange.getText();
+
+                        String[] numbers = IDVrange.split("₹");
+
+                        String idvMin = numbers[1].split("-")[0].replaceAll("[^0-9]", "");
+                        String idvMax = numbers[2].replaceAll("[^0-9]", "");
+
+                        System.out.println("idvMax: " + idvMin);
+                        System.out.println("idvMax: " + idvMax);
+
                         String IDVactual = idvactual.getText().replaceAll("[^0-9]", "");
 
 
@@ -213,7 +222,8 @@ public class renewbuy_page extends TestBase {
                                 insurerName,
                                 IDVactual,
                                 premium,
-                                IDVrange
+                                idvMin,
+                                idvMax
 
                         };
                         premiumData.add(row);
@@ -233,8 +243,8 @@ public class renewbuy_page extends TestBase {
         }
         String dateTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss"));
         // ✅ Save successful data
-     //   String outputExcel = "/Users/sayali/Desktop/RenewBuy_premium" + dateTime + ".xlsx";
-        String outputExcel = "/Users/nitinrathod/Desktop/RenewBuy_COMP_premium" + dateTime + ".xlsx";
+      String outputExcel = "/Users/sayali/Desktop/RenewBuy_premium" + dateTime + ".xlsx";
+//        String outputExcel = "/Users/nitinrathod/Desktop/RenewBuy_COMP_premium" + dateTime + ".xlsx";
         if (!premiumData.isEmpty()) {
             TestUtil.writePremiumDataRBCOMP(outputExcel, premiumData);
             System.out.println("✅ Premium data written to Excel successfully.");
