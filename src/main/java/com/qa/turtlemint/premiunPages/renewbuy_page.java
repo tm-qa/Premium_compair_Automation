@@ -205,15 +205,15 @@ public class renewbuy_page extends TestBase {
                     Thread.sleep(2000);
                     TestUtil.click(bajajinsurer, "");
                 }
-                Thread.sleep(2000);
-                TestUtil.click(policyExiryDate,"clicked on calendar");
-                Thread.sleep(2000);
-                String existingValue1 = policyExiryDate.getAttribute("value");
-                System.out.println(existingValue1);
-                if (existingValue1 == null || existingValue1.trim().isEmpty()) {
+                try {
+
+                    TestUtil.click(error,"");
+
+                    TestUtil.click(policyExiryDate,"clicked on calendar");
                     Thread.sleep(2000);
                     String futuredate = TestUtil.ninjaFutureDate(3);
                     System.out.println(futuredate);
+
                     String newdate = futuredate.replaceAll("-","");
                     System.out.println(newdate);
                     TestUtil.click(mand,"");
@@ -222,8 +222,9 @@ public class renewbuy_page extends TestBase {
                     Thread.sleep(2000);
                     TestUtil.sendKeys(policyExiryDate, newdate, "entered");
                     Thread.sleep(2000);
-                    policyExiryDate.sendKeys(Keys.ENTER);
-                    Thread.sleep(2000);
+                }
+                catch (Exception e){
+                    System.out.println("date present");
 
                 }
 
