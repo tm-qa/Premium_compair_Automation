@@ -306,7 +306,7 @@ public class TestUtil {
         }
    }
 
-    public static void writePremiumDataRBTP(String filePath, List<String[]> dataRows) {
+    public static void writePremiumDataRBTP(String filePath, List<String[]> dataRows , List<String[]> addOnsDataRows) {
         Workbook workbook = new XSSFWorkbook();
         Sheet sheet = workbook.createSheet("PremiumData");
 
@@ -326,11 +326,25 @@ public class TestUtil {
             }
         }
 
+        Sheet addOnSheet = workbook.createSheet("AddOns");
+
+        int addOnRowIndex = 0;
+        for (String[] rowData : addOnsDataRows) {
+            Row row = addOnSheet.createRow(addOnRowIndex++);
+            for (int i = 0; i < rowData.length; i++) {
+                row.createCell(i).setCellValue(rowData[i]);
+            }
+        }
+
+
+        addOnSheet.autoSizeColumn(0);
+
         try (FileOutputStream fos = new FileOutputStream(filePath)) {
             workbook.write(fos);
             workbook.close();
+            System.out.println("✅ Excel file written: " + filePath);
         } catch (IOException e) {
-            e.printStackTrace();
+            System.err.println("❌ Failed to write Excel file: " + e.getMessage());
         }
     }
 
