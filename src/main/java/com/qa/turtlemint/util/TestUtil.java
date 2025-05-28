@@ -11,10 +11,7 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.openqa.selenium.OutputType;
-import org.openqa.selenium.TakesScreenshot;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -27,6 +24,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Random;
 
 import static com.qa.turtlemint.base.TestBase.driver;
@@ -87,6 +85,22 @@ public class TestUtil {
         LogUtils.info(msg);
 
     }
+    public static boolean isElementPresent(WebDriver driver, By locator) {
+        try {
+            driver.findElement(locator);
+            return true;
+        } catch (NoSuchElementException e) {
+            return false;
+        }
+    }
+    public static boolean isVisible(WebElement element) {
+        try {
+            return element.isDisplayed();
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
 
     public static void moveToElement(WebElement element) {
 
@@ -283,7 +297,7 @@ public class TestUtil {
 
         // Header row
         Row header = sheet.createRow(0);
-        String[] headers = { "RegistrationNumber", "Make", "Model", "Variant", "Fuel","Previous_Policy_Type","Registration_Date", "Insurer","IDV_premium", "Premium","Activity Points" , "IDVmin", "IDVmax"};
+        String[] headers = { "RegistrationNumber", "Make", "Model", "Variant", "Fuel","Previous_Policy_Type","Registration_Date", "Insurer","IDV_premium", "Premium","Activity_Points" , "IDVmin", "IDVmax"};
         for (int i = 0; i < headers.length; i++) {
             header.createCell(i).setCellValue(headers[i]);
         }
@@ -312,7 +326,7 @@ public class TestUtil {
 
         // Header row
         Row header = sheet.createRow(0);
-        String[] headers = { "RegistrationNumber", "Make", "Model", "Variant", "Fuel","Previous_Policy_Type","Registration_Date", "Insurer", "Premium"};
+        String[] headers = { "RegistrationNumber", "Make", "Model", "Variant", "Fuel","Previous_Policy_Type","Registration_Date", "Insurer", "Premium","Activity_Points"};
         for (int i = 0; i < headers.length; i++) {
             header.createCell(i).setCellValue(headers[i]);
         }

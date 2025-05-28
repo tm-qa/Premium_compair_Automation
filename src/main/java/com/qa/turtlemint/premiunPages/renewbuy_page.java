@@ -5,10 +5,7 @@ import com.qa.turtlemint.util.TestUtil;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.jaxen.pattern.Pattern;
-import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.Keys;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -22,6 +19,7 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.NoSuchElementException;
 
 import static java.util.Collections.replaceAll;
 
@@ -68,6 +66,9 @@ public class renewbuy_page extends TestBase {
 
     @FindBy(xpath = "//span[text()=\" 1 Year Third Party Damage \"]")
     WebElement policyExiryTypeTP;
+    @FindBy(xpath = "//span[text()=\" 3 Year Third Party Damage \"]")
+    WebElement policyExiryTypeTP3;
+
     @FindBy(xpath = "//span[text()=\" Comprehensive (1 Year Own Damage + 1 Year Third Party Damage) \"]")
     WebElement policyExiryTypeCOMP;
     @FindBy(xpath = "//input[@id-automation=\"policy_expiry_date\"]")
@@ -76,14 +77,6 @@ public class renewbuy_page extends TestBase {
     WebElement mand;
     @FindBy(xpath = "//mat-error[text()=\" This is a required field. \"]")
     WebElement error;
-
-
-
-
-
-
-
-
 
 
     @FindBy(xpath = "//input[@aria-label=\"previous_insurer\"]")
@@ -172,12 +165,10 @@ public class renewbuy_page extends TestBase {
 
         for (String reg : regNumbers) {
             try {
-                Thread.sleep(4000);
-                TestUtil.sendKeys(registrationNumber, reg, "entered registration number");
-                Thread.sleep(4000);
-
-                TestUtil.click(getVehicleDetailsIdButton, "click on vehicle details button");
-
+                wait.until(ExpectedConditions.elementToBeClickable(registrationNumber));
+                System.out.println("entered registration number");
+                wait.until(ExpectedConditions.elementToBeClickable(getVehicleDetailsIdButton));
+                System.out.println("click on vehicle details button");
 
                 Thread.sleep(4000);
                 String vehicleMake = make.getAttribute("value");
@@ -196,7 +187,6 @@ public class renewbuy_page extends TestBase {
                 TestUtil.click(policyExiry, "click on previous policy expiry dropdown");
                 TestUtil.click(policyExiryTypeCOMP, "comprehensive policy expiry type selected");
 
-
                 String prepolicytype = policyExiryTypeCOMP.getText();
                 Thread.sleep(3000);
                 TestUtil.click(prevYearNCB , "click on prevYearNCB ");
@@ -212,31 +202,26 @@ public class renewbuy_page extends TestBase {
                     Thread.sleep(2000);
                     TestUtil.click(bajajinsurer, "");
                 }
-                try {
-
-                    TestUtil.click(error,"got error");
-
-                    TestUtil.click(policyExiryDate,"clicked on calendar");
-                    Thread.sleep(2000);
+                String dateValue = policyExiryDate.getAttribute("value");
+                if (dateValue == null || dateValue.trim().isEmpty()) {
+                    // Date is missing, fill it before clicking confirm
+                    TestUtil.click(policyExiryDate, "clicked on calendar");
                     String futuredate = TestUtil.ninjaFutureDate(3);
-                    System.out.println(futuredate);
-
-                    String newdate = futuredate.replaceAll("-","");
-                    System.out.println(newdate);
-                    TestUtil.click(mand,"");
-                    Thread.sleep(2000);
+                    String newdate = futuredate.replaceAll("-", "");
+                    TestUtil.click(mand, "");
                     policyExiryDate.clear();
-                    Thread.sleep(2000);
                     TestUtil.sendKeys(policyExiryDate, newdate, "entered");
-                    Thread.sleep(2000);
+                    System.out.println("✅ New date entered: " + newdate);
+                } else {
+                    System.out.println("ℹ️ Date already present: " + dateValue);
                 }
-                catch (Exception e){
-                    System.out.println("date present");
 
-                }
+               // ✅ Now click the confirm button just once
+                TestUtil.click(aboveDetailsAreCorrectButton, "Clicked on above details are correct button");
+
 
                 Thread.sleep(2000);
-                TestUtil.click(aboveDetailsAreCorrectButton, "Clicked on above details are correct button");
+              //  TestUtil.click(aboveDetailsAreCorrectButton, "Clicked on above details are correct button");
                 Thread.sleep(30000);
 
                 wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.xpath("//img[@class='insurer-logo']")));
@@ -276,8 +261,14 @@ public class renewbuy_page extends TestBase {
 
                         String IdvMin = numbers[1].split("-")[0].replaceAll("[^0-9]", "");
                         String IdvMax = numbers[2].replaceAll("[^0-9]", "");
-                        String actP = activityP.getText();
-                        String numberOnly = actP.split("\\*")[0].trim();
+
+                        String actP = activityP.getText().trim();
+                        String numberOnly = "0";
+
+                        if (actP.matches("^\\d+.*")) {
+                            numberOnly = actP.split("\\*")[0].trim();
+                        }
+                        System.out.println(numberOnly);
 
                         String[] row = {
                                 reg,
@@ -294,12 +285,10 @@ public class renewbuy_page extends TestBase {
                                 IdvMin,
                                 IdvMax
 
-
-
                         };
                         premiumData.add(row);
                     }
-                    System.out.println("addons data added in sheet");
+                    System.out.println("Premium and vehicle details data added in sheet");
                 } else {
                     System.err.println("Mismatch in insurer and premium count for Reg: " + reg);
                     failedRegs.add(reg);
@@ -382,9 +371,10 @@ public class renewbuy_page extends TestBase {
 
         for (String reg : regNumbers) {
             try {
-                Thread.sleep(3000);
-                TestUtil.sendKeys(registrationNumber, reg, "entered registration number");
-                TestUtil.click(getVehicleDetailsIdButton, "click on vehicle details button");
+                wait.until(ExpectedConditions.elementToBeClickable(registrationNumber));
+                TestUtil.sendKeys(registrationNumber,reg,"entered registration number");
+                wait.until(ExpectedConditions.elementToBeClickable(getVehicleDetailsIdButton));
+               TestUtil.click(getVehicleDetailsIdButton,"click on vehicle details button");
 
                 Thread.sleep(4000);
                 String vehicleMake = make.getAttribute("value");
@@ -400,10 +390,27 @@ public class renewbuy_page extends TestBase {
 
 
 
-                TestUtil.click(policyExiry, "click on previous policy expiry dropdown");
-                TestUtil.click(policyExiryTypeTP, "Third party policy expiry type selected");
-                String prepolicytype = policyExiryTypeTP.getText();
-                System.out.println(prepolicytype);
+//                TestUtil.click(policyExiry, "click on previous policy expiry dropdown");
+//                TestUtil.click(policyExiryTypeTP, "Third party policy expiry type selected");
+//                String prepolicytype = policyExiryTypeTP.getText();
+//                System.out.println(prepolicytype);
+
+                TestUtil.click(policyExiry, "Clicked on previous policy expiry dropdown");
+
+                String prepolicytype = "";
+
+                if (TestUtil.isVisible(policyExiryTypeTP)) {
+                    TestUtil.click(policyExiryTypeTP, "Selected 1 year TP policy type");
+                    prepolicytype = policyExiryTypeTP.getText();
+                } else if (TestUtil.isVisible(policyExiryTypeTP3)) {
+                    TestUtil.click(policyExiryTypeTP3, "Selected 3 year TP policy type");
+                    prepolicytype = policyExiryTypeTP3.getText();
+                } else {
+                    System.out.println("❌ No TP policy option found.");
+                }
+
+                System.out.println("Selected Policy Type: " + prepolicytype);
+
 
                 Thread.sleep(4000);
                 String existingValue = previousinsurer.getAttribute("value");
@@ -414,34 +421,20 @@ public class renewbuy_page extends TestBase {
                     TestUtil.click(bajajinsurer, "Bajaj insurer selected");
                 }
 
-
-                try {
-
-                    TestUtil.click(error,"got error msg");
-
-                    TestUtil.click(policyExiryDate,"clicked on calendar");
-                    Thread.sleep(2000);
+                String dateValue = policyExiryDate.getAttribute("value");
+                if (dateValue == null || dateValue.trim().isEmpty()) {
+                    // Date is missing, fill it before clicking confirm
+                    TestUtil.click(policyExiryDate, "clicked on calendar");
                     String futuredate = TestUtil.ninjaFutureDate(3);
-                    System.out.println(futuredate);
-
-                    String newdate = futuredate.replaceAll("-","");
-                    System.out.println(newdate);
-                    TestUtil.click(mand,"");
-                    Thread.sleep(2000);
+                    String newdate = futuredate.replaceAll("-", "");
+                    TestUtil.click(mand, "");
                     policyExiryDate.clear();
-                    Thread.sleep(2000);
                     TestUtil.sendKeys(policyExiryDate, newdate, "entered");
-                    Thread.sleep(2000);
-                }
-                catch (Exception e){
-                    System.out.println("date present");
-
+                    System.out.println("✅ New date entered: " + newdate);
+                } else {
+                    System.out.println("ℹ️ Date already present: " + dateValue);
                 }
 
-//                    policyExiryDate.sendKeys(Keys.ENTER);
-//                    Thread.sleep(2000);
-
-                Thread.sleep(2000);
                 TestUtil.click(aboveDetailsAreCorrectButton, "Clicked on above details are correct button");
                 Thread.sleep(15000);
                 TestUtil.click(policytypeTP, "Selected new policy type as TP");
@@ -472,8 +465,12 @@ public class renewbuy_page extends TestBase {
                         String[] parts = srcValue.split("/");
                         String insurerName = parts[parts.length - 1].replace(".png", "");
                         String premium = premiumBtn.getText().replaceAll("[^0-9]", "");
-                        String actP = activityP.getText();
-                        String numberOnly = actP.split("\\*")[0].trim();
+                        String actP = activityP.getText().trim();
+                        String numberOnly = "0";
+
+                        if (actP.matches("^\\d+.*")) {
+                            numberOnly = actP.split("\\*")[0].trim();
+                        }
 
                         String[] row = {
                                 reg,
@@ -520,8 +517,7 @@ public class renewbuy_page extends TestBase {
         //✅ Save successful data
         //   String outputExcel = "/Users/sayali/Desktop/RenewBuy_premium" + dateTime + ".xlsx";
           String outputExcel = "/Users/nitinrathod/Desktop/RenewBuy_TP_premium" + dateTime + ".xlsx";
-       // String outputExcel = "C:\\Users\\pradeep.u_turtlemint\\Desktop\\ALLBrokerdata\\RenewBuy_COMP_premium"+dateTime+".xlsx";
-
+       // String outputExcel = "C:\\Users\\pradeep.u_turtlemint\\Desktop\\ALLBrokerdata\\RenewBuy_TP_premium"+dateTime+".xlsx";
 
         if (!premiumData.isEmpty()) {
             TestUtil.writePremiumDataRBTP(outputExcel, premiumData,addOnsData);
@@ -538,6 +534,7 @@ public class renewbuy_page extends TestBase {
             }
         }
     }
+
 
 }
 

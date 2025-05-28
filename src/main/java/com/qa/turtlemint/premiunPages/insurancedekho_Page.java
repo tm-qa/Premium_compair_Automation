@@ -138,7 +138,7 @@ public class insurancedekho_Page extends TestBase {
                     TestUtil.click(comp, "selected comp");
                     Thread.sleep(3000);
                 }
-                String prevpolicytype = "Comprehnesive";
+                String prevpolicytype = "Comprehensive";
                 System.out.println(prevpolicytype);
 
                 TestUtil.click(confirm, "");
