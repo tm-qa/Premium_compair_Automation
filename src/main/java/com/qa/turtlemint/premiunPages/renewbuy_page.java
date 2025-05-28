@@ -147,8 +147,8 @@ public class renewbuy_page extends TestBase {
 
     public void premiumRBComp() throws InterruptedException, IOException {
         //   String excelPath = "/Users/sayali/Documents/insurer/Premium_compair_Automation/src/test/resources/registration_data.xlsx";
-//        String excelPath = "/Users/nitinrathod/Documents/registration_data.xlsx";
-        String excelPath = "C:\\Users\\pradeep.u_turtlemint\\Downloads\\registration_data.xlsx";
+        String excelPath = "/Users/nitinrathod/Documents/registration_data.xlsx";
+      //  String excelPath = "C:\\Users\\pradeep.u_turtlemint\\Downloads\\registration_data.xlsx";
         List<String> regNumbers = TestUtil.getRegistrationNumbers(excelPath);
 
         List<String[]> addOnsData = new ArrayList<>();
@@ -172,7 +172,7 @@ public class renewbuy_page extends TestBase {
 
         for (String reg : regNumbers) {
             try {
-
+                Thread.sleep(4000);
                 TestUtil.sendKeys(registrationNumber, reg, "entered registration number");
                 Thread.sleep(4000);
 
@@ -186,8 +186,15 @@ public class renewbuy_page extends TestBase {
                 String vehicleFuel = fuelType.getText();
                 String regisdate = registrationyear.getAttribute("value");
 
-                TestUtil.click(policyExiry, "click");
-                TestUtil.click(policyExiryTypeCOMP, "expiry type");
+                System.out.println(vehicleMake);
+                System.out.println(vehicleModel);
+                System.out.println(vehicleVariant);
+                System.out.println(vehicleFuel);
+                System.out.println(regisdate);
+
+
+                TestUtil.click(policyExiry, "click on previous policy expiry dropdown");
+                TestUtil.click(policyExiryTypeCOMP, "comprehensive policy expiry type selected");
 
 
                 String prepolicytype = policyExiryTypeCOMP.getText();
@@ -207,7 +214,7 @@ public class renewbuy_page extends TestBase {
                 }
                 try {
 
-                    TestUtil.click(error,"");
+                    TestUtil.click(error,"got error");
 
                     TestUtil.click(policyExiryDate,"clicked on calendar");
                     Thread.sleep(2000);
@@ -229,8 +236,8 @@ public class renewbuy_page extends TestBase {
                 }
 
                 Thread.sleep(2000);
-                TestUtil.click(aboveDetailsAreCorrectButton, "confirm vehicle");
-                Thread.sleep(15000);
+                TestUtil.click(aboveDetailsAreCorrectButton, "Clicked on above details are correct button");
+                Thread.sleep(30000);
 
                 wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.xpath("//img[@class='insurer-logo']")));
                 wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.xpath("//button[contains(@class,'premium-breakup-amount')]")));
@@ -292,6 +299,7 @@ public class renewbuy_page extends TestBase {
                         };
                         premiumData.add(row);
                     }
+                    System.out.println("addons data added in sheet");
                 } else {
                     System.err.println("Mismatch in insurer and premium count for Reg: " + reg);
                     failedRegs.add(reg);
@@ -302,12 +310,13 @@ public class renewbuy_page extends TestBase {
                         String addOnName = addOn.getText().trim();
                         addOnsData.add(new String[] { reg, addOnName });
                     }
+                    System.out.println("addons data added in sheet");
                 } else {
 
                     addOnsData.add(new String[] { reg, "No Add-Ons Found" });
                 }
 
-                Thread.sleep(3000);
+                Thread.sleep(10000);
 
                 driver.get("https://apex.renewbuyinsurance.com/motor/");
 
@@ -320,12 +329,12 @@ public class renewbuy_page extends TestBase {
 
         }
 
-        String dateTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy-----HH-mm-ss"));
+        String dateTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy---HH-mm-ss"));
 
         // ✅ Save successful data
         //    String outputExcel = "/Users/sayali/Desktop/RenewBuy_premium" + dateTime + ".xlsx";
-//        String outputExcel = "/Users/nitinrathod/Desktop/RenewBuy_COMP_premium" + dateTime + ".xlsx";
-        String outputExcel = "C:\\Users\\pradeep.u_turtlemint\\Desktop\\ALLBrokerdata\\RenewBuy_COMP_premium"+dateTime+".xlsx";
+            String outputExcel = "/Users/nitinrathod/Desktop/RenewBuy_COMP_premium" + dateTime + ".xlsx";
+     //   String outputExcel = "C:\\Users\\pradeep.u_turtlemint\\Desktop\\ALLBrokerdata\\RenewBuy_COMP_premium"+dateTime+".xlsx";
         if (!premiumData.isEmpty()) {
             TestUtil.writePremiumDataRBCOMP_Add1(outputExcel, premiumData , addOnsData);
             System.out.println("✅ Premium data written to Excel successfully.");
@@ -362,15 +371,18 @@ public class renewbuy_page extends TestBase {
         JavascriptExecutor js = (JavascriptExecutor) driver;
         js.executeScript("window.scrollBy(0,800)");
         js.executeScript("arguments[0].click();", motor);
+        System.out.println("Clicked om motor");
 
         Set<String> windowHandles = driver.getWindowHandles();
         ArrayList<String> tabs = new ArrayList<>(windowHandles);
         driver.switchTo().window(tabs.get(1));
+        System.out.println("New tab open");
 
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
 
         for (String reg : regNumbers) {
             try {
+                Thread.sleep(3000);
                 TestUtil.sendKeys(registrationNumber, reg, "entered registration number");
                 TestUtil.click(getVehicleDetailsIdButton, "click on vehicle details button");
 
@@ -380,14 +392,18 @@ public class renewbuy_page extends TestBase {
                 String vehicleVariant = variant.getAttribute("value");
                 String vehicleFuel = fuelType.getText();
                 String regisdate = registrationyear.getAttribute("value");
+                System.out.println(vehicleMake);
+                System.out.println(vehicleModel);
+                System.out.println(vehicleVariant);
+                System.out.println(vehicleFuel);
+                System.out.println(regisdate);
 
 
 
-                TestUtil.click(policyExiry, "click");
-                TestUtil.click(policyExiryTypeTP, "expiry type");
+                TestUtil.click(policyExiry, "click on previous policy expiry dropdown");
+                TestUtil.click(policyExiryTypeTP, "Third party policy expiry type selected");
                 String prepolicytype = policyExiryTypeTP.getText();
-
-
+                System.out.println(prepolicytype);
 
                 Thread.sleep(4000);
                 String existingValue = previousinsurer.getAttribute("value");
@@ -395,13 +411,13 @@ public class renewbuy_page extends TestBase {
                     Thread.sleep(2000);
                     previousinsurer.sendKeys("bajaj");
                     Thread.sleep(2000);
-                    TestUtil.click(bajajinsurer, "");
+                    TestUtil.click(bajajinsurer, "Bajaj insurer selected");
                 }
 
 
                 try {
 
-                    TestUtil.click(error,"");
+                    TestUtil.click(error,"got error msg");
 
                     TestUtil.click(policyExiryDate,"clicked on calendar");
                     Thread.sleep(2000);
@@ -422,16 +438,14 @@ public class renewbuy_page extends TestBase {
 
                 }
 
-
 //                    policyExiryDate.sendKeys(Keys.ENTER);
 //                    Thread.sleep(2000);
 
-
                 Thread.sleep(2000);
-                TestUtil.click(aboveDetailsAreCorrectButton, "confirm vehicle");
+                TestUtil.click(aboveDetailsAreCorrectButton, "Clicked on above details are correct button");
                 Thread.sleep(15000);
-                TestUtil.click(policytypeTP, "confirm vehicle");
-                Thread.sleep(15000);
+                TestUtil.click(policytypeTP, "Selected new policy type as TP");
+                Thread.sleep(30000);
 
 
 
@@ -477,6 +491,7 @@ public class renewbuy_page extends TestBase {
                         };
                         premiumData.add(row);
                     }
+                    System.out.println("all data added in sheet");
                 } else {
                     System.err.println("Mismatch in insurer and premium count for Reg: " + reg);
                     failedRegs.add(reg);
@@ -486,6 +501,7 @@ public class renewbuy_page extends TestBase {
                         String addOnName = addOn.getText().trim();
                         addOnsData.add(new String[] { reg, addOnName });
                     }
+                    System.out.println("addons data added in sheet");
                 } else {
 
                     addOnsData.add(new String[] { reg, "No Add-Ons Found" });
@@ -500,11 +516,11 @@ public class renewbuy_page extends TestBase {
                 failedRegs.add(reg);
             }
         }
-        String dateTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss"));
-        // ✅ Save successful data
+        String dateTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy---HH-mm-ss"));
+        //✅ Save successful data
         //   String outputExcel = "/Users/sayali/Desktop/RenewBuy_premium" + dateTime + ".xlsx";
-        //  String outputExcel = "/Users/nitinrathod/Desktop/RenewBuy_TP_premium" + dateTime + ".xlsx";
-        String outputExcel = "C:\\Users\\pradeep.u_turtlemint\\Desktop\\ALLBrokerdata\\RenewBuy_COMP_premium"+dateTime+".xlsx";
+          String outputExcel = "/Users/nitinrathod/Desktop/RenewBuy_TP_premium" + dateTime + ".xlsx";
+       // String outputExcel = "C:\\Users\\pradeep.u_turtlemint\\Desktop\\ALLBrokerdata\\RenewBuy_COMP_premium"+dateTime+".xlsx";
 
 
         if (!premiumData.isEmpty()) {
