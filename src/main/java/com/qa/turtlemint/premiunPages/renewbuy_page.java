@@ -207,7 +207,7 @@ public class renewbuy_page extends TestBase {
                 if (dateValue == null || dateValue.trim().isEmpty()) {
                     // Date is missing, fill it before clicking confirm
                     TestUtil.click(policyExiryDate, "clicked on calendar");
-                    String futuredate = TestUtil.ninjaFutureDate(3);
+                    String futuredate = TestUtil.ninjaFutureDate(1);
                     String newdate = futuredate.replaceAll("-", "");
                     TestUtil.click(mand, "");
                     policyExiryDate.clear();
@@ -372,6 +372,7 @@ public class renewbuy_page extends TestBase {
 
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
 
+
         for (String reg : regNumbers) {
             try {
                 wait.until(ExpectedConditions.elementToBeClickable(registrationNumber)).sendKeys(reg);
@@ -429,7 +430,7 @@ public class renewbuy_page extends TestBase {
                 if (dateValue == null || dateValue.trim().isEmpty()) {
                     // Date is missing, fill it before clicking confirm
                     TestUtil.click(policyExiryDate, "clicked on calendar");
-                    String futuredate = TestUtil.ninjaFutureDate(3);
+                    String futuredate = TestUtil.ninjaFutureDate(1);
                     String newdate = futuredate.replaceAll("-", "");
                     TestUtil.click(mand, "");
                     policyExiryDate.clear();

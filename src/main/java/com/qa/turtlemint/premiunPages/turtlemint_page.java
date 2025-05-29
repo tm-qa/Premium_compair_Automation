@@ -169,7 +169,7 @@ public class turtlemint_page extends TestBase {
 
                 if (existingValue == null || existingValue.trim().isEmpty()) {
                     Thread.sleep(2000);
-                    String futuredate = TestUtil.ninjaFutureDate(3);
+                    String futuredate = TestUtil.ninjaFutureDate(1);
                     System.out.println(futuredate);
                     SimpleDateFormat inputFormat = new SimpleDateFormat("dd-MM-yyyy");
                     SimpleDateFormat outputFormat = new SimpleDateFormat("dd/MM/yyyy");
@@ -419,7 +419,7 @@ public class turtlemint_page extends TestBase {
 
                 if (existingValue == null || existingValue.trim().isEmpty()) {
                     Thread.sleep(2000);
-                    String futuredate = TestUtil.ninjaFutureDate(3);
+                    String futuredate = TestUtil.ninjaFutureDate(1);
                     System.out.println(futuredate);
                     SimpleDateFormat inputFormat = new SimpleDateFormat("dd-MM-yyyy");
                     SimpleDateFormat outputFormat = new SimpleDateFormat("dd/MM/yyyy");
