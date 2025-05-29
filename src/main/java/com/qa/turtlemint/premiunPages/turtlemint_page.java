@@ -49,6 +49,9 @@ public class turtlemint_page extends TestBase {
     WebElement previousPolicyTypeTP;
     @FindBy(xpath = "//input[@id=\"previousPolicyType-COMPREHENSIVE\"]//following-sibling::span[text()=\"Comprehensive\"]")
     WebElement previousPolicyTypeCOMP;
+    @FindBy(xpath = "//input[@id=\"previousPolicyType-SAOD\"]//following-sibling::span[text()=\"Standalone Own Damage\"]")
+    WebElement saod;
+
 
 
     @FindBy(xpath = "//input[@id=\"prevClaim-false\"]//following-sibling::span")
@@ -140,8 +143,8 @@ public class turtlemint_page extends TestBase {
     public void Comppremiumtm() throws InterruptedException {
 
        // String excelPath = "/Users/sayali/Documents/insurer/Premium_compair_Automation/src/test/resources/registration_data.xlsx";
-       // String excelPath = "/Users/nitinrathod/Documents/registration_data.xlsx";
-        String excelPath = "C:\\Users\\pradeep.u_turtlemint\\Downloads\\registration_data.xlsx";
+        String excelPath = "/Users/nitinrathod/Documents/registration_data.xlsx";
+       // String excelPath = "C:\\Users\\pradeep.u_turtlemint\\Downloads\\registration_data.xlsx";
         List<String> regNumbers = TestUtil.getRegistrationNumbers(excelPath);
         System.out.println(regNumbers);
 
@@ -156,7 +159,7 @@ public class turtlemint_page extends TestBase {
         for (String reg : regNumbers) {
             try {
                 Thread.sleep(3000);
-                TestUtil.sendKeys(registrationNumber, reg, "picked 1st");
+                TestUtil.sendKeys(registrationNumber, reg, "");
                 Thread.sleep(3000);
                 TestUtil.click(registrationNumberButton, "");
                 TestUtil.click(policyTypecomp, "");
@@ -179,37 +182,45 @@ public class turtlemint_page extends TestBase {
 
                 Thread.sleep(2000);
                 JavascriptExecutor js = (JavascriptExecutor) driver;
-                js.executeScript("arguments[0].click();", previousPolicyTypeCOMP);
+
+                String prepolicytype = "";
+
+                if (TestUtil.isVisible(previousPolicyTypeCOMP)) {
+                    TestUtil.click(previousPolicyTypeCOMP, "Selected 1 year TP policy type");
+                    prepolicytype = previousPolicyTypeCOMP.getText();
+                } else if (TestUtil.isVisible(saod)) {
+                    js.executeScript("arguments[0].click();", saod);
+                    System.out.println("Selected SAOD policy type");
+                    prepolicytype = saod.getText();
+                } else {
+                    System.out.println("❌ No TP policy option found.");
+                }
+
+                System.out.println("Selected Policy Type: " + prepolicytype);
+
                 Thread.sleep(2000);
                 TestUtil.click(prevClaim, "select prev Claim as No");
+                Thread.sleep(2000);
                 TestUtil.click(ncb, "click on ncb dropdown");
+                Thread.sleep(2000);
                 TestUtil.click(zeroNCB, " NCB : 0% selected");
 
 
                 try {
 
                     WebDriverWait shortWait = new WebDriverWait(driver, Duration.ofSeconds(5));
-
-                    List<WebElement> insurerElements = driver.findElements(
-                            By.xpath("//div[@data-auto='previousinsurer-uiSelect']//span")
-                    );
+                    List<WebElement> insurerElements = driver.findElements(By.xpath("//div[@data-auto='previousinsurer-uiSelect']//span"));
 
                     if (!insurerElements.isEmpty()) {
                         WebElement previousinsureruiSelect = insurerElements.get(0);
-
                         shortWait.until(ExpectedConditions.visibilityOf(previousinsureruiSelect));
-
                         String selectedValue = previousinsureruiSelect.getText().trim();
                         System.out.println("Current selected value: " + selectedValue);
 
                         if (selectedValue.isEmpty() || selectedValue.equalsIgnoreCase("Select")) {
                             System.out.println("No value is selected, selecting one from dropdown.");
-
                             TestUtil.click(previousinsureruiSelect, "Clicking to open dropdown");
-
-                            WebElement option = shortWait.until(ExpectedConditions.elementToBeClickable(
-                                    By.xpath("//span[text()=\"Bajaj Allianz\"]")
-                            ));
+                            WebElement option = shortWait.until(ExpectedConditions.elementToBeClickable(By.xpath("//span[text()=\"Bajaj Allianz\"]")));
                             TestUtil.click(option, "Selecting Bajaj from dropdown");
                         }
                     } else {
@@ -246,18 +257,13 @@ public class turtlemint_page extends TestBase {
                 wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.xpath("//div[@class=\"priceArea hidden-xs text-center\"]//span[contains(@ng-if , \"multiPlanDropDown[insurer.insurerProvider\")]")));
                 wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.xpath("//span[@class=\"bold vehicleIdv ng-binding\"]")));
 
-
-
                 List<WebElement> insurerLogos = driver.findElements(By.xpath("//div[@class='logoArea col-xs-6 col-sm-3 text-left']//img[contains(@class, 'client-logo-img')]"));
                 List<WebElement> insurerPremiums = driver.findElements(By.xpath("//div[@class=\"priceArea hidden-xs text-center\"]//span[contains(@ng-if , \"multiPlanDropDown[insurer.insurerProvider\")]"));
                 List<WebElement> premiumIdv = driver.findElements(By.xpath("//span[@class=\"bold vehicleIdv ng-binding\"]"));
 
-
-
                 System.out.println("Logos found: " + insurerLogos.size());
                 System.out.println("Premiums found: " + insurerPremiums.size());
                 System.out.println("Premiums IDV: " + premiumIdv.size());
-
 
                 if (insurerLogos.size() == insurerPremiums.size() && insurerLogos.size() == premiumIdv.size()) {
                     for (int i = 0; i < insurerLogos.size(); i++) {
@@ -265,15 +271,12 @@ public class turtlemint_page extends TestBase {
                         WebElement premiumBtn = insurerPremiums.get(i);
                         WebElement idvElement = premiumIdv.get(i);
 
-
-
                         String srcValue = logo.getAttribute("src");
                         String[] parts = srcValue.split("/");
                         String insurerName = parts[parts.length - 1].replace(".png", "");
 
                         String premium = premiumBtn.getText().replace(",", "").replace("₹", "").trim();
                         String premiumidv = idvElement.getText().replace(",", "").replace("₹", "").trim();
-
 
                         String[] row = {
                                 reg,
@@ -284,37 +287,28 @@ public class turtlemint_page extends TestBase {
                                 resgistrationdate,
                                 insurerName,
                                 premiumidv,
-                                premium,
-
-
+                                premium
                         };
                         premiumData.add(row);
                     }
                 }
-
-                ///////////////
-
 
                 else {
                     System.err.println("Mismatch in insurer and premium count for Reg: " + reg);
                     failedRegs.add(reg);
                 }
 
-
-
-                TestUtil.click(actpointtext,"");
-                Thread.sleep(10000);
-                List<String> ActivityP = new ArrayList<>();
-                List<WebElement> Activitypt = driver.findElements(By.xpath("//div[@class=\"flex layout-align-space-between ng-scope\"]"));
-                for (WebElement act : Activitypt) {
-                    String actp = act.getText();
-                    ActivityP.add(actp);
-                }
-                for (String value : ActivityP) {
-                    System.out.println(value);
-                }
-
-
+//                TestUtil.click(actpointtext,"");
+//                Thread.sleep(10000);
+//                List<String> ActivityP = new ArrayList<>();
+//                List<WebElement> Activitypt = driver.findElements(By.xpath("//div[@class=\"flex layout-align-space-between ng-scope\"]"));
+//                for (WebElement act : Activitypt) {
+//                    String actp = act.getText();
+//                    ActivityP.add(actp);
+//                }
+//                for (String value : ActivityP) {
+//                    System.out.println(value);
+//                }
 
                 Actions actions = new Actions(driver);
                 actions.moveToElement(hoverIn).perform();
@@ -350,7 +344,12 @@ public class turtlemint_page extends TestBase {
                         String premiumidv1 = idvElement.getText().replace(",", "").replace("₹", "").trim();
 
                         String[] row1 = {
-
+                                reg,
+                                vehicleMakeModel,
+                                vehicleFuelType,
+                                vehicleVarient,
+                                prePolicy,
+                                resgistrationdate,
                                 insurerName,
                                 premiumidv1,
                                 premium1,
@@ -360,32 +359,20 @@ public class turtlemint_page extends TestBase {
                     }
                 }
 
-
-
-
-                /////
-
             } catch (Exception e) {
                 System.err.println("❌ Failed for Reg Number: " + reg);
                 e.printStackTrace();
                 failedRegs.add(reg);
             }
-
-            // Move to next
-            TestUtil.click(logoback, "");
-            Thread.sleep(4000);
-            TestUtil.click(sellButton, "");
-            Thread.sleep(2000);
-            TestUtil.click(carInsurance, "");
-            System.out.println("jwh");
+            driver.get("https://pro.turtlemint.com/car-insurance/create");
         }
 
-        String dateTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss"));
+        String dateTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy---HH-mm-ss"));
 
         // ✅ Save successful data
        // String outputExcel = "/Users/sayali/Desktop/RenewBuy_premium" + dateTime + ".xlsx";
-        //  String outputExcel = "/Users/nitinrathod/Desktop/Turtlemint_COMP_premium" + dateTime + ".xlsx";
-        String outputExcel = "C:\\Users\\pradeep.u_turtlemint\\Downloads\\Turtlemint_COMP_premium" + dateTime + ".xlsx";
+          String outputExcel = "/Users/nitinrathod/Desktop/Turtlemint_COMP_premium" + dateTime + ".xlsx";
+       // String outputExcel = "C:\\Users\\pradeep.u_turtlemint\\Downloads\\Turtlemint_COMP_premium" + dateTime + ".xlsx";
 
         TestUtil.writeCombinedSheetTM_Comp(outputExcel, premiumData , maxIDV);
         // Optional: Print or save failed registrations
@@ -409,8 +396,8 @@ public class turtlemint_page extends TestBase {
     public void Tppremiumtm() throws InterruptedException {
 
        // String excelPath = "/Users/sayali/Documents/insurer/Premium_compair_Automation/src/test/resources/registration_data.xlsx";
-       // String excelPath = "/Users/nitinrathod/Documents/registration_data.xlsx";
-        String excelPath = "C:\\Users\\pradeep.u_turtlemint\\Downloads\\registration_data.xlsx";
+        String excelPath = "/Users/nitinrathod/Documents/registration_data.xlsx";
+      //  String excelPath = "C:\\Users\\pradeep.u_turtlemint\\Downloads\\registration_data.xlsx";
         List<String> regNumbers = TestUtil.getRegistrationNumbers(excelPath);
         System.out.println(regNumbers);
 
@@ -551,21 +538,15 @@ public class turtlemint_page extends TestBase {
                 failedRegs.add(reg);
             }
 
-            // Move to next
-            TestUtil.click(logoback, "");
-            Thread.sleep(4000);
-            TestUtil.click(sellButton, "");
-            Thread.sleep(2000);
-            TestUtil.click(carInsurance, "");
-            System.out.println("jwh");
+           driver.get("https://pro.turtlemint.com/car-insurance/create");
         }
 
-        String dateTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss"));
+        String dateTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy---HH-mm-ss"));
 
         // ✅ Save successful data
       //  String outputExcel = "/Users/sayali/Desktop/RenewBuy_premium" + dateTime + ".xlsx";
-      //  String outputExcel = "/Users/nitinrathod/Desktop/Turtlemint_TP_premium" + dateTime + ".xlsx";
-        String outputExcel = "C:\\Users\\pradeep.u_turtlemint\\Downloads\\Turtlemint_TP_premium" + dateTime + ".xlsx";
+        String outputExcel = "/Users/nitinrathod/Desktop/Turtlemint_TP_premium" + dateTime + ".xlsx";
+       // String outputExcel = "C:\\Users\\pradeep.u_turtlemint\\Downloads\\Turtlemint_TP_premium" + dateTime + ".xlsx";
 
         TestUtil.writePremiumDataTm(outputExcel, premiumData);
         // Optional: Print or save failed registrations
