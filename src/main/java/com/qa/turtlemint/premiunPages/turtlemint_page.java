@@ -49,8 +49,15 @@ public class turtlemint_page extends TestBase {
     WebElement previousPolicyTypeTP;
     @FindBy(xpath = "//input[@id=\"previousPolicyType-COMPREHENSIVE\"]//following-sibling::span[text()=\"Comprehensive\"]")
     WebElement previousPolicyTypeCOMP;
+    @FindBy(xpath = "//input[@id=\"previousPolicyType-COMPREHENSIVE\"]//following-sibling::span[text()=\"Comprehensive\"]//..//input")
+    WebElement comptxt;
+
     @FindBy(xpath = "//input[@id=\"previousPolicyType-SAOD\"]//following-sibling::span[text()=\"Standalone Own Damage\"]")
     WebElement saod;
+    @FindBy(xpath = "//input[@id=\"previousPolicyType-SAOD\"]//following-sibling::span[text()=\"Standalone Own Damage\"]//..//input")
+    WebElement saodtext;
+
+
 
 
 
@@ -88,6 +95,7 @@ public class turtlemint_page extends TestBase {
     WebElement fuel;
     @FindBy(xpath = "//li[@ng-if=\"motorDetail.variant\"]//p[@ng-click=\"onCopylink()\"]")
     WebElement variant;
+
 
     @FindBy(xpath = "//li[@ng-if=\"config.policyType\"]//p[@class=\"ng-binding\"]")
     WebElement getPolicyType;
@@ -187,11 +195,11 @@ public class turtlemint_page extends TestBase {
 
                 if (TestUtil.isVisible(previousPolicyTypeCOMP)) {
                     TestUtil.click(previousPolicyTypeCOMP, "Selected 1 year TP policy type");
-                    prepolicytype = previousPolicyTypeCOMP.getText();
+                    prepolicytype = comptxt.getAttribute("value");
                 } else if (TestUtil.isVisible(saod)) {
                     js.executeScript("arguments[0].click();", saod);
                     System.out.println("Selected SAOD policy type");
-                    prepolicytype = saod.getText();
+                    prepolicytype = saodtext.getAttribute("value");
                 } else {
                     System.out.println("❌ No TP policy option found.");
                 }
@@ -244,9 +252,9 @@ public class turtlemint_page extends TestBase {
                 String vehicleMakeModel = makeModel.getText();
                 String vehicleFuelType = fuel.getText();
                 String vehicleVarient = variant.getText();
-                String prePolicy = getPolicyType.getText();
                 String resgistrationdate = resgisdate.getText();
-                System.out.println(vehicleMakeModel + " ---" + vehicleFuelType + "--- " + vehicleVarient + " ____" + prePolicy);
+
+                System.out.println(vehicleMakeModel + " ---" + vehicleFuelType + "--- " + vehicleVarient + " ____" + prepolicytype);
                 TestUtil.click(closedButton, "");
                 Thread.sleep(15000);
                 WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
@@ -280,7 +288,7 @@ public class turtlemint_page extends TestBase {
                                 vehicleMakeModel,
                                 vehicleFuelType,
                                 vehicleVarient,
-                                prePolicy,
+                                prepolicytype,
                                 resgistrationdate,
                                 insurerName,
                                 premiumidv,
@@ -345,7 +353,7 @@ public class turtlemint_page extends TestBase {
                                 vehicleMakeModel,
                                 vehicleFuelType,
                                 vehicleVarient,
-                                prePolicy,
+                                prepolicytype,
                                 resgistrationdate,
                                 insurerName,
                                 premiumidv1,
@@ -370,7 +378,7 @@ public class turtlemint_page extends TestBase {
         // ✅ Save successful data
        // String outputExcel = "/Users/sayali/Desktop/RenewBuy_premium" + dateTime + ".xlsx";
           String outputExcel = "/Users/nitinrathod/Desktop/Turtlemint_COMP_premium" + dateTime + ".xlsx";
-       // String outputExcel = "C:\\Users\\pradeep.u_turtlemint\\Downloads\\Turtlemint_COMP_premium" + dateTime + ".xlsx";
+       // String outputExcel = "C:\\Users\\pradeep.u_turtlemint\\Desktop\\ALLBrokerdata\\Turtlemint_COMP_premium" + dateTime + ".xlsx";
 
         TestUtil.writeCombinedSheetTM_Comp(outputExcel, premiumData , maxIDV);
         // Optional: Print or save failed registrations
@@ -538,7 +546,7 @@ public class turtlemint_page extends TestBase {
         // ✅ Save successful data
       //  String outputExcel = "/Users/sayali/Desktop/RenewBuy_premium" + dateTime + ".xlsx";
         String outputExcel = "/Users/nitinrathod/Desktop/Turtlemint_TP_premium" + dateTime + ".xlsx";
-       // String outputExcel = "C:\\Users\\pradeep.u_turtlemint\\Downloads\\Turtlemint_TP_premium" + dateTime + ".xlsx";
+       // String outputExcel = "C:\\Users\\pradeep.u_turtlemint\\Desktop\\ALLBrokerdata\\Turtlemint_TP_premium" + dateTime + ".xlsx";
 
         TestUtil.writePremiumDataTm(outputExcel, premiumData);
         // Optional: Print or save failed registrations
