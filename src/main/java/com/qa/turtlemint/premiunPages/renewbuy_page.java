@@ -165,9 +165,9 @@ public class renewbuy_page extends TestBase {
 
         for (String reg : regNumbers) {
             try {
-                wait.until(ExpectedConditions.elementToBeClickable(registrationNumber));
+                wait.until(ExpectedConditions.elementToBeClickable(registrationNumber)).sendKeys(reg);
                 System.out.println("entered registration number");
-                wait.until(ExpectedConditions.elementToBeClickable(getVehicleDetailsIdButton));
+                wait.until(ExpectedConditions.elementToBeClickable(getVehicleDetailsIdButton)).click();
                 System.out.println("click on vehicle details button");
 
                 Thread.sleep(4000);
@@ -371,7 +371,7 @@ public class renewbuy_page extends TestBase {
 
         for (String reg : regNumbers) {
             try {
-                wait.until(ExpectedConditions.elementToBeClickable(registrationNumber));
+                wait.until(ExpectedConditions.elementToBeClickable(registrationNumber)).sendKeys(reg);
                 TestUtil.sendKeys(registrationNumber,reg,"entered registration number");
                 wait.until(ExpectedConditions.elementToBeClickable(getVehicleDetailsIdButton));
                TestUtil.click(getVehicleDetailsIdButton,"click on vehicle details button");
