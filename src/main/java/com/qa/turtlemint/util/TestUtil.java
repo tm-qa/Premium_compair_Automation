@@ -530,7 +530,7 @@ public class TestUtil {
 
             // Header row
             String[] headers = {
-                    "Reg No", "Make & Model", "Fuel", "Variant", "Policy", "Reg Date",
+                    "Reg No", "Make & Model", "Fuel", "Variant", "Pre Policy Type", "Reg Date",
                     "MIN_Insurer", "MIN_IDV", "MIN_Premium",
                     "MAX_Insurer", "MAX_IDV", "MAX_Premium"
             };
