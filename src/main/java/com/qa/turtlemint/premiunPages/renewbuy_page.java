@@ -143,6 +143,7 @@ public class renewbuy_page extends TestBase {
         String excelPath = "/Users/nitinrathod/Documents/registration_data.xlsx";
       //  String excelPath = "C:\\Users\\pradeep.u_turtlemint\\Downloads\\registration_data.xlsx";
         List<String> regNumbers = TestUtil.getRegistrationNumbers(excelPath);
+        System.out.println(regNumbers);
 
         List<String[]> addOnsData = new ArrayList<>();
         List<String[]> premiumData = new ArrayList<>(); // successful data
@@ -350,6 +351,8 @@ public class renewbuy_page extends TestBase {
          String excelPath = "/Users/nitinrathod/Documents/registration_data.xlsx";
       //  String excelPath = "C:\\Users\\pradeep.u_turtlemint\\Downloads\\registration_data.xlsx";
         List<String> regNumbers = TestUtil.getRegistrationNumbers(excelPath);
+        System.out.println(regNumbers);
+
         List<String[]> addOnsData = new ArrayList<>();
         List<String[]> premiumData = new ArrayList<>(); // successful data
         List<String> failedRegs = new ArrayList<>();    // failed registrations
