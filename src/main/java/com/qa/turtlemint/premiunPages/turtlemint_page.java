@@ -443,10 +443,7 @@ public class turtlemint_page extends TestBase {
                 try {
 
                     WebDriverWait shortWait = new WebDriverWait(driver, Duration.ofSeconds(5));
-
-                    List<WebElement> insurerElements = driver.findElements(
-                            By.xpath("//div[@data-auto='previousinsurer-uiSelect']//span")
-                    );
+                    List<WebElement> insurerElements = driver.findElements(By.xpath("//div[@data-auto='previousinsurer-uiSelect']//span"));
 
                     if (!insurerElements.isEmpty()) {
                         WebElement previousinsureruiSelect = insurerElements.get(0);
@@ -461,9 +458,7 @@ public class turtlemint_page extends TestBase {
 
                             TestUtil.click(previousinsureruiSelect, "Clicking to open dropdown");
 
-                            WebElement option = shortWait.until(ExpectedConditions.elementToBeClickable(
-                                    By.xpath("//span[text()=\"Bajaj Allianz\"]")
-                            ));
+                            WebElement option = shortWait.until(ExpectedConditions.elementToBeClickable(By.xpath("//span[text()=\"Bajaj Allianz\"]")));
                             TestUtil.click(option, "Selecting Bajaj from dropdown");
                         }
                     } else {
