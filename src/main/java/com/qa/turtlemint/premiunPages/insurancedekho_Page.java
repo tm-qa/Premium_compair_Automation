@@ -215,6 +215,9 @@ public class insurancedekho_Page extends TestBase {
                 failedRegs.add(reg);
             }
             driver.get("https://pos.insurancedekho.com/core/sell/car");
+            Thread.sleep(2000);
+            driver.navigate().refresh();
+            Thread.sleep(4000);
         }
         String dateTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy---HH-mm-ss"));
         // ✅ Save successful data
@@ -247,7 +250,9 @@ public class insurancedekho_Page extends TestBase {
         JavascriptExecutor js = (JavascriptExecutor) driver;
         js.executeScript("arguments[0].click();", selectcar);
         TestUtil.click(selectcar, "");
-        Thread.sleep(3000);
+        Thread.sleep(2000);
+        driver.navigate().refresh();
+        Thread.sleep(4000);
 
         String excelPath = "/Users/nitinrathod/Documents/registration_data.xlsx";
      //   String excelPath = "C:\\Users\\pradeep.u_turtlemint\\Downloads\\registration_data.xlsx";
@@ -357,6 +362,9 @@ public class insurancedekho_Page extends TestBase {
                 failedRegs.add(reg);
             }
             driver.get("https://pos.insurancedekho.com/core/sell/car");
+            Thread.sleep(2000);
+            driver.navigate().refresh();
+            Thread.sleep(4000);
         }
         String dateTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy-HH-mm-ss"));
         // ✅ Save successful data
