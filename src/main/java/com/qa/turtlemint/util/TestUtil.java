@@ -10,6 +10,7 @@ import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.openqa.selenium.*;
 import org.openqa.selenium.interactions.Actions;
@@ -22,10 +23,8 @@ import java.text.SimpleDateFormat;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import java.util.NoSuchElementException;
-import java.util.Random;
 
 import static com.qa.turtlemint.base.TestBase.driver;
 
@@ -477,52 +476,129 @@ public class TestUtil {
         }
     }
 
-    public static void writeCombinedSheetTM_Comp(String filePath, List<String[]> premiumData, List<String[]> maxIDV) {
-        Workbook workbook = new XSSFWorkbook();
-        Sheet sheet = workbook.createSheet("Premium and Max IDV Data");
+//    public static void writeCombinedSheetTM_Comp(String filePath, List<String[]> premiumData, List<String[]> maxIDV) {
+//        Workbook workbook = new XSSFWorkbook();
+//        Sheet sheet = workbook.createSheet("Premium and Max IDV Data");
+//
+//
+//        String[] headers = {
+//                "RegistrationNumber", "Make and Model", "Fuel","Variant", "Previous Policy Type", "Registration Date", "Insurer",
+//                "Min_IDV" , "MinIDV_Premium","Insurer",
+//                "Max_IDV" , "MaxIDV_Premium"
+//        };
+//
+//
+//        Row headerRow = sheet.createRow(0);
+//        for (int i = 0; i < headers.length; i++) {
+//            headerRow.createCell(i).setCellValue(headers[i]);
+//        }
+//
+//
+//        int maxRows = Math.max(premiumData.size(), maxIDV.size());
+//
+//
+//        for (int i = 0; i < maxRows; i++) {
+//            Row row = sheet.createRow(i + 1); // +1 because row 0 is header
+//
+//            if (i < premiumData.size()) {
+//                String[] premiumRow = premiumData.get(i);
+//                for (int j = 0; j < premiumRow.length; j++) {
+//                    row.createCell(j).setCellValue(premiumRow[j]);
+//                }
+//            }
+//
+//            if (i < maxIDV.size()) {
+//                String[] idvRow = maxIDV.get(i);
+//                for (int j = 0; j < idvRow.length; j++) {
+//                    row.createCell(9 + j).setCellValue(idvRow[j]); // Starting after premium columns
+//                }
+//            }
+//        }
+//
+//        try (FileOutputStream fos = new FileOutputStream(filePath)) {
+//            workbook.write(fos);
+//            workbook.close();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//    }
 
 
-        String[] headers = {
-                "RegistrationNumber", "Make and Model", "Fuel","Variant", "Previous Policy Type", "Registration Date", "Insurer",
-                "Min_IDV" , "MinIDV_Premium","Insurer",
-                "Max_IDV" , "MaxIDV_Premium"
-        };
+    public static void writeCombinedSheetTM_Comp(String excelPath, List<String[]> premiumData, List<String[]> maxIDV) {
+        try (XSSFWorkbook workbook = new XSSFWorkbook()) {
+            XSSFSheet sheet = workbook.createSheet("premiumData");
 
+            // Header row
+            String[] headers = {
+                    "Reg No", "Make & Model", "Fuel", "Variant", "Policy", "Reg Date",
+                    "MIN_Insurer", "MIN_IDV", "MIN_Premium",
+                    "MAX_Insurer", "MAX_IDV", "MAX_Premium"
+            };
+            Row headerRow = sheet.createRow(0);
+            for (int i = 0; i < headers.length; i++) {
+                headerRow.createCell(i).setCellValue(headers[i]);
+            }
 
-        Row headerRow = sheet.createRow(0);
-        for (int i = 0; i < headers.length; i++) {
-            headerRow.createCell(i).setCellValue(headers[i]);
-        }
+            // Group data by unique vehicle info: Reg No to Reg Date (columns 0–5)
+            Map<String, List<String[]>> minMap = new LinkedHashMap<>();
+            for (String[] row : premiumData) {
+                String key = String.join("|", Arrays.copyOfRange(row, 0, 6));
+                minMap.computeIfAbsent(key, k -> new ArrayList<>()).add(row);
+            }
 
+            Map<String, List<String[]>> maxMap = new LinkedHashMap<>();
+            for (String[] row : maxIDV) {
+                String key = String.join("|", Arrays.copyOfRange(row, 0, 6));
+                maxMap.computeIfAbsent(key, k -> new ArrayList<>()).add(row);
+            }
 
-        int maxRows = Math.max(premiumData.size(), maxIDV.size());
+            int rowNum = 1;
+            for (String key : minMap.keySet()) {
+                List<String[]> minRows = minMap.getOrDefault(key, new ArrayList<>());
+                List<String[]> maxRows = maxMap.getOrDefault(key, new ArrayList<>());
 
+                int maxLen = Math.max(minRows.size(), maxRows.size());
+                for (int i = 0; i < maxLen; i++) {
+                    Row row = sheet.createRow(rowNum++);
 
-        for (int i = 0; i < maxRows; i++) {
-            Row row = sheet.createRow(i + 1); // +1 because row 0 is header
+                    String[] common = key.split("\\|");
+                    for (int j = 0; j < common.length; j++) {
+                        row.createCell(j).setCellValue(common[j]);
+                    }
 
-            if (i < premiumData.size()) {
-                String[] premiumRow = premiumData.get(i);
-                for (int j = 0; j < premiumRow.length; j++) {
-                    row.createCell(j).setCellValue(premiumRow[j]);
+                    // MIN columns
+                    if (i < minRows.size()) {
+                        String[] min = minRows.get(i);
+                        row.createCell(6).setCellValue(min[6]);
+                        row.createCell(7).setCellValue(min[7]);
+                        row.createCell(8).setCellValue(min[8]);
+                    }
+
+                    // MAX columns
+                    if (i < maxRows.size()) {
+                        String[] max = maxRows.get(i);
+                        row.createCell(9).setCellValue(max[6]);
+                        row.createCell(10).setCellValue(max[7]);
+                        row.createCell(11).setCellValue(max[8]);
+                    }
                 }
             }
 
-            if (i < maxIDV.size()) {
-                String[] idvRow = maxIDV.get(i);
-                for (int j = 0; j < idvRow.length; j++) {
-                    row.createCell(9 + j).setCellValue(idvRow[j]); // Starting after premium columns
-                }
+            try (FileOutputStream fileOut = new FileOutputStream(excelPath)) {
+                workbook.write(fileOut);
             }
-        }
 
-        try (FileOutputStream fos = new FileOutputStream(filePath)) {
-            workbook.write(fos);
-            workbook.close();
+            System.out.println("✅ Excel successfully written to: " + excelPath);
+
         } catch (IOException e) {
+            System.err.println("❌ Error writing Excel: " + e.getMessage());
             e.printStackTrace();
         }
     }
+
+
+
+
 
     public static void writePremiumDataRBCOMP_Add1(String filePath, List<String[]> premiumDataRows, List<String[]> addOnsDataRows) {
         Workbook workbook = new XSSFWorkbook();
