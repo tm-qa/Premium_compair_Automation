@@ -375,7 +375,6 @@ public class renewbuy_page extends TestBase {
         for (String reg : regNumbers) {
             try {
                 wait.until(ExpectedConditions.elementToBeClickable(registrationNumber)).sendKeys(reg);
-                TestUtil.sendKeys(registrationNumber,reg,"entered registration number");
                 wait.until(ExpectedConditions.elementToBeClickable(getVehicleDetailsIdButton));
                TestUtil.click(getVehicleDetailsIdButton,"click on vehicle details button");
 
