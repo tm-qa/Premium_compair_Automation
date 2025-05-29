@@ -155,7 +155,7 @@ public class turtlemint_page extends TestBase {
         TestUtil.click(sellButton, "ed");
         Thread.sleep(3000);
         TestUtil.click(carInsurance, "");
-
+        int count = 0;
         for (String reg : regNumbers) {
             try {
                 Thread.sleep(3000);
@@ -236,12 +236,9 @@ public class turtlemint_page extends TestBase {
                 }
 
                 TestUtil.click(saveAndCon, "");
-                try {
+                if (count == 0 && gotIt.isDisplayed()) {
                     TestUtil.click(gotIt, "");
-                } catch (Exception e) {
-                    System.out.println("'Got It' button not present, skipping.");
                 }
-
                 Thread.sleep(15000);
                 js.executeScript("arguments[0].click();", editButton);
                 String vehicleMakeModel = makeModel.getText();
@@ -364,6 +361,7 @@ public class turtlemint_page extends TestBase {
                 e.printStackTrace();
                 failedRegs.add(reg);
             }
+            count++;
             driver.get("https://pro.turtlemint.com/car-insurance/create");
         }
 
@@ -407,7 +405,7 @@ public class turtlemint_page extends TestBase {
         TestUtil.click(sellButton, "Clicked on sell button");
         Thread.sleep(3000);
         TestUtil.click(carInsurance, "Clicked on car insurance");
-
+        int count = 0;
         for (String reg : regNumbers) {
             try {
                 Thread.sleep(3000);
@@ -474,10 +472,8 @@ public class turtlemint_page extends TestBase {
                 }
 
                 TestUtil.click(saveAndCon, "");
-                try {
+                if (count == 0 && gotIt.isDisplayed()) {
                     TestUtil.click(gotIt, "");
-                } catch (Exception e) {
-                    System.out.println("'Got It' button not present, skipping.");
                 }
                 Thread.sleep(20000);
                 js.executeScript("arguments[0].click();", editButton);
@@ -532,6 +528,7 @@ public class turtlemint_page extends TestBase {
                 e.printStackTrace();
                 failedRegs.add(reg);
             }
+            count++;
 
            driver.get("https://pro.turtlemint.com/car-insurance/create");
         }

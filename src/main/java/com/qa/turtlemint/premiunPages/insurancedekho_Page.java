@@ -208,14 +208,13 @@ public class insurancedekho_Page extends TestBase {
                     failedRegs.add(reg);
                 }
 
-                driver.get("https://pos.insurancedekho.com/core/sell/car");
-
 
             } catch (Exception e) {
                 System.err.println("❌ Failed for Reg Number: " + reg);
                 e.printStackTrace();
                 failedRegs.add(reg);
             }
+            driver.get("https://pos.insurancedekho.com/core/sell/car");
         }
         String dateTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy---HH-mm-ss"));
         // ✅ Save successful data
@@ -351,14 +350,13 @@ public class insurancedekho_Page extends TestBase {
                     failedRegs.add(reg);
                 }
 
-                driver.get("https://pos.insurancedekho.com/core/sell/car");
-
 
             } catch (Exception e) {
                 System.err.println("❌ Failed for Reg Number: " + reg);
                 e.printStackTrace();
                 failedRegs.add(reg);
             }
+            driver.get("https://pos.insurancedekho.com/core/sell/car");
         }
         String dateTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy-HH-mm-ss"));
         // ✅ Save successful data
