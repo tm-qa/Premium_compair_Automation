@@ -404,11 +404,11 @@ public class renewbuy_page extends TestBase {
 
                 if (TestUtil.isVisible(policyExiryTypeTP)) {
                     js.executeScript("arguments[0].click();", policyExiryTypeTP);
-                 //   TestUtil.click(policyExiryTypeTP, "Selected 1 year TP policy type");
+                    TestUtil.click(policyExiryTypeTP, "Selected 1 year TP policy type");
                     prepolicytype = policyExiryTypeTP.getText();
                 } else if (TestUtil.isVisible(policyExiryTypeTP3)) {
                     js.executeScript("arguments[0].click();", policyExiryTypeTP);
-                 //   TestUtil.click(policyExiryTypeTP3, "Selected 3 year TP policy type");
+                    TestUtil.click(policyExiryTypeTP3, "Selected 3 year TP policy type");
                     prepolicytype = policyExiryTypeTP3.getText();
                 } else {
                     System.out.println("❌ No TP policy option found.");
