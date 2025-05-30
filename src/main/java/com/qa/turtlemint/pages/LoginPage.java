@@ -58,7 +58,7 @@ public class LoginPage extends TestBase {
         return new GrowPage();
     }
 
-    public void LoginInsurancedekho(String username, String otp) throws InterruptedException {
+    public void LoginInsurancedekho(String username) throws InterruptedException {
         String strUrl = driver.getCurrentUrl();
         LogUtils.info("Opened Website: " + strUrl);
         Thread.sleep(3000);
@@ -66,9 +66,9 @@ public class LoginPage extends TestBase {
         TestUtil.sendKeys(MobileNumberID, username, "Mobile Number Entered");
        // MobileNumberID.sendKeys(username + Keys.ENTER);
         TestUtil.click(startearning, "Start earning pressed");
-        Thread.sleep(25000);
-        TestUtil.click(VerifyOTPBtnID, "Login Successful");
-        Thread.sleep(8000);
+        Thread.sleep(20000);
+       // TestUtil.click(VerifyOTPBtnID, "Login Successful");
+        Thread.sleep(5000);
         TestUtil.getScreenShot();
 
     }
