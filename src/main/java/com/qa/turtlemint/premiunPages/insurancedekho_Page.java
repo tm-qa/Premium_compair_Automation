@@ -62,6 +62,14 @@ public class insurancedekho_Page extends TestBase {
     WebElement modelmodel;
     @FindBy(xpath = "//a[text()=\"Sell\"]")
     WebElement sell;
+    @FindBy(xpath = "//div[@class=\"filterBtn1 filterBtn active\"]")
+    WebElement predrop;
+    @FindBy(xpath = "//label[@for=\"third_party\"]")
+    WebElement predropTP;
+
+
+
+
 
     public insurancedekho_Page() {
         PageFactory.initElements(driver, this);
@@ -308,8 +316,11 @@ public class insurancedekho_Page extends TestBase {
                 System.out.println(prevpolicytype);
 
                 TestUtil.click(confirm, "Clicked on confirm to get quotes");
-                Thread.sleep(30000);
+                Thread.sleep(15000);
+                TestUtil.click(predrop,"");
+                TestUtil.click(predropTP,"");
 
+                Thread.sleep(25000);
                 wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.xpath("//span[@class=\"insurerNameAndButtonWrapper\"]//h2")));
                 wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.xpath("//button[@class=\"quoteButton\"]")));
                 wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.xpath("//div[@class='pointEarn']/p[position() mod 2 = 1]")));
