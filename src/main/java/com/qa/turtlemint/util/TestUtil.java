@@ -418,7 +418,7 @@ public class TestUtil {
         }
     }
 
-    public static void writePremiumDataTm(String filePath, List<String[]> dataRows) {
+    public static void writePremiumDataTm(String filePath, List<String[]> dataRows,List<String[]> ActivityP) {
         Workbook workbook = new XSSFWorkbook();
         Sheet sheet = workbook.createSheet("PremiumData");
 
@@ -438,7 +438,33 @@ public class TestUtil {
             for (int i = 0; i < rowData.length; i++) {
                 row.createCell(i).setCellValue(rowData[i]);
             }
+
         }
+        // === Sheet 2: ActivityPoints (only MinIDV data as per current main method) ===
+        Sheet activitySheet = workbook.createSheet("ActivityPointsMIN");
+        // Header matches what you currently have in your ActivityP rows (3 columns)
+        String[] activityHeaders = {"Reg No", "MinIDVInsurer", "MinIDVActivityPoints"};
+        Row activityHeaderRow = activitySheet.createRow(0);
+        for (int i = 0; i < activityHeaders.length; i++) {
+            activityHeaderRow.createCell(i).setCellValue(activityHeaders[i]);
+        }
+
+        int activityRowIndex = 1;
+        for (String[] rowData : ActivityP) {
+            Row row = activitySheet.createRow(activityRowIndex++);
+            for (int i = 0; i < rowData.length; i++) {
+                row.createCell(i).setCellValue(rowData[i]);
+            }
+        }
+
+        // Auto-size columns for better readability
+        for (int i = 0; i < headers.length; i++) {
+            sheet.autoSizeColumn(i);
+        }
+        for (int i = 0; i < activityHeaders.length; i++) {
+            activitySheet.autoSizeColumn(i);
+        }
+
 
         try (FileOutputStream fos = new FileOutputStream(filePath)) {
             workbook.write(fos);
