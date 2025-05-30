@@ -567,6 +567,7 @@ public class turtlemint_page extends TestBase {
                 e.printStackTrace();
                 failedRegs.add(reg);
             }
+
             count++;
             driver.get("https://pro.turtlemint.com/car-insurance/create");
         }
