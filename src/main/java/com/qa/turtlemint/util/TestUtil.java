@@ -524,22 +524,24 @@ public class TestUtil {
 //    }
 
 
-    public static void writeCombinedSheetTM_Comp(String excelPath, List<String[]> premiumData, List<String[]> maxIDV) {
+    public static void writeCombinedSheetTM_Comp(String excelPath, List<String[]> premiumData, List<String[]> maxIDV, List<String[]> ActivityP, List<String[]> ActivityP2) {
         try (XSSFWorkbook workbook = new XSSFWorkbook()) {
+
+            // === Sheet 1: premiumData (combined min and max premiums) ===
             XSSFSheet sheet = workbook.createSheet("premiumData");
 
-            // Header row
             String[] headers = {
                     "Reg No", "Make & Model", "Fuel", "Variant", "Pre Policy Type", "Reg Date",
                     "MIN_Insurer", "MIN_IDV", "MIN_Premium",
                     "MAX_Insurer", "MAX_IDV", "MAX_Premium"
             };
+
             Row headerRow = sheet.createRow(0);
             for (int i = 0; i < headers.length; i++) {
                 headerRow.createCell(i).setCellValue(headers[i]);
             }
 
-            // Group data by unique vehicle info: Reg No to Reg Date (columns 0–5)
+            // Map key based on first 6 columns (common data)
             Map<String, List<String[]>> minMap = new LinkedHashMap<>();
             for (String[] row : premiumData) {
                 String key = String.join("|", Arrays.copyOfRange(row, 0, 6));
@@ -566,24 +568,75 @@ public class TestUtil {
                         row.createCell(j).setCellValue(common[j]);
                     }
 
-                    // MIN columns
                     if (i < minRows.size()) {
                         String[] min = minRows.get(i);
-                        row.createCell(6).setCellValue(min[6]);
-                        row.createCell(7).setCellValue(min[7]);
-                        row.createCell(8).setCellValue(min[8]);
+                        row.createCell(6).setCellValue(min[6]); // MIN_Insurer
+                        row.createCell(7).setCellValue(min[7]); // MIN_IDV
+                        row.createCell(8).setCellValue(min[8]); // MIN_Premium
                     }
 
-                    // MAX columns
                     if (i < maxRows.size()) {
                         String[] max = maxRows.get(i);
-                        row.createCell(9).setCellValue(max[6]);
-                        row.createCell(10).setCellValue(max[7]);
-                        row.createCell(11).setCellValue(max[8]);
+                        row.createCell(9).setCellValue(max[6]);  // MAX_Insurer
+                        row.createCell(10).setCellValue(max[7]); // MAX_IDV
+                        row.createCell(11).setCellValue(max[8]); // MAX_Premium
                     }
                 }
             }
 
+            // === Sheet 2: ActivityPoints (only MinIDV data as per current main method) ===
+            XSSFSheet activitySheet = workbook.createSheet("ActivityPointsMIN");
+
+            // Header matches what you currently have in your ActivityP rows (3 columns)
+            String[] activityHeaders = {"Reg No", "MinIDVInsurer", "MinIDVActivityPoints"};
+            Row activityHeaderRow = activitySheet.createRow(0);
+            for (int i = 0; i < activityHeaders.length; i++) {
+                activityHeaderRow.createCell(i).setCellValue(activityHeaders[i]);
+            }
+
+            int activityRowIndex = 1;
+            for (String[] rowData : ActivityP) {
+                Row row = activitySheet.createRow(activityRowIndex++);
+                for (int i = 0; i < rowData.length; i++) {
+                    row.createCell(i).setCellValue(rowData[i]);
+                }
+            }
+
+            // Auto-size columns for better readability
+            for (int i = 0; i < headers.length; i++) {
+                sheet.autoSizeColumn(i);
+            }
+            for (int i = 0; i < activityHeaders.length; i++) {
+                activitySheet.autoSizeColumn(i);
+            }
+
+            // === Sheet 3: ActivityPointsMAx (only MinIDV data as per current main method) ===
+            XSSFSheet activitySheet1 = workbook.createSheet("ActivityPointsMAX");
+
+            // Header matches what you currently have in your ActivityP rows (3 columns)
+            String[] activityHeaders1 = {"Reg No", "MaxIDVInsurer", "MaxIDVActivityPoints"};
+            Row activityHeaderRow1 = activitySheet1.createRow(0);
+            for (int i = 0; i < activityHeaders1.length; i++) {
+                activityHeaderRow1.createCell(i).setCellValue(activityHeaders1[i]);
+            }
+
+            int activityRowIndex1 = 1;
+            for (String[] rowData : ActivityP2) {
+                Row row = activitySheet1.createRow(activityRowIndex1++);
+                for (int i = 0; i < rowData.length; i++) {
+                    row.createCell(i).setCellValue(rowData[i]);
+                }
+            }
+
+            // Auto-size columns for better readability
+            for (int i = 0; i < headers.length; i++) {
+                sheet.autoSizeColumn(i);
+            }
+            for (int i = 0; i < activityHeaders1.length; i++) {
+                activitySheet.autoSizeColumn(i);
+            }
+
+            // Write workbook to file
             try (FileOutputStream fileOut = new FileOutputStream(excelPath)) {
                 workbook.write(fileOut);
             }
@@ -595,6 +648,10 @@ public class TestUtil {
             e.printStackTrace();
         }
     }
+
+
+
+
 
 
 
