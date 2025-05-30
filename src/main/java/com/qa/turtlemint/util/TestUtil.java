@@ -441,9 +441,9 @@ public class TestUtil {
 
         }
         // === Sheet 2: ActivityPoints (only MinIDV data as per current main method) ===
-        Sheet activitySheet = workbook.createSheet("ActivityPointsMIN");
+        Sheet activitySheet = workbook.createSheet("ActivityPoints");
         // Header matches what you currently have in your ActivityP rows (3 columns)
-        String[] activityHeaders = {"Reg No", "MinIDVInsurer", "MinIDVActivityPoints"};
+        String[] activityHeaders = {"Reg No", "Insurer", "ActivityPoints"};
         Row activityHeaderRow = activitySheet.createRow(0);
         for (int i = 0; i < activityHeaders.length; i++) {
             activityHeaderRow.createCell(i).setCellValue(activityHeaders[i]);
