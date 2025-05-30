@@ -306,17 +306,14 @@ public class renewbuy_page extends TestBase {
                     addOnsData.add(new String[] { reg, "No Add-Ons Found" });
                 }
 
-                Thread.sleep(10000);
-
-                driver.get("https://apex.renewbuyinsurance.com/motor/");
 
             } catch (Exception e) {
                 System.err.println("❌ Failed for Reg Number: " + reg);
                 e.printStackTrace();
                 failedRegs.add(reg);
             }
-
-
+            Thread.sleep(3000);
+            driver.get("https://apex.renewbuyinsurance.com/motor/");
         }
 
         String dateTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy---HH-mm-ss"));
@@ -509,14 +506,13 @@ public class renewbuy_page extends TestBase {
                     addOnsData.add(new String[] { reg, "No Add-Ons Found" });
                 }
 
-                Thread.sleep(3000);
-                driver.get("https://apex.renewbuyinsurance.com/motor/");
-
             } catch (Exception e) {
                 System.err.println("❌ Failed for Reg Number: " + reg);
                 e.printStackTrace();
                 failedRegs.add(reg);
             }
+            Thread.sleep(3000);
+            driver.get("https://apex.renewbuyinsurance.com/motor/");
         }
         String dateTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy---HH-mm-ss"));
         //✅ Save successful data
