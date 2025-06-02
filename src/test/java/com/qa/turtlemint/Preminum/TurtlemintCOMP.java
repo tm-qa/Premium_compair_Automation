@@ -29,5 +29,4 @@ public class TurtlemintCOMP extends TestBase {
         tmp.Comppremiumtm();
     }
 
-
 }
