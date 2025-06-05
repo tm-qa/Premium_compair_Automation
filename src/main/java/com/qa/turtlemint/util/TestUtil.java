@@ -30,8 +30,8 @@ import static com.qa.turtlemint.base.TestBase.driver;
 
 public class TestUtil {
 
-    public static long Page_load_time = 60;
-    public static long implicit_wait = 60;
+    public static long Page_load_time = 10;
+    public static long implicit_wait = 10;
 
     public String firstname;
     public String lastname;
@@ -445,14 +445,14 @@ public class TestUtil {
         }
     }
 
-    public static void writePremiumDataTm(String filePath, List<String[]> dataRows,List<String[]> ActivityP,List<String[]>addOnsData) {
+    public static void          writePremiumDataTm(String filePath, List<String[]> dataRows,List<String[]> ActivityP,List<String[]>addOnsData) {
         Workbook workbook = new XSSFWorkbook();
         Sheet sheet = workbook.createSheet("PremiumData");
 
         // Header row
         Row header = sheet.createRow(0);
         String[] headers = {
-                "RegistrationNumber", "Make and Model", "Fuel","Variant", "Previous Policy Type", "Registration Date", "Insurer", "Premium"
+                "RegistrationNumber", "Make and Model", "Fuel","Variant", "Previous Policy Type", "Registration Date", "Insurer", "Premium", "RequestID"
         };
         for (int i = 0; i < headers.length; i++) {
             header.createCell(i).setCellValue(headers[i]);

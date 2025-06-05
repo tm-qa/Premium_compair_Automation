@@ -265,6 +265,7 @@ public class turtlemint_page extends TestBase {
                 System.out.println(vehicleMakeModel + " ---" + vehicleFuelType + "--- " + vehicleVarient + " ____" + prepolicytype);
                 TestUtil.click(closedButton, "");
                 Thread.sleep(10000);
+
                 WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
                 wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.xpath("//div[@class='logoArea col-xs-6 col-sm-3 text-left']//img[contains(@class, 'client-logo-img')]")));
                 wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.xpath("//div[@class=\"priceArea hidden-xs text-center\"]//span[contains(@ng-if , \"multiPlanDropDown[insurer.insurerProvider\")]")));
@@ -324,6 +325,10 @@ public class turtlemint_page extends TestBase {
                 TestUtil.click(actclose, "");
                 Thread.sleep(2000);
 
+                String currentUrl = driver.getCurrentUrl();
+                String[] parts1 = currentUrl.split("/");
+                String id = parts1[parts1.length - 1];  // Get the last part after the last "/"
+                System.out.println("Extracted ID: " + id);
 
                 Actions actions = new Actions(driver);
                 actions.moveToElement(hoverIn).perform();
@@ -333,7 +338,7 @@ public class turtlemint_page extends TestBase {
                 if (addOns.size() > 0) {
                     for (WebElement addOn : addOns) {
                         String addOnName = addOn.getText().trim();
-                        addOnsData.add(new String[] { reg, addOnName });
+                        addOnsData.add(new String[] { reg, addOnName,id });
                         System.out.println(addOnName);
                     }
 
@@ -351,7 +356,6 @@ public class turtlemint_page extends TestBase {
                 actions.moveToElement(hoverOut).perform();
                 TestUtil.click(updateedresult, "ejd");
 
-                Thread.sleep(25000);
                 wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.xpath("//div[@class='logoArea col-xs-6 col-sm-3 text-left']//img[contains(@class, 'client-logo-img')]")));
                 wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.xpath("//div[@class=\"priceArea hidden-xs text-center\"]//span[contains(@ng-if , \"multiPlanDropDown[insurer.insurerProvider\")]")));
                 wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.xpath("//span[@class=\"bold vehicleIdv ng-binding\"]")));
@@ -371,8 +375,8 @@ public class turtlemint_page extends TestBase {
                         WebElement idvElement = premiumIdv1.get(i);
 
                         String srcValue = logo.getAttribute("src");
-                        String[] parts = srcValue.split("/");
-                        String insurerName = parts[parts.length - 1].replace(".png", "");
+                        String[] parts2 = srcValue.split("/");
+                        String insurerName = parts2[parts2.length - 1].replace(".png", "");
 
                         String premium1 = premiumBtn.getText().replace(",", "").replace("₹", "").trim();
                         String premiumidv1 = idvElement.getText().replace(",", "").replace("₹", "").trim();
@@ -383,7 +387,7 @@ public class turtlemint_page extends TestBase {
                         maxIDV.add(row1);
                     }
                 }
-
+                Thread.sleep(5000);
                 TestUtil.click(actpointtext, "");
                 Thread.sleep(5000);
                 List<WebElement> Activitypt1 = driver.findElements(By.xpath("//div[@class=\"flex layout-align-space-between ng-scope\"]"));
@@ -422,7 +426,7 @@ public class turtlemint_page extends TestBase {
 
         // ✅ Save successful data
         // String outputExcel = "/Users/sayali/Desktop/RenewBuy_premium" + dateTime + ".xlsx";
-      //  String outputExcel = "/Users/nitinrathod/Desktop/Turtlemint_COMP_premium" + dateTime + ".xlsx";
+       // String outputExcel = "/Users/nitinrathod/Desktop/Turtlemint_COMP_premium" + dateTime + ".xlsx";
          String outputExcel = "C:\\Users\\pradeep.u_turtlemint\\Desktop\\ALLBrokerdata\\Turtlemint_COMP_premium" + dateTime + ".xlsx";
 
         TestUtil.writeCombinedSheetTM_Comp(outputExcel, premiumData, maxIDV, ActivityP, ActivityP2,addOnsData);
@@ -442,7 +446,7 @@ public class turtlemint_page extends TestBase {
     public void Tppremiumtm() throws InterruptedException {
 
         // String excelPath = "/Users/sayali/Documents/insurer/Premium_compair_Automation/src/test/resources/registration_data.xlsx";
-      //  String excelPath = "/Users/nitinrathod/Documents/registration_data.xlsx";
+     //  String excelPath = "/Users/nitinrathod/Documents/registration_data.xlsx";
           String excelPath = "C:\\Users\\pradeep.u_turtlemint\\Downloads\\registration_data.xlsx";
         List<String> regNumbers = TestUtil.getRegistrationNumbers(excelPath);
         System.out.println(regNumbers);
@@ -537,6 +541,13 @@ public class turtlemint_page extends TestBase {
                 Thread.sleep(2000);
                 TestUtil.click(closedButton, "");
                 Thread.sleep(15000);
+
+                String currentUrl = driver.getCurrentUrl();
+                String[] parts2 = currentUrl.split("/");
+                String id = parts2[parts2.length - 1];  // Get the last part after the last "/"
+                System.out.println("Extracted ID: " + id);
+
+
                 WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
                 wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.xpath("//div[@class='logoArea col-xs-6 col-sm-3 text-left']//img[contains(@class, 'client-logo-img')]")));
                 wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.xpath("//div[@class=\"priceArea hidden-xs text-center\"]//span[contains(@ng-if , \"multiPlanDropDown[insurer.insurerProvider\")]")));
@@ -558,13 +569,14 @@ public class turtlemint_page extends TestBase {
                         String insurerName = parts[parts.length - 1].replace(".png", "");
                         String premium = premiumBtn.getText();
 
-                        String[] row = {reg, vehicleMakeModel, vehicleFuelType, vehicleVarient, prePolicy, resgistrationdate, insurerName, premium};
+                        String[] row = {reg, vehicleMakeModel, vehicleFuelType, vehicleVarient, prePolicy, resgistrationdate, insurerName, premium,id};
                         premiumData.add(row);
                     }
                 } else {
                     System.err.println("Mismatch in insurer and premium count for Reg: " + reg);
                     failedRegs.add(reg);
                 }
+
                 TestUtil.click(actpointtext, "");
                 Thread.sleep(5000);
                 List<WebElement> Activitypt = driver.findElements(By.xpath("//div[@class=\"flex layout-align-space-between ng-scope\"]"));
@@ -577,8 +589,7 @@ public class turtlemint_page extends TestBase {
                     if (numbers.length == 2) {
                         String MinIDVactInsurer = numbers[0].trim();
                         String MinIDVactPoints = numbers[1].trim();
-
-                        String[] row = {reg, MinIDVactInsurer, MinIDVactPoints};
+                        String[] row = {reg, MinIDVactInsurer, MinIDVactPoints,id};
                         ActivityP.add(row);
                     } else {
                         System.err.println("Unexpected format in activity points for reg: " + reg + " index: " + i);
@@ -617,7 +628,7 @@ public class turtlemint_page extends TestBase {
 
         // ✅ Save successful data
         //  String outputExcel = "/Users/sayali/Desktop/RenewBuy_premium" + dateTime + ".xlsx";
-     //  String outputExcel = "/Users/nitinrathod/Desktop/Turtlemint_TP_premium" + dateTime + ".xlsx";
+       //String outputExcel = "/Users/nitinrathod/Desktop/Turtlemint_TP_premium" + dateTime + ".xlsx";
         String outputExcel = "C:\\Users\\pradeep.u_turtlemint\\Desktop\\ALLBrokerdata\\Turtlemint_TP_premium" + dateTime + ".xlsx";
 
         TestUtil.writePremiumDataTm(outputExcel, premiumData,ActivityP,addOnsData );
