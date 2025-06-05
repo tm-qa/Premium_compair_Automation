@@ -35,6 +35,14 @@ public class insurancedekho_Page extends TestBase {
     WebElement confirm;
     @FindBy(xpath = "//label[text()=\"Policy Expiry Date\"]//..//input")
     WebElement calendar;
+    @FindBy(xpath = "//div[@class=\"filterBtn7 filterBtn active\"]")
+    WebElement addOnButton;
+
+    @FindBy(xpath = "//div[@class=\"planList insurerList bonus addOne insurerDropdown\"]")
+    WebElement insurerDropdown;
+
+    @FindBy(xpath = "//div[@class=\"addoneListWrapper \"]//h2[1]")
+    WebElement addoneListWrapper;
 
     @FindBy(xpath = "//h3[text()=\"Policy Expiry Date\"]//..//li[not(contains(@class,\" year disabled\"))]")
     WebElement currentyear;
@@ -48,9 +56,9 @@ public class insurancedekho_Page extends TestBase {
     WebElement comp;
     @FindBy(xpath = " //li[text()=\"Third Party\"]")
     WebElement Tp;
-    @FindBy(xpath = "//div[@id='common-login']//div[@class='otpLogin']//div[@id='OTPLogin']//input[@type='tel' and @name='mobileNumber' and @autocomplete='phone']")
+    @FindBy(xpath = "//label[text()=\"Mobile Number\"]//parent::div//input")
     WebElement MobileNumberID;
-    @FindBy(xpath = "(//span[text()=\"Start Earning Now\"])[3]")
+    @FindBy(xpath = "(//button[text()=\"Start Earning Now\"])[1]")
     WebElement startearning;
     @FindBy(xpath = "//p[text()=\"Registration Year \"]//span")
     WebElement registrationyear;
@@ -94,14 +102,14 @@ public class insurancedekho_Page extends TestBase {
         TestUtil.click(selectcar, "Clicked on car");
         Thread.sleep(2000);
         driver.navigate().refresh();
-        driver.navigate().refresh();
         Thread.sleep(2000);
 
-       //  String excelPath = "/Users/nitinrathod/Documents/registration_data.xlsx";
+      //   String excelPath = "/Users/nitinrathod/Documents/registration_data.xlsx";
         String excelPath = "C:\\Users\\pradeep.u_turtlemint\\Downloads\\registration_data.xlsx";
         List<String> regNumbers = TestUtil.getRegistrationNumbers(excelPath);
         List<String[]> premiumData = new ArrayList<>(); // successful data
         List<String> failedRegs = new ArrayList<>();
+        List<String[]> addOnsData = new ArrayList<>();
         System.out.println(regNumbers);
 
 
@@ -165,7 +173,6 @@ public class insurancedekho_Page extends TestBase {
                 List<WebElement> IDVActual = driver.findElements(By.xpath("//h2[@class=\"idvCoverValue\"]//span"));
                 List<WebElement> actpoint = driver.findElements(By.xpath("//div[@class='pointEarn']/p[position() mod 2 = 1]"));
 
-
                 if (insurerLogos.size() == insurerPremiums.size()) {
                     for (int i = 0; i < insurerLogos.size(); i++) {
                         WebElement logo = insurerLogos.get(i);
@@ -216,6 +223,29 @@ public class insurancedekho_Page extends TestBase {
                     System.err.println("Mismatch in insurer and premium count for Reg: " + reg);
                     failedRegs.add(reg);
                 }
+                TestUtil.click( addOnButton , "");
+                System.out.println( " clicke on add on button "  );
+
+
+                actions.moveToElement(insurerDropdown);
+
+                Thread.sleep(3000);
+                wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.xpath("//span[contains(@class,'checkInsurence')]")));
+                List<WebElement> addOns = driver.findElements(By.xpath("//span[contains(@class,'checkInsurence')]"));
+
+                Thread.sleep(3000);
+                System.out.println("Total Add-ons found: " + addOns.size());
+                System.out.println(" start adding add ons");
+
+                if (!addOns.isEmpty()) {
+                    for (WebElement addon : addOns) {
+                        String addOnName = addon.getText().trim();
+                        addOnsData.add(new String[] { reg, addOnName });
+                    }
+                    System.out.println("Add-ons data added to sheet");
+                } else {
+                    System.out.println("No add-ons found");
+                }
 
 
             } catch (Exception e) {
@@ -226,7 +256,6 @@ public class insurancedekho_Page extends TestBase {
             driver.get("https://pos.insurancedekho.com/core/sell/car");
             Thread.sleep(2000);
             driver.navigate().refresh();
-            driver.navigate().refresh();
             Thread.sleep(2000);
         }
         String dateTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy---HH-mm-ss"));
@@ -235,7 +264,7 @@ public class insurancedekho_Page extends TestBase {
        // String outputExcel = "/Users/nitinrathod/Desktop/InsuranceDekho_COMP_premium" + dateTime + ".xlsx";
         String outputExcel = "C:\\Users\\pradeep.u_turtlemint\\Desktop\\ALLBrokerdata\\RenewBuy_COMP_premium"+dateTime+".xlsx";
         if (!premiumData.isEmpty()) {
-            TestUtil.writePremiumDataIDCOMP(outputExcel, premiumData);
+            TestUtil.writePremiumDataIDCOMP(outputExcel, premiumData,addOnsData);
             System.out.println("✅ Premium data written to Excel successfully.");
         } else {
             System.out.println("⚠️ No premium data collected to write.");
@@ -262,15 +291,15 @@ public class insurancedekho_Page extends TestBase {
         TestUtil.click(selectcar, "");
         Thread.sleep(2000);
         driver.navigate().refresh();
-        driver.navigate().refresh();
-        Thread.sleep(4000);
+        Thread.sleep(2000);
 
-      //  String excelPath = "/Users/nitinrathod/Documents/registration_data.xlsx";
+       // String excelPath = "/Users/nitinrathod/Documents/registration_data.xlsx";
         String excelPath = "C:\\Users\\pradeep.u_turtlemint\\Downloads\\registration_data.xlsx";
 
         List<String> regNumbers = TestUtil.getRegistrationNumbers(excelPath);
         List<String[]> premiumData = new ArrayList<>(); // successful data
         List<String> failedRegs = new ArrayList<>();
+        List<String[]> addOnsData = new ArrayList<>();
         System.out.println(regNumbers);
 
 
@@ -368,6 +397,32 @@ public class insurancedekho_Page extends TestBase {
                     System.err.println("Mismatch in insurer and premium count for Reg: " + reg);
                     failedRegs.add(reg);
                 }
+                TestUtil.click( addOnButton , "");
+                System.out.println( " clicke on add on button "  );
+
+
+                actions.moveToElement(insurerDropdown);
+
+                Thread.sleep(3000);
+                js.executeScript("document.body.style.zoom='50%'");
+                Thread.sleep(3000);
+
+                wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.xpath("//span[contains(@class,'checkInsurence')]")));
+                List<WebElement> addOns = driver.findElements(By.xpath("//span[contains(@class,'checkInsurence')]"));
+
+                System.out.println("Total Add-ons found: " + addOns.size());
+                System.out.println(" start adding add ons");
+
+                if (!addOns.isEmpty()) {
+                    for (WebElement addon : addOns) {
+                        String addOnName = addon.getText().trim();
+                        addOnsData.add(new String[] { reg, addOnName });
+                        System.out.println(addOnsData);
+                    }
+                    System.out.println("Add-ons data added to sheet");
+                } else {
+                    System.out.println("No add-ons found");
+                }
 
 
             } catch (Exception e) {
@@ -378,7 +433,6 @@ public class insurancedekho_Page extends TestBase {
             driver.get("https://pos.insurancedekho.com/core/sell/car");
             Thread.sleep(2000);
             driver.navigate().refresh();
-            driver.navigate().refresh();
             Thread.sleep(2000);
         }
         String dateTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy-HH-mm-ss"));
@@ -388,7 +442,7 @@ public class insurancedekho_Page extends TestBase {
         String outputExcel = "C:\\Users\\pradeep.u_turtlemint\\Desktop\\ALLBrokerdata\\RenewBuy_COMP_premium"+dateTime+".xlsx";
 
         if (!premiumData.isEmpty()) {
-            TestUtil.writePremiumDataIDTP(outputExcel, premiumData);
+            TestUtil.writePremiumDataIDTP(outputExcel, premiumData,addOnsData);
             System.out.println("✅ Premium data written to Excel successfully.");
         } else {
             System.out.println("⚠️ No premium data collected to write.");

@@ -125,11 +125,11 @@ public static void initialization() {
         driver = new ChromeDriver(options);
 
         // Optionally maximize again if needed
-        // driver.manage().window().maximize();
+         driver.manage().window().maximize();
 
-        Dimension currentDimension = driver.manage().window().getSize();
-        System.out.println("Current height: " + currentDimension.getHeight());
-        System.out.println("Current width: " + currentDimension.getWidth());
+//        Dimension currentDimension = driver.manage().window().getSize();
+//        System.out.println("Current height: " + currentDimension.getHeight());
+//        System.out.println("Current width: " + currentDimension.getWidth());
 
         driver.manage().deleteAllCookies();
 
