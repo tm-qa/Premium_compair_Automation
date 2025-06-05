@@ -154,8 +154,8 @@ public class turtlemint_page extends TestBase {
     public void Comppremiumtm() throws InterruptedException {
 
         // String excelPath = "/Users/sayali/Documents/insurer/Premium_compair_Automation/src/test/resources/registration_data.xlsx";
-        String excelPath = "/Users/nitinrathod/Documents/registration_data.xlsx";
-       //  String excelPath = "C:\\Users\\pradeep.u_turtlemint\\Downloads\\registration_data.xlsx";
+       // String excelPath = "/Users/nitinrathod/Documents/registration_data.xlsx";
+         String excelPath = "C:\\Users\\pradeep.u_turtlemint\\Downloads\\registration_data.xlsx";
         List<String> regNumbers = TestUtil.getRegistrationNumbers(excelPath);
         System.out.println(regNumbers);
 
@@ -273,7 +273,7 @@ public class turtlemint_page extends TestBase {
                 List<WebElement> insurerLogos = driver.findElements(By.xpath("//div[@class='logoArea col-xs-6 col-sm-3 text-left']//img[contains(@class, 'client-logo-img')]"));
                 List<WebElement> insurerPremiums = driver.findElements(By.xpath("//div[@class=\"priceArea hidden-xs text-center\"]//span[contains(@ng-if , \"multiPlanDropDown[insurer.insurerProvider\")]"));
                 List<WebElement> premiumIdv = driver.findElements(By.xpath("//span[@class=\"bold vehicleIdv ng-binding\"]"));
-                List<WebElement> addOns = driver.findElements(By.xpath("//span[@class=\"set-title\"]"));
+
 
                 System.out.println("Logos found: " + insurerLogos.size());
                 System.out.println("Premiums found: " + insurerPremiums.size());
@@ -321,25 +321,28 @@ public class turtlemint_page extends TestBase {
 
                 }
 
-
                 TestUtil.click(actclose, "");
                 Thread.sleep(2000);
 
+
                 Actions actions = new Actions(driver);
-//                actions.moveToElement(hoverIn).perform();
-//                //   TestUtil.click(addonmore,"");
-//
-//                if (addOns.size() > 0) {
-//                    for (WebElement addOn : addOns) {
-//                        String addOnName = addOn.getText().trim();
-//                        addOnsData.add(new String[] { reg, addOnName });
-//                        System.out.println(addOnName);
-//                    }
-//                    System.out.println("addons data added in sheet");
-//                } else {
-//
-//                    addOnsData.add(new String[] { reg, "No Add-Ons Found" });
-//                }
+                actions.moveToElement(hoverIn).perform();
+                   TestUtil.click(addonmore,"");
+                List<WebElement> addOns = driver.findElements(By.xpath("(//div[@class=\"sidePanelCommonHeaderContent clearfix\"])[2]//a//span[@class=\"set-title\"]"));
+
+                if (addOns.size() > 0) {
+                    for (WebElement addOn : addOns) {
+                        String addOnName = addOn.getText().trim();
+                        addOnsData.add(new String[] { reg, addOnName });
+                        System.out.println(addOnName);
+                    }
+
+                    System.out.println("addons data added in sheet");
+
+                } else {
+
+                    addOnsData.add(new String[] { reg, "No Add-Ons Found" });
+                }
 
                 actions.moveToElement(hoverIn).perform();
                 actions.moveToElement(isMaxId).perform();
@@ -419,10 +422,10 @@ public class turtlemint_page extends TestBase {
 
         // ✅ Save successful data
         // String outputExcel = "/Users/sayali/Desktop/RenewBuy_premium" + dateTime + ".xlsx";
-        String outputExcel = "/Users/nitinrathod/Desktop/Turtlemint_COMP_premium" + dateTime + ".xlsx";
-        // String outputExcel = "C:\\Users\\pradeep.u_turtlemint\\Desktop\\ALLBrokerdata\\Turtlemint_COMP_premium" + dateTime + ".xlsx";
+      //  String outputExcel = "/Users/nitinrathod/Desktop/Turtlemint_COMP_premium" + dateTime + ".xlsx";
+         String outputExcel = "C:\\Users\\pradeep.u_turtlemint\\Desktop\\ALLBrokerdata\\Turtlemint_COMP_premium" + dateTime + ".xlsx";
 
-        TestUtil.writeCombinedSheetTM_Comp(outputExcel, premiumData, maxIDV, ActivityP, ActivityP2);
+        TestUtil.writeCombinedSheetTM_Comp(outputExcel, premiumData, maxIDV, ActivityP, ActivityP2,addOnsData);
         // Optional: Print or save failed registrations
         if (!failedRegs.isEmpty()) {
             System.out.println("Failed registrations:");
@@ -540,7 +543,6 @@ public class turtlemint_page extends TestBase {
 
                 List<WebElement> insurerLogos = driver.findElements(By.xpath("//div[@class='logoArea col-xs-6 col-sm-3 text-left']//img[contains(@class, 'client-logo-img')]"));
                 List<WebElement> insurerPremiums = driver.findElements(By.xpath("//div[@class=\"priceArea hidden-xs text-center\"]//span[contains(@ng-if , \"multiPlanDropDown[insurer.insurerProvider\")]"));
-                List<WebElement> addOns = driver.findElements(By.xpath("//span[@class=\"set-title\"]"));
 
 
                 System.out.println("Logos found: " + insurerLogos.size());
@@ -586,20 +588,21 @@ public class turtlemint_page extends TestBase {
                 TestUtil.click(actclose, "");
                 Thread.sleep(2000);
                 Actions actions = new Actions(driver);
-//                actions.moveToElement(hoverIn).perform();
-//             //   TestUtil.click(addonmore,"");
-//
-//                if (addOns.size() > 0) {
-//                    for (WebElement addOn : addOns) {
-//                        String addOnName = addOn.getText().trim();
-//                        addOnsData.add(new String[] { reg, addOnName });
-//                        System.out.println(addOnName);
-//                    }
-//                    System.out.println("addons data added in sheet");
-//                } else {
-//
-//                    addOnsData.add(new String[] { reg, "No Add-Ons Found" });
-//                }
+                actions.moveToElement(hoverIn).perform();
+              //  TestUtil.click(addonmore,"");
+                List<WebElement> addOns = driver.findElements(By.xpath("(//div[@class=\"sidePanelCommonHeaderContent clearfix\"])[2]//a//span[@class=\"set-title\"]"));
+
+                if (addOns.size() > 0) {
+                    for (WebElement addOn : addOns) {
+                        String addOnName = addOn.getText().trim();
+                        if (!addOnName.isEmpty()) {
+                            addOnsData.add(new String[]{reg, addOnName});
+                            System.out.println(addOnName);
+                        }
+                    }
+                    System.out.println("addons data added in sheet");
+
+                }
             } catch (Exception e) {
                 System.err.println("❌ Failed for Reg Number: " + reg);
                 e.printStackTrace();
@@ -614,10 +617,10 @@ public class turtlemint_page extends TestBase {
 
         // ✅ Save successful data
         //  String outputExcel = "/Users/sayali/Desktop/RenewBuy_premium" + dateTime + ".xlsx";
-     //   String outputExcel = "/Users/nitinrathod/Desktop/Turtlemint_TP_premium" + dateTime + ".xlsx";
-         String outputExcel = "C:\\Users\\pradeep.u_turtlemint\\Desktop\\ALLBrokerdata\\Turtlemint_TP_premium" + dateTime + ".xlsx";
+     //  String outputExcel = "/Users/nitinrathod/Desktop/Turtlemint_TP_premium" + dateTime + ".xlsx";
+        String outputExcel = "C:\\Users\\pradeep.u_turtlemint\\Desktop\\ALLBrokerdata\\Turtlemint_TP_premium" + dateTime + ".xlsx";
 
-        TestUtil.writePremiumDataTm(outputExcel, premiumData,ActivityP );
+        TestUtil.writePremiumDataTm(outputExcel, premiumData,ActivityP,addOnsData );
         // Optional: Print or save failed registrations
         if (!failedRegs.isEmpty()) {
             System.out.println("Failed registrations:");

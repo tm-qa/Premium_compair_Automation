@@ -361,7 +361,7 @@ public class TestUtil {
         }
     }
 
-    public static void writePremiumDataIDCOMP(String filePath, List<String[]> dataRows) {
+    public static void writePremiumDataIDCOMP(String filePath, List<String[]> dataRows,List<String[]> addOnsDataRows) {
         Workbook workbook = new XSSFWorkbook();
         Sheet sheet = workbook.createSheet("PremiumData");
 
@@ -381,6 +381,20 @@ public class TestUtil {
             }
         }
 
+        // ---- Sheet 2: Add Ons ----
+        Sheet addOnSheet = workbook.createSheet("AddOns");
+
+        int addOnRowIndex = 0;
+        for (String[] rowData : addOnsDataRows) {
+            Row row = addOnSheet.createRow(addOnRowIndex++);
+            for (int i = 0; i < rowData.length; i++) {
+                row.createCell(i).setCellValue(rowData[i]);
+            }
+        }
+
+        // Auto-size add-ons column
+        addOnSheet.autoSizeColumn(0);
+
         try (FileOutputStream fos = new FileOutputStream(filePath)) {
             workbook.write(fos);
             workbook.close();
@@ -390,7 +404,7 @@ public class TestUtil {
     }
 
 
-    public static void writePremiumDataIDTP(String filePath, List<String[]> dataRows) {
+    public static void writePremiumDataIDTP(String filePath, List<String[]> dataRows, List<String[]> addOnsDataRows) {
         Workbook workbook = new XSSFWorkbook();
         Sheet sheet = workbook.createSheet("PremiumData");
 
@@ -409,6 +423,19 @@ public class TestUtil {
                 row.createCell(i).setCellValue(rowData[i]);
             }
         }
+        // ---- Sheet 2: Add Ons ----
+        Sheet addOnSheet = workbook.createSheet("AddOns");
+
+        int addOnRowIndex = 0;
+        for (String[] rowData : addOnsDataRows) {
+            Row row = addOnSheet.createRow(addOnRowIndex++);
+            for (int i = 0; i < rowData.length; i++) {
+                row.createCell(i).setCellValue(rowData[i]);
+            }
+        }
+
+        // Auto-size add-ons column
+        addOnSheet.autoSizeColumn(0);
 
         try (FileOutputStream fos = new FileOutputStream(filePath)) {
             workbook.write(fos);
@@ -418,7 +445,7 @@ public class TestUtil {
         }
     }
 
-    public static void writePremiumDataTm(String filePath, List<String[]> dataRows,List<String[]> ActivityP) {
+    public static void writePremiumDataTm(String filePath, List<String[]> dataRows,List<String[]> ActivityP,List<String[]>addOnsData) {
         Workbook workbook = new XSSFWorkbook();
         Sheet sheet = workbook.createSheet("PremiumData");
 
@@ -463,6 +490,15 @@ public class TestUtil {
         }
         for (int i = 0; i < activityHeaders.length; i++) {
             activitySheet.autoSizeColumn(i);
+        }
+        // Example: Add-ons
+        Sheet addOnsSheet = workbook.createSheet("AddOns");
+        rowIndex = 0;
+        for (String[] rowData : addOnsData) {
+            Row row = addOnsSheet.createRow(rowIndex++);
+            for (int i = 0; i < rowData.length; i++) {
+                row.createCell(i).setCellValue(rowData[i]);
+            }
         }
 
 
@@ -550,7 +586,7 @@ public class TestUtil {
 //    }
 
 
-    public static void writeCombinedSheetTM_Comp(String excelPath, List<String[]> premiumData, List<String[]> maxIDV, List<String[]> ActivityP, List<String[]> ActivityP2) {
+    public static void writeCombinedSheetTM_Comp(String excelPath, List<String[]> premiumData, List<String[]> maxIDV, List<String[]> ActivityP, List<String[]> ActivityP2, List<String[]> addOnsData) {
         try (XSSFWorkbook workbook = new XSSFWorkbook()) {
 
             // === Sheet 1: premiumData (combined min and max premiums) ===
@@ -660,6 +696,16 @@ public class TestUtil {
             }
             for (int i = 0; i < activityHeaders1.length; i++) {
                 activitySheet.autoSizeColumn(i);
+            }
+
+            // Example: Add-ons
+            Sheet addOnsSheet = workbook.createSheet("AddOns");
+            rowNum = 0;
+            for (String[] rowData : addOnsData) {
+                Row row = addOnsSheet.createRow(rowNum++);
+                for (int i = 0; i < rowData.length; i++) {
+                    row.createCell(i).setCellValue(rowData[i]);
+                }
             }
 
             // Write workbook to file
