@@ -17,6 +17,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 public class insurancedekho_Page extends TestBase {
 
@@ -29,6 +30,9 @@ public class insurancedekho_Page extends TestBase {
     WebElement regiNumber;
     @FindBy(xpath = "//button[text()=\"Get Vehicle Details\"]")
     WebElement getvehicledetails;
+    @FindBy(xpath = "//button[text()=\"Get Quotes\"]")
+    WebElement getdetails;
+
     @FindBy(xpath = "//button[text()=\"Confirm & Get Quotes\"]")
     WebElement confandgetquotes;
     @FindBy(xpath = "//button[text()=\"Confirm & Proceed\"]")
@@ -52,7 +56,7 @@ public class insurancedekho_Page extends TestBase {
     WebElement currentdate;
     @FindBy(xpath = "(//input[@class=\"MuiInputBase-input MuiFilledInput-input MuiInputBase-inputAdornedEnd MuiAutocomplete-input MuiAutocomplete-inputFocused css-ftr4jk\"])[2]")
     WebElement previousdrop;
-    @FindBy(xpath = "//li[text()=\"Comprehensive\"]")
+    @FindBy(xpath = "//li[contains(@class, 'MuiAutocomplete-option') and contains(text(), 'Comprehensive')]")
     WebElement comp;
     @FindBy(xpath = " //li[text()=\"Third Party\"]")
     WebElement Tp;
@@ -94,6 +98,8 @@ public class insurancedekho_Page extends TestBase {
 
     }
 
+
+
     public void premiumIDCOMP() throws InterruptedException {
 
         Thread.sleep(7000);
@@ -104,8 +110,8 @@ public class insurancedekho_Page extends TestBase {
         driver.navigate().refresh();
         Thread.sleep(2000);
 
-      //   String excelPath = "/Users/nitinrathod/Documents/registration_data.xlsx";
-        String excelPath = "C:\\Users\\pradeep.u_turtlemint\\Downloads\\registration_data.xlsx";
+         String excelPath = "/Users/nitinrathod/Documents/registration_data.xlsx";
+       // String excelPath = "C:\\Users\\pradeep.u_turtlemint\\Downloads\\registration_data.xlsx";
         List<String> regNumbers = TestUtil.getRegistrationNumbers(excelPath);
         List<String[]> premiumData = new ArrayList<>(); // successful data
         List<String> failedRegs = new ArrayList<>();
@@ -129,18 +135,26 @@ public class insurancedekho_Page extends TestBase {
                 String vehicleFuel = fuelType.getText();
                 String regisdate = registrationyear.getText();
 
-                TestUtil.click(confandgetquotes, "Clicked on confirm and get quotes");
                 Thread.sleep(5000);
+                if (confandgetquotes != null && confandgetquotes.isDisplayed()) {
+                    confandgetquotes.click();
+                } else if (getdetails != null && getdetails.isDisplayed()) {
+                    getdetails.click();
+                }
+
+                Thread.sleep(3000);
+
                 String existingValue1 = calendar.getText();
                 if (existingValue1 == null || existingValue1.trim().isEmpty() )
                 {
-                    actions.moveToElement(calendar).doubleClick().perform();
+                    js.executeScript("arguments[0].click();", calendar);
                     Thread.sleep(2000);
-                    TestUtil.click(currentyear, "selected year");
+                    js.executeScript("arguments[0].click();", currentyear);
                     Thread.sleep(2000);
-                    TestUtil.click(currentmonth, "selected month");
+                    js.executeScript("arguments[0].click();", currentmonth);
                     Thread.sleep(2000);
-                    TestUtil.click(currentdate, "selected date");
+                    js.executeScript("arguments[0].click();", currentdate);
+
                     Thread.sleep(3000);
                 }
                 String existingValue = previousdrop.getText();
@@ -149,9 +163,11 @@ public class insurancedekho_Page extends TestBase {
                 {
                     Thread.sleep(2000);
                     TestUtil.click(previousdrop,"Clicked on previous policy type dropdown");
-                    actions.moveToElement(previousdrop).doubleClick().perform();
+                 //   Thread.sleep(4000);
+                   // actions.moveToElement(previousdrop).doubleClick().perform();
                     Thread.sleep(3000);
-                    TestUtil.click(comp, "selected comprehensive");
+                    TestUtil.click(comp,"selectec comp");
+
                     Thread.sleep(3000);
                 }
                 String prevpolicytype = "Comprehensive";
@@ -160,6 +176,7 @@ public class insurancedekho_Page extends TestBase {
 
                 TestUtil.click(confirm, "Clicked on confirmed to get quotes");
                 Thread.sleep(30000);
+
 
                 wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.xpath("//span[@class=\"insurerNameAndButtonWrapper\"]//h2")));
                 wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.xpath("//button[@class=\"quoteButton\"]")));
@@ -261,8 +278,8 @@ public class insurancedekho_Page extends TestBase {
         String dateTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy---HH-mm-ss"));
         // ✅ Save successful data
         //   String outputExcel = "/Users/sayali/Desktop/RenewBuy_premium" + dateTime + ".xlsx";
-       // String outputExcel = "/Users/nitinrathod/Desktop/InsuranceDekho_COMP_premium" + dateTime + ".xlsx";
-        String outputExcel = "C:\\Users\\pradeep.u_turtlemint\\Desktop\\ALLBrokerdata\\RenewBuy_COMP_premium"+dateTime+".xlsx";
+        String outputExcel = "/Users/nitinrathod/Desktop/InsuranceDekho_COMP_premium" + dateTime + ".xlsx";
+       // String outputExcel = "C:\\Users\\pradeep.u_turtlemint\\Desktop\\ALLBrokerdata\\RenewBuy_COMP_premium"+dateTime+".xlsx";
         if (!premiumData.isEmpty()) {
             TestUtil.writePremiumDataIDCOMP(outputExcel, premiumData,addOnsData);
             System.out.println("✅ Premium data written to Excel successfully.");
@@ -292,9 +309,8 @@ public class insurancedekho_Page extends TestBase {
         Thread.sleep(2000);
         driver.navigate().refresh();
         Thread.sleep(2000);
-
-       // String excelPath = "/Users/nitinrathod/Documents/registration_data.xlsx";
-        String excelPath = "C:\\Users\\pradeep.u_turtlemint\\Downloads\\registration_data.xlsx";
+         String excelPath = "/Users/nitinrathod/Documents/registration_data.xlsx";
+       // String excelPath = "C:\\Users\\pradeep.u_turtlemint\\Downloads\\registration_data.xlsx";
 
         List<String> regNumbers = TestUtil.getRegistrationNumbers(excelPath);
         List<String[]> premiumData = new ArrayList<>(); // successful data
@@ -438,8 +454,8 @@ public class insurancedekho_Page extends TestBase {
         String dateTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy-HH-mm-ss"));
         // ✅ Save successful data
         //   String outputExcel = "/Users/sayali/Desktop/RenewBuy_premium" + dateTime + ".xlsx";
-      //   String outputExcel = "/Users/nitinrathod/Desktop/InsuranceDekho_TP_premium" + dateTime + ".xlsx";
-        String outputExcel = "C:\\Users\\pradeep.u_turtlemint\\Desktop\\ALLBrokerdata\\RenewBuy_COMP_premium"+dateTime+".xlsx";
+         String outputExcel = "/Users/nitinrathod/Desktop/InsuranceDekho_TP_premium" + dateTime + ".xlsx";
+      //  String outputExcel = "C:\\Users\\pradeep.u_turtlemint\\Desktop\\ALLBrokerdata\\RenewBuy_COMP_premium"+dateTime+".xlsx";
 
         if (!premiumData.isEmpty()) {
             TestUtil.writePremiumDataIDTP(outputExcel, premiumData,addOnsData);
