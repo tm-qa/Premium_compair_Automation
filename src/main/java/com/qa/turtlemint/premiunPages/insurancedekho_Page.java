@@ -39,6 +39,13 @@ public class insurancedekho_Page extends TestBase {
     WebElement confirm;
     @FindBy(xpath = "//label[text()=\"Policy Expiry Date\"]//..//input")
     WebElement calendar;
+    @FindBy(xpath = "//label[text()=\"Previous Insurer\"]//..//input")
+    WebElement preinsurer;
+    @FindBy(xpath = "//li[text()=\"Bajaj Allianz\"]")
+    WebElement bajajinsurer;
+
+
+
     @FindBy(xpath = "//div[@class=\"filterBtn7 filterBtn active\"]")
     WebElement addOnButton;
 
@@ -54,7 +61,7 @@ public class insurancedekho_Page extends TestBase {
     WebElement currentmonth;
     @FindBy(xpath = "(//li[@class=\"active day\"]//following-sibling::li)[1]")
     WebElement currentdate;
-    @FindBy(xpath = "(//input[@class=\"MuiInputBase-input MuiFilledInput-input MuiInputBase-inputAdornedEnd MuiAutocomplete-input MuiAutocomplete-inputFocused css-ftr4jk\"])[2]")
+    @FindBy(xpath = "//label[text()=\"Previous Policy Type\"]//..//input")
     WebElement previousdrop;
     @FindBy(xpath = "//li[contains(@class, 'MuiAutocomplete-option') and contains(text(), 'Comprehensive')]")
     WebElement comp;
@@ -66,12 +73,24 @@ public class insurancedekho_Page extends TestBase {
     WebElement startearning;
     @FindBy(xpath = "//p[text()=\"Registration Year \"]//span")
     WebElement registrationyear;
+    @FindBy(xpath = "//label[text()=\"Registration Date\"]//..//input")
+    WebElement registrationyear1;
+
     @FindBy(xpath = "//p[text()=\"Fuel Type \"]//span")
     WebElement fuelType;
+    @FindBy(xpath = "//label[text()=\"Fuel Type*\"]//..//input")
+    WebElement fuelType1;
+
     @FindBy(xpath = "//p[text()=\"Variant \"]//span")
     WebElement variant;
+    @FindBy(xpath = "//label[text()=\"Variant\"]//..//input")
+    WebElement variant1;
+
     @FindBy(xpath = "//div[@class=\"motorNumber\"]//p//span")
     WebElement modelmodel;
+    @FindBy(xpath = "//label[text()=\"Make Model\"]//..//input")
+    WebElement modelmodel1;
+
     @FindBy(xpath = "//a[text()=\"Sell\"]")
     WebElement sell;
     @FindBy(xpath = "//div[@class=\"filterBtn1 filterBtn active\"]")
@@ -94,7 +113,6 @@ public class insurancedekho_Page extends TestBase {
         TestUtil.sendKeys(MobileNumberID, username, "Mobile Number Entered");
         TestUtil.click(startearning, "Start earning pressed");
         Thread.sleep(25000);
-        TestUtil.getScreenShot();
 
     }
 
@@ -109,9 +127,8 @@ public class insurancedekho_Page extends TestBase {
         Thread.sleep(2000);
         driver.navigate().refresh();
         Thread.sleep(2000);
-
-         String excelPath = "/Users/nitinrathod/Documents/registration_data.xlsx";
-       // String excelPath = "C:\\Users\\pradeep.u_turtlemint\\Downloads\\registration_data.xlsx";
+       //  String excelPath = "/Users/nitinrathod/Documents/registration_data.xlsx";
+        String excelPath = "C:\\Users\\pradeep.u_turtlemint\\Downloads\\registration_data.xlsx";
         List<String> regNumbers = TestUtil.getRegistrationNumbers(excelPath);
         List<String[]> premiumData = new ArrayList<>(); // successful data
         List<String> failedRegs = new ArrayList<>();
@@ -126,20 +143,40 @@ public class insurancedekho_Page extends TestBase {
             try {
                 wait.until(ExpectedConditions.elementToBeClickable(regiNumber));
                 TestUtil.sendKeys(regiNumber,reg,"entered registration number");
-                Thread.sleep(6000);
+                Thread.sleep(3000);
                 TestUtil.click(getvehicledetails,"click on vehicle details button");
+                Thread.sleep(4000);
+                String vehicleMakeModel ="" ;
+                String vehicleVariant="";
+                String vehicleFuel="";
+                String regisdate ="";
 
-                Thread.sleep(10000);
-                String vehicleMakeModel = modelmodel.getText();
-                String vehicleVariant = variant.getText();
-                String vehicleFuel = fuelType.getText();
-                String regisdate = registrationyear.getText();
+                Thread.sleep(4000);
+                List<WebElement> confQuotesBtnList = driver.findElements(By.xpath("//button[text()=\"Confirm & Get Quotes\"]"));
+                if (!confQuotesBtnList.isEmpty() && confQuotesBtnList.get(0).isDisplayed()) {
+                    Thread.sleep(5000);
+                     vehicleMakeModel = modelmodel.getText();
+                     vehicleVariant = variant.getText();
+                     vehicleFuel = fuelType.getText();
+                     regisdate = registrationyear.getText();
+                    confQuotesBtnList.get(0).click();
+                } else {
+                    WebElement getDetails = driver.findElement(By.xpath("//button[text()=\"Get Quotes\"]"));
+                    if (getDetails.isDisplayed()) {
+                        Thread.sleep(5000);
+                        vehicleMakeModel = modelmodel1.getAttribute("value");
+                        vehicleVariant = variant1.getAttribute("value");
+                        vehicleFuel = fuelType1.getAttribute("value");
+                        regisdate = registrationyear1.getAttribute("value");
 
-                Thread.sleep(5000);
-                if (confandgetquotes != null && confandgetquotes.isDisplayed()) {
-                    confandgetquotes.click();
-                } else if (getdetails != null && getdetails.isDisplayed()) {
-                    getdetails.click();
+                        getDetails.click();
+                        Thread.sleep(3000);
+
+                        TestUtil.sendKeys(preinsurer,"bajaj","clicked on prev insurer dropdown");
+                        TestUtil.click(bajajinsurer,"clicked bajaj prev insurer");
+                    } else {
+                        System.out.println("Neither button is available.");
+                    }
                 }
 
                 Thread.sleep(3000);
@@ -157,19 +194,14 @@ public class insurancedekho_Page extends TestBase {
 
                     Thread.sleep(3000);
                 }
-                String existingValue = previousdrop.getText();
 
-                if (existingValue == null || existingValue.trim().isEmpty())
-                {
-                    Thread.sleep(2000);
-                    TestUtil.click(previousdrop,"Clicked on previous policy type dropdown");
-                 //   Thread.sleep(4000);
-                   // actions.moveToElement(previousdrop).doubleClick().perform();
+                TestUtil.click(previousdrop,"clicked");
+
                     Thread.sleep(3000);
                     TestUtil.click(comp,"selectec comp");
 
                     Thread.sleep(3000);
-                }
+
                 String prevpolicytype = "Comprehensive";
                 System.out.println(prevpolicytype);
                 Thread.sleep(2000);
@@ -278,8 +310,8 @@ public class insurancedekho_Page extends TestBase {
         String dateTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy---HH-mm-ss"));
         // ✅ Save successful data
         //   String outputExcel = "/Users/sayali/Desktop/RenewBuy_premium" + dateTime + ".xlsx";
-        String outputExcel = "/Users/nitinrathod/Desktop/InsuranceDekho_COMP_premium" + dateTime + ".xlsx";
-       // String outputExcel = "C:\\Users\\pradeep.u_turtlemint\\Desktop\\ALLBrokerdata\\RenewBuy_COMP_premium"+dateTime+".xlsx";
+      //  String outputExcel = "/Users/nitinrathod/Desktop/InsuranceDekho_COMP_premium" + dateTime + ".xlsx";
+        String outputExcel = "C:\\Users\\pradeep.u_turtlemint\\Desktop\\ALLBrokerdata\\RenewBuy_COMP_premium"+dateTime+".xlsx";
         if (!premiumData.isEmpty()) {
             TestUtil.writePremiumDataIDCOMP(outputExcel, premiumData,addOnsData);
             System.out.println("✅ Premium data written to Excel successfully.");
@@ -309,8 +341,8 @@ public class insurancedekho_Page extends TestBase {
         Thread.sleep(2000);
         driver.navigate().refresh();
         Thread.sleep(2000);
-         String excelPath = "/Users/nitinrathod/Documents/registration_data.xlsx";
-       // String excelPath = "C:\\Users\\pradeep.u_turtlemint\\Downloads\\registration_data.xlsx";
+       //  String excelPath = "/Users/nitinrathod/Documents/registration_data.xlsx";
+        String excelPath = "C:\\Users\\pradeep.u_turtlemint\\Downloads\\registration_data.xlsx";
 
         List<String> regNumbers = TestUtil.getRegistrationNumbers(excelPath);
         List<String[]> premiumData = new ArrayList<>(); // successful data
@@ -326,17 +358,44 @@ public class insurancedekho_Page extends TestBase {
             try {
                 wait.until(ExpectedConditions.elementToBeClickable(regiNumber));
                 TestUtil.sendKeys(regiNumber,reg,"entered registration number");
-                Thread.sleep(6000);
+                Thread.sleep(3000);
                 TestUtil.click(getvehicledetails,"click on vehicle details button");
+                Thread.sleep(4000);
+                String vehicleMakeModel ="" ;
+                String vehicleVariant="";
+                String vehicleFuel="";
+                String regisdate ="";
 
-                Thread.sleep(10000);
-                String vehicleMakeModel = modelmodel.getText();
-                String vehicleVariant = variant.getText();
-                String vehicleFuel = fuelType.getText();
-                String regisdate = registrationyear.getText();
+                Thread.sleep(4000);
+                List<WebElement> confQuotesBtnList = driver.findElements(By.xpath("//button[text()=\"Confirm & Get Quotes\"]"));
+                if (!confQuotesBtnList.isEmpty() && confQuotesBtnList.get(0).isDisplayed()) {
+                    Thread.sleep(5000);
+                    vehicleMakeModel = modelmodel.getText();
+                    vehicleVariant = variant.getText();
+                    vehicleFuel = fuelType.getText();
+                    regisdate = registrationyear.getText();
+                    confQuotesBtnList.get(0).click();
+                } else {
+                    WebElement getDetails = driver.findElement(By.xpath("//button[text()=\"Get Quotes\"]"));
+                    if (getDetails.isDisplayed()) {
+                        Thread.sleep(5000);
+                        vehicleMakeModel = modelmodel1.getAttribute("value");
+                        vehicleVariant = variant1.getAttribute("value");
+                        vehicleFuel = fuelType1.getAttribute("value");
+                        regisdate = registrationyear1.getAttribute("value");
 
-                TestUtil.click(confandgetquotes, "click on confirm and get quotes");
+                        getDetails.click();
+                        Thread.sleep(3000);
+
+                        TestUtil.sendKeys(preinsurer,"bajaj","clicked on prev insurer dropdown");
+                        TestUtil.click(bajajinsurer,"clicked bajaj prev insurer");
+                    } else {
+                        System.out.println("Neither button is available.");
+                    }
+                }
+
                 Thread.sleep(5000);
+
                 String existingValue1 = calendar.getText();
                 if (existingValue1 == null || existingValue1.trim().isEmpty() ) {
                     actions.moveToElement(calendar).doubleClick().perform();
@@ -348,23 +407,21 @@ public class insurancedekho_Page extends TestBase {
                     TestUtil.click(currentdate, "selected date");
                     Thread.sleep(3000);
                 }
-                String existingValue = previousdrop.getText();
 
-                if (existingValue == null || existingValue.trim().isEmpty()) {
-                    Thread.sleep(2000);
-                    System.out.println(existingValue + "blank");
-                    TestUtil.click(previousdrop,"");
-                    System.out.println("first click");
-                    actions.moveToElement(previousdrop).doubleClick().perform();
-                    Thread.sleep(3000);
-                    TestUtil.click(Tp, "selected comp");
-                    Thread.sleep(3000);
-                }
+                TestUtil.click(previousdrop,"clicked");
+
+                Thread.sleep(3000);
+                TestUtil.click(Tp,"selectec TP");
+
+                Thread.sleep(3000);
+
                 String prevpolicytype = "Third Party";
                 System.out.println(prevpolicytype);
+                Thread.sleep(2000);
 
-                TestUtil.click(confirm, "Clicked on confirm to get quotes");
-                Thread.sleep(15000);
+                TestUtil.click(confirm, "Clicked on confirmed to get quotes");
+                Thread.sleep(30000);
+
                 TestUtil.click(predrop,"");
                 TestUtil.click(predropTP,"");
 
@@ -454,8 +511,8 @@ public class insurancedekho_Page extends TestBase {
         String dateTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy-HH-mm-ss"));
         // ✅ Save successful data
         //   String outputExcel = "/Users/sayali/Desktop/RenewBuy_premium" + dateTime + ".xlsx";
-         String outputExcel = "/Users/nitinrathod/Desktop/InsuranceDekho_TP_premium" + dateTime + ".xlsx";
-      //  String outputExcel = "C:\\Users\\pradeep.u_turtlemint\\Desktop\\ALLBrokerdata\\RenewBuy_COMP_premium"+dateTime+".xlsx";
+       //  String outputExcel = "/Users/nitinrathod/Desktop/InsuranceDekho_TP_premium" + dateTime + ".xlsx";
+        String outputExcel = "C:\\Users\\pradeep.u_turtlemint\\Desktop\\ALLBrokerdata\\RenewBuy_COMP_premium"+dateTime+".xlsx";
 
         if (!premiumData.isEmpty()) {
             TestUtil.writePremiumDataIDTP(outputExcel, premiumData,addOnsData);
