@@ -290,7 +290,7 @@ public class TestUtil {
     }
 
 
-    public static void writePremiumDataRBCOMP(String filePath, List<String[]> dataRows) {
+    public static void writePremiumDataRBCOMP(String filePath, List<String[]> dataRows,List<String[]> addOnsDataRows) {
         Workbook workbook = new XSSFWorkbook();
         Sheet sheet = workbook.createSheet("PremiumData");
 
@@ -310,6 +310,19 @@ public class TestUtil {
                 row.createCell(i).setCellValue(rowData[i]);
             }
         }
+        // ---- Sheet 2: Add Ons ----
+        Sheet addOnSheet = workbook.createSheet("AddOns");
+
+        int addOnRowIndex = 0;
+        for (String[] rowData : addOnsDataRows) {
+            Row row = addOnSheet.createRow(addOnRowIndex++);
+            for (int i = 0; i < rowData.length; i++) {
+                row.createCell(i).setCellValue(rowData[i]);
+            }
+        }
+
+        // Auto-size add-ons column
+        addOnSheet.autoSizeColumn(0);
 
         try (FileOutputStream fos = new FileOutputStream(filePath)) {
             workbook.write(fos);
