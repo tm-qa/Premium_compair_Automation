@@ -429,6 +429,7 @@ public class turtlemint_page extends TestBase {
        // String outputExcel = "/Users/nitinrathod/Desktop/Turtlemint_COMP_premium" + dateTime + ".xlsx";
          String outputExcel = "C:\\Users\\pradeep.u_turtlemint\\Desktop\\ALLBrokerdata\\Turtlemint_COMP_premium" + dateTime + ".xlsx";
 
+
         TestUtil.writeCombinedSheetTM_Comp(outputExcel, premiumData, maxIDV, ActivityP, ActivityP2,addOnsData);
         // Optional: Print or save failed registrations
         if (!failedRegs.isEmpty()) {
@@ -554,6 +555,7 @@ public class turtlemint_page extends TestBase {
 
                 List<WebElement> insurerLogos = driver.findElements(By.xpath("//div[@class='logoArea col-xs-6 col-sm-3 text-left']//img[contains(@class, 'client-logo-img')]"));
                 List<WebElement> insurerPremiums = driver.findElements(By.xpath("//div[@class=\"priceArea hidden-xs text-center\"]//span[contains(@ng-if , \"multiPlanDropDown[insurer.insurerProvider\")]"));
+
 
 
                 System.out.println("Logos found: " + insurerLogos.size());
