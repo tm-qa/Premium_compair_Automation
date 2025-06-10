@@ -114,7 +114,7 @@ public class TestUtil {
     }
 
     public static void waitUntilVisibilityOfElement(WebElement element) {
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(120));
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
         wait.until(ExpectedConditions.visibilityOf(element));
     }
     public static String ninjaFutureDate(int days) {
@@ -290,13 +290,13 @@ public class TestUtil {
     }
 
 
-    public static void writePremiumDataRBCOMP(String filePath, List<String[]> dataRows,List<String[]> addOnsDataRows) {
+    public static void writePremiumDataPBCOMP(String filePath, List<String[]> dataRows,List<String[]> addOnsDataRows) {
         Workbook workbook = new XSSFWorkbook();
         Sheet sheet = workbook.createSheet("PremiumData");
 
         // Header row
         Row header = sheet.createRow(0);
-        String[] headers = { "RegistrationNumber", "Make", "Model", "Variant", "Fuel","Previous_Policy_Type","Registration_Date", "Insurer","IDV_premium", "Premium","Activity_Points" , "IDVmin", "IDVmax"};
+        String[] headers = { "RegistrationNumber", "MakeModel", "Variant", "FuelType","Previous_Policy_Type","Registration_Date", "Insurer","IDV_premium", "Premium","Activity_Points"};
         for (int i = 0; i < headers.length; i++) {
             header.createCell(i).setCellValue(headers[i]);
         }
@@ -331,6 +331,48 @@ public class TestUtil {
             e.printStackTrace();
         }
    }
+
+    public static void writePremiumDataPBTP(String filePath, List<String[]> dataRows,List<String[]> addOnsDataRows) {
+        Workbook workbook = new XSSFWorkbook();
+        Sheet sheet = workbook.createSheet("PremiumData");
+
+        // Header row
+        Row header = sheet.createRow(0);
+        String[] headers = { "RegistrationNumber", "MakeModel", "Variant", "FuelType","Previous_Policy_Type","Registration_Date", "Insurer", "Premium","Activity_Points"};
+        for (int i = 0; i < headers.length; i++) {
+            header.createCell(i).setCellValue(headers[i]);
+        }
+
+
+        // Data rows
+        int rowIndex = 1;
+        for (String[] rowData : dataRows) {
+            Row row = sheet.createRow(rowIndex++);
+            for (int i = 0; i < rowData.length; i++) {
+                row.createCell(i).setCellValue(rowData[i]);
+            }
+        }
+        // ---- Sheet 2: Add Ons ----
+        Sheet addOnSheet = workbook.createSheet("AddOns");
+
+        int addOnRowIndex = 0;
+        for (String[] rowData : addOnsDataRows) {
+            Row row = addOnSheet.createRow(addOnRowIndex++);
+            for (int i = 0; i < rowData.length; i++) {
+                row.createCell(i).setCellValue(rowData[i]);
+            }
+        }
+
+        // Auto-size add-ons column
+        addOnSheet.autoSizeColumn(0);
+
+        try (FileOutputStream fos = new FileOutputStream(filePath)) {
+            workbook.write(fos);
+            workbook.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     public static void writePremiumDataRBTP(String filePath, List<String[]> dataRows , List<String[]> addOnsDataRows) {
         Workbook workbook = new XSSFWorkbook();
@@ -458,7 +500,7 @@ public class TestUtil {
         }
     }
 
-    public static void          writePremiumDataTm(String filePath, List<String[]> dataRows,List<String[]> ActivityP,List<String[]>addOnsData) {
+    public static void writePremiumDataTm(String filePath, List<String[]> dataRows,List<String[]> ActivityP,List<String[]>addOnsData) {
         Workbook workbook = new XSSFWorkbook();
         Sheet sheet = workbook.createSheet("PremiumData");
 
@@ -514,34 +556,6 @@ public class TestUtil {
             }
         }
 
-
-        try (FileOutputStream fos = new FileOutputStream(filePath)) {
-            workbook.write(fos);
-            workbook.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public static void writePremiumDataPBCOMP(String filePath, List<String[]> dataRows) {
-        Workbook workbook = new XSSFWorkbook();
-        Sheet sheet = workbook.createSheet("PremiumData");
-
-        // Header row
-        Row header = sheet.createRow(0);
-        String[] headers = { "RegistrationNumber", "MakeModel", "Variant", "Fuel","Previous_Policy_Type","Registration_Date", "Insurer","IDV_premium", "Premium"};
-        for (int i = 0; i < headers.length; i++) {
-            header.createCell(i).setCellValue(headers[i]);
-        }
-
-        // Data rows
-        int rowIndex = 1;
-        for (String[] rowData : dataRows) {
-            Row row = sheet.createRow(rowIndex++);
-            for (int i = 0; i < rowData.length; i++) {
-                row.createCell(i).setCellValue(rowData[i]);
-            }
-        }
 
         try (FileOutputStream fos = new FileOutputStream(filePath)) {
             workbook.write(fos);

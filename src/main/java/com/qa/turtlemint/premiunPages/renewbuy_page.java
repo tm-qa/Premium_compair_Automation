@@ -151,11 +151,11 @@ public class renewbuy_page extends TestBase {
 
         try {
             TestUtil.click(closedButton, "click on close button");
-            Thread.sleep(3000);
         }catch (Exception e){}
 
         JavascriptExecutor js = (JavascriptExecutor) driver;
         js.executeScript("window.scrollBy(0,800)");
+        TestUtil.waitUntilVisibilityOfElement(motor);
         js.executeScript("arguments[0].click();", motor);
 
         Set<String> windowHandles = driver.getWindowHandles();
@@ -171,7 +171,7 @@ public class renewbuy_page extends TestBase {
                 wait.until(ExpectedConditions.elementToBeClickable(getVehicleDetailsIdButton)).click();
                 System.out.println("click on vehicle details button");
 
-                Thread.sleep(4000);
+                TestUtil.waitUntilVisibilityOfElement(make);
                 String vehicleMake = make.getAttribute("value");
                 String vehicleModel = model.getAttribute("value");
                 String vehicleVariant = variant.getAttribute("value");
@@ -189,12 +189,12 @@ public class renewbuy_page extends TestBase {
                 TestUtil.click(policyExiryTypeCOMP, "comprehensive policy expiry type selected");
 
                 String prepolicytype = policyExiryTypeCOMP.getText();
-                Thread.sleep(3000);
+                TestUtil.waitUntilVisibilityOfElement(prevYearNCB);
                 TestUtil.click(prevYearNCB , "click on prevYearNCB ");
-                Thread.sleep(3000);
+                TestUtil.waitUntilVisibilityOfElement(zeroNcb);
                 TestUtil.click(zeroNcb , "select 0% ncb");
 
-                Thread.sleep(4000);
+                TestUtil.waitUntilVisibilityOfElement(previousinsurer);
                 String existingValue = previousinsurer.getAttribute("value");
                 System.out.println(existingValue);
                 if (existingValue == null || existingValue.trim().isEmpty()) {
@@ -219,10 +219,6 @@ public class renewbuy_page extends TestBase {
 
                // ✅ Now click the confirm button just once
                 TestUtil.click(aboveDetailsAreCorrectButton, "Clicked on above details are correct button");
-
-
-                Thread.sleep(2000);
-              //  TestUtil.click(aboveDetailsAreCorrectButton, "Clicked on above details are correct button");
                 Thread.sleep(30000);
 
                 wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.xpath("//img[@class='insurer-logo']")));
@@ -355,10 +351,10 @@ public class renewbuy_page extends TestBase {
         List<String> failedRegs = new ArrayList<>();    // failed registrations
 
         TestUtil.click(closedButton, "click on close button");
-        Thread.sleep(3000);
 
         JavascriptExecutor js = (JavascriptExecutor) driver;
         js.executeScript("window.scrollBy(0,800)");
+        TestUtil.waitUntilVisibilityOfElement(motor);
         js.executeScript("arguments[0].click();", motor);
         System.out.println("Clicked om motor");
 
@@ -373,10 +369,10 @@ public class renewbuy_page extends TestBase {
         for (String reg : regNumbers) {
             try {
                 wait.until(ExpectedConditions.elementToBeClickable(registrationNumber)).sendKeys(reg);
-                wait.until(ExpectedConditions.elementToBeClickable(getVehicleDetailsIdButton));
+                TestUtil.waitUntilVisibilityOfElement(getVehicleDetailsIdButton);
                TestUtil.click(getVehicleDetailsIdButton,"click on vehicle details button");
 
-                Thread.sleep(4000);
+                TestUtil.waitUntilVisibilityOfElement(make);
                 String vehicleMake = make.getAttribute("value");
                 String vehicleModel = model.getAttribute("value");
                 String vehicleVariant = variant.getAttribute("value");
@@ -389,32 +385,13 @@ public class renewbuy_page extends TestBase {
                 System.out.println(regisdate);
 
 
-
+                TestUtil.waitUntilVisibilityOfElement(policyExiry);
                 TestUtil.click(policyExiry, "click on previous policy expiry dropdown");
                 TestUtil.click(policyExiryTypeTP, "Third party policy expiry type selected");
                 String prepolicytype = policyExiryTypeTP.getText();
                 System.out.println(prepolicytype);
-//
-//                TestUtil.click(policyExiry, "Clicked on previous policy expiry dropdown");
-//
-//                String prepolicytype = "";
-//
-//                if (TestUtil.isVisible(policyExiryTypeTP)) {
-//                    js.executeScript("arguments[0].click();", policyExiryTypeTP);
-//                  //  TestUtil.click(policyExiryTypeTP, "Selected 1 year TP policy type");
-//                    prepolicytype = policyExiryTypeTP.getText();
-//                } else if (TestUtil.isVisible(policyExiryTypeTP3)) {
-//                    js.executeScript("arguments[0].click();", policyExiryTypeTP);
-//                 //   TestUtil.click(policyExiryTypeTP3, "Selected 3 year TP policy type");
-//                    prepolicytype = policyExiryTypeTP3.getText();
-//                } else {
-//                    System.out.println("❌ No TP policy option found.");
-//                }
-//
-//                System.out.println("Selected Policy Type: " + prepolicytype);
 
-
-                Thread.sleep(4000);
+                TestUtil.waitUntilVisibilityOfElement(previousinsurer);
                 String existingValue = previousinsurer.getAttribute("value");
                 if (existingValue == null || existingValue.trim().isEmpty()) {
                     Thread.sleep(2000);
