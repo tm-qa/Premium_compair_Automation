@@ -166,16 +166,16 @@ public class turtlemint_page extends TestBase {
         List<String[]> maxIDV = new ArrayList<>();
         List<String[]> addOnsData = new ArrayList<>();
 
-        Thread.sleep(3000);
-        TestUtil.click(sellButton, "ed");
-        Thread.sleep(3000);
-        TestUtil.click(carInsurance, "");
+        TestUtil.waitUntilVisibilityOfElement(sellButton);
+        TestUtil.click(sellButton, "sell");
+        TestUtil.waitUntilVisibilityOfElement(carInsurance);
+        TestUtil.click(carInsurance, "car");
         int count = 0;
         for (String reg : regNumbers) {
             try {
-                Thread.sleep(3000);
+                TestUtil.waitUntilVisibilityOfElement(registrationNumber);
                 TestUtil.sendKeys(registrationNumber, reg, "");
-                Thread.sleep(3000);
+                TestUtil.waitUntilVisibilityOfElement(registrationNumberButton);
                 TestUtil.click(registrationNumberButton, "");
                 TestUtil.click(policyTypecomp, "");
 
@@ -213,11 +213,11 @@ public class turtlemint_page extends TestBase {
 
                 System.out.println("Selected Policy Type: " + prepolicytype);
 
-                Thread.sleep(2000);
+                TestUtil.waitUntilVisibilityOfElement(prevClaim);
                 TestUtil.click(prevClaim, "select prev Claim as No");
-                Thread.sleep(2000);
+                TestUtil.waitUntilVisibilityOfElement(ncb);
                 TestUtil.click(ncb, "click on ncb dropdown");
-                Thread.sleep(2000);
+                TestUtil.waitUntilVisibilityOfElement(zeroNCB);
                 TestUtil.click(zeroNCB, " NCB : 0% selected");
 
 
@@ -249,22 +249,21 @@ public class turtlemint_page extends TestBase {
                 } catch (Exception e) {
                     System.out.println("Unexpected error occurred: " + e.getMessage());
                 }
-                Thread.sleep(5000);
+                TestUtil.waitUntilVisibilityOfElement(saveAndCon);
                 TestUtil.click(saveAndCon, "");
-                Thread.sleep(5000);
+                TestUtil.waitUntilVisibilityOfElement(gotIt);
                 if (count == 0 && gotIt.isDisplayed()) {
                     TestUtil.click(gotIt, "");
                 }
-                Thread.sleep(20000);
+                Thread.sleep(25000);
                 js.executeScript("arguments[0].click();", editButton);
                 String vehicleMakeModel = makeModel.getText();
                 String vehicleFuelType = fuel.getText();
                 String vehicleVarient = variant.getText();
                 String resgistrationdate = resgisdate.getText();
-
+                Thread.sleep(2000);
                 System.out.println(vehicleMakeModel + " ---" + vehicleFuelType + "--- " + vehicleVarient + " ____" + prepolicytype);
                 TestUtil.click(closedButton, "");
-                Thread.sleep(10000);
 
                 WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
                 wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.xpath("//div[@class='logoArea col-xs-6 col-sm-3 text-left']//img[contains(@class, 'client-logo-img')]")));
@@ -387,7 +386,7 @@ public class turtlemint_page extends TestBase {
                         maxIDV.add(row1);
                     }
                 }
-                Thread.sleep(5000);
+                TestUtil.waitUntilVisibilityOfElement(actpointtext);
                 TestUtil.click(actpointtext, "");
                 Thread.sleep(5000);
                 List<WebElement> Activitypt1 = driver.findElements(By.xpath("//div[@class=\"flex layout-align-space-between ng-scope\"]"));
@@ -429,6 +428,7 @@ public class turtlemint_page extends TestBase {
        // String outputExcel = "/Users/nitinrathod/Desktop/Turtlemint_COMP_premium" + dateTime + ".xlsx";
          String outputExcel = "C:\\Users\\pradeep.u_turtlemint\\Desktop\\ALLBrokerdata\\Turtlemint_COMP_premium" + dateTime + ".xlsx";
 
+
         TestUtil.writeCombinedSheetTM_Comp(outputExcel, premiumData, maxIDV, ActivityP, ActivityP2,addOnsData);
         // Optional: Print or save failed registrations
         if (!failedRegs.isEmpty()) {
@@ -454,16 +454,16 @@ public class turtlemint_page extends TestBase {
         List<String[]> ActivityP = new ArrayList<>();
         List<String[]> premiumData = new ArrayList<>();
         List<String> failedRegs = new ArrayList<>();
-        Thread.sleep(3000);
+        TestUtil.waitUntilVisibilityOfElement(sellButton);
         TestUtil.click(sellButton, "Clicked on sell button");
-        Thread.sleep(3000);
+        TestUtil.waitUntilVisibilityOfElement(carInsurance);
         TestUtil.click(carInsurance, "Clicked on car insurance");
         int count = 0;
         for (String reg : regNumbers) {
             try {
-                Thread.sleep(3000);
+                TestUtil.waitUntilVisibilityOfElement(registrationNumber);
                 TestUtil.sendKeys(registrationNumber, reg, "Started loop from first registration number");
-                Thread.sleep(3000);
+                TestUtil.waitUntilVisibilityOfElement(registrationNumberButton);
                 TestUtil.click(registrationNumberButton, "Clicked on get quotes");
                 TestUtil.click(policyTypetp, "Selected policy type as TP");
 
@@ -483,13 +483,10 @@ public class turtlemint_page extends TestBase {
                     TestUtil.click(random, "");
                 }
 
-                Thread.sleep(2000);
+                TestUtil.waitUntilVisibilityOfElement(previousPolicyTypeTP);
                 JavascriptExecutor js = (JavascriptExecutor) driver;
                 js.executeScript("arguments[0].click();", previousPolicyTypeTP);
                 Thread.sleep(2000);
-//                TestUtil.click(prevClaim, "select prev Claim as No");
-//                TestUtil.click(ncb, "click on ncb dropdown");
-//                TestUtil.click(zeroNCB, " NCB : 0% selected");
 
                 try {
 
@@ -523,13 +520,13 @@ public class turtlemint_page extends TestBase {
                 } catch (Exception e) {
                     System.out.println("Unexpected error occurred: " + e.getMessage());
                 }
-                Thread.sleep(5000);
+                TestUtil.waitUntilVisibilityOfElement(saveAndCon);
                 TestUtil.click(saveAndCon, "");
-                Thread.sleep(5000);
+                TestUtil.waitUntilVisibilityOfElement(gotIt);
                 if (count == 0 && gotIt.isDisplayed()) {
                     TestUtil.click(gotIt, "");
                 }
-                Thread.sleep(20000);
+                Thread.sleep(25000);
                 js.executeScript("arguments[0].click();", editButton);
                 String vehicleMakeModel = makeModel.getText();
                 String vehicleFuelType = fuel.getText();
@@ -540,7 +537,6 @@ public class turtlemint_page extends TestBase {
                 System.out.println(vehicleMakeModel + " ---" + vehicleFuelType + "--- " + vehicleVarient + " ____" + prePolicy);
                 Thread.sleep(2000);
                 TestUtil.click(closedButton, "");
-                Thread.sleep(15000);
 
                 String currentUrl = driver.getCurrentUrl();
                 String[] parts2 = currentUrl.split("/");
@@ -554,6 +550,7 @@ public class turtlemint_page extends TestBase {
 
                 List<WebElement> insurerLogos = driver.findElements(By.xpath("//div[@class='logoArea col-xs-6 col-sm-3 text-left']//img[contains(@class, 'client-logo-img')]"));
                 List<WebElement> insurerPremiums = driver.findElements(By.xpath("//div[@class=\"priceArea hidden-xs text-center\"]//span[contains(@ng-if , \"multiPlanDropDown[insurer.insurerProvider\")]"));
+
 
 
                 System.out.println("Logos found: " + insurerLogos.size());
@@ -576,7 +573,7 @@ public class turtlemint_page extends TestBase {
                     System.err.println("Mismatch in insurer and premium count for Reg: " + reg);
                     failedRegs.add(reg);
                 }
-
+                TestUtil.waitUntilVisibilityOfElement(actpointtext);
                 TestUtil.click(actpointtext, "");
                 Thread.sleep(5000);
                 List<WebElement> Activitypt = driver.findElements(By.xpath("//div[@class=\"flex layout-align-space-between ng-scope\"]"));
