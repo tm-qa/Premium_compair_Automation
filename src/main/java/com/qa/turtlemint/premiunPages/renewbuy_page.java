@@ -140,7 +140,7 @@ public class renewbuy_page extends TestBase {
 
     public void premiumRBComp() throws InterruptedException, IOException {
         //   String excelPath = "/Users/sayali/Documents/insurer/Premium_compair_Automation/src/test/resources/registration_data.xlsx";
-      //  String excelPath = "/Users/nitinrathod/Documents/registration_data.xlsx";
+       // String excelPath = "/Users/nitinrathod/Documents/registration_data.xlsx";
        String excelPath = "C:\\Users\\pradeep.u_turtlemint\\Downloads\\registration_data.xlsx";
         List<String> regNumbers = TestUtil.getRegistrationNumbers(excelPath);
         System.out.println(regNumbers);
@@ -171,7 +171,7 @@ public class renewbuy_page extends TestBase {
                 wait.until(ExpectedConditions.elementToBeClickable(getVehicleDetailsIdButton)).click();
                 System.out.println("click on vehicle details button");
 
-                TestUtil.waitUntilVisibilityOfElement(make);
+                Thread.sleep(5000);
                 String vehicleMake = make.getAttribute("value");
                 String vehicleModel = model.getAttribute("value");
                 String vehicleVariant = variant.getAttribute("value");
@@ -248,8 +248,11 @@ public class renewbuy_page extends TestBase {
                         String[] parts = srcValue.split("/");
                         String insurerName = parts[parts.length - 1].replace(".png", "");
 
+                        String premiumRaw = premiumBtn.getText().replaceAll("[^0-9]", "");
+                        double premiumValue = Double.parseDouble(premiumRaw);
+                        double premiumWithGST = premiumValue * 1.18;
+                        String premium = String.valueOf(Math.round(premiumWithGST));  // Final value with 18% GST applied
 
-                        String premium = premiumBtn.getText().replaceAll("[^0-9]", "");
                         String IDVactual = idvactual.getText().replaceAll("[^0-9]", "");
 
                         String IDVrange =  idvrange.getText();
@@ -341,7 +344,7 @@ public class renewbuy_page extends TestBase {
 
     public void premiumRBTp() throws InterruptedException, IOException {
         // String excelPath = "/Users/sayali/Documents/insurer/Premium_compair_Automation/src/test/resources/registration_data.xlsx";
-       //  String excelPath = "/Users/nitinrathod/Documents/registration_data.xlsx";
+        //   String excelPath = "/Users/nitinrathod/Documents/registration_data.xlsx";
         String excelPath = "C:\\Users\\pradeep.u_turtlemint\\Downloads\\registration_data.xlsx";
         List<String> regNumbers = TestUtil.getRegistrationNumbers(excelPath);
         System.out.println(regNumbers);
@@ -372,7 +375,7 @@ public class renewbuy_page extends TestBase {
                 TestUtil.waitUntilVisibilityOfElement(getVehicleDetailsIdButton);
                TestUtil.click(getVehicleDetailsIdButton,"click on vehicle details button");
 
-                TestUtil.waitUntilVisibilityOfElement(make);
+                Thread.sleep(5000);
                 String vehicleMake = make.getAttribute("value");
                 String vehicleModel = model.getAttribute("value");
                 String vehicleVariant = variant.getAttribute("value");
@@ -442,7 +445,12 @@ public class renewbuy_page extends TestBase {
                         String srcValue = logo.getAttribute("src");
                         String[] parts = srcValue.split("/");
                         String insurerName = parts[parts.length - 1].replace(".png", "");
-                        String premium = premiumBtn.getText().replaceAll("[^0-9]", "");
+
+                        String premiumRaw = premiumBtn.getText().replaceAll("[^0-9]", "");
+                        double premiumValue = Double.parseDouble(premiumRaw);
+                        double premiumWithGST = premiumValue * 1.18;
+                        String premium = String.valueOf(Math.round(premiumWithGST));  // Final value with 18% GST applied
+
                         String actP = activityP.getText().trim();
                         String numberOnly = "0";
 
@@ -493,7 +501,7 @@ public class renewbuy_page extends TestBase {
         String dateTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy---HH-mm-ss"));
         //✅ Save successful data
         //   String outputExcel = "/Users/sayali/Desktop/RenewBuy_premium" + dateTime + ".xlsx";
-      //    String outputExcel = "/Users/nitinrathod/Desktop/RenewBuy_TP_premium" + dateTime + ".xlsx";
+        //  String outputExcel = "/Users/nitinrathod/Desktop/RenewBuy_TP_premium" + dateTime + ".xlsx";
         String outputExcel = "C:\\Users\\pradeep.u_turtlemint\\Desktop\\ALLBrokerdata\\RenewBuy_TP_premium"+dateTime+".xlsx";
 
         if (!premiumData.isEmpty()) {

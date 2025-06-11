@@ -114,7 +114,7 @@ public class policybazar_page extends TestBase {
                 TestUtil.waitUntilVisibilityOfElement(viewprice);
                 TestUtil.click(viewprice, "click on vehicle details button");
 
-                TestUtil.waitUntilVisibilityOfElement(makemodel);
+                Thread.sleep(5000);
                 Actions act =  new Actions(driver);
                 act.moveToElement(makemodel).build().perform();
                 String vehicleMakemodel = makemodel.getText();
@@ -279,7 +279,7 @@ public class policybazar_page extends TestBase {
                 TestUtil.waitUntilVisibilityOfElement(viewprice);
                 TestUtil.click(viewprice, "click on vehicle details button");
 
-                TestUtil.waitUntilVisibilityOfElement(makemodel);
+                Thread.sleep(5000);
                 Actions act =  new Actions(driver);
                 act.moveToElement(makemodel).build().perform();
                 String vehicleMakemodel = makemodel.getText();

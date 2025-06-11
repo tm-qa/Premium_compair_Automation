@@ -153,7 +153,7 @@ public class insurancedekho_Page extends TestBase {
                 Thread.sleep(4000);
                 List<WebElement> confQuotesBtnList = driver.findElements(By.xpath("//button[text()=\"Confirm & Get Quotes\"]"));
                 if (!confQuotesBtnList.isEmpty() && confQuotesBtnList.get(0).isDisplayed()) {
-                    TestUtil.waitUntilVisibilityOfElement(modelmodel);
+                    Thread.sleep(3000);
                      vehicleMakeModel = modelmodel.getText();
                      vehicleVariant = variant.getText();
                      vehicleFuel = fuelType.getText();
@@ -162,7 +162,7 @@ public class insurancedekho_Page extends TestBase {
                 } else {
                     WebElement getDetails = driver.findElement(By.xpath("//button[text()=\"Get Quotes\"]"));
                     if (getDetails.isDisplayed()) {
-                        TestUtil.waitUntilVisibilityOfElement(modelmodel1);
+                        Thread.sleep(3000);
                         vehicleMakeModel = modelmodel1.getAttribute("value");
                         vehicleVariant = variant1.getAttribute("value");
                         vehicleFuel = fuelType1.getAttribute("value");
@@ -366,7 +366,7 @@ public class insurancedekho_Page extends TestBase {
                 Thread.sleep(4000);
                 List<WebElement> confQuotesBtnList = driver.findElements(By.xpath("//button[text()=\"Confirm & Get Quotes\"]"));
                 if (!confQuotesBtnList.isEmpty() && confQuotesBtnList.get(0).isDisplayed()) {
-                    TestUtil.waitUntilVisibilityOfElement(modelmodel);
+                    Thread.sleep(3000);
                     vehicleMakeModel = modelmodel.getText();
                     vehicleVariant = variant.getText();
                     vehicleFuel = fuelType.getText();
@@ -375,7 +375,7 @@ public class insurancedekho_Page extends TestBase {
                 } else {
                     WebElement getDetails = driver.findElement(By.xpath("//button[text()=\"Get Quotes\"]"));
                     if (getDetails.isDisplayed()) {
-                        TestUtil.waitUntilVisibilityOfElement(modelmodel1);
+                        Thread.sleep(3000);
                         vehicleMakeModel = modelmodel1.getAttribute("value");
                         vehicleVariant = variant1.getAttribute("value");
                         vehicleFuel = fuelType1.getAttribute("value");
