@@ -130,7 +130,7 @@ public class policybazar_page extends TestBase {
                 System.out.println(regisdate);
                 String prevpolicytype = "Comprehensive";
 
-                TestUtil.waitUntilVisibilityOfElement(calendar);
+                Thread.sleep(3000);
                 String existingValue = calendar.getAttribute("value");
                 System.out.println(existingValue);
                 if (existingValue == null || existingValue.trim().isEmpty()) {
@@ -144,7 +144,7 @@ public class policybazar_page extends TestBase {
                     TestUtil.sendKeys(calendar, formattedDate + Keys.ENTER, "entered");
 
                 }
-                TestUtil.waitUntilVisibilityOfElement(prepolicytypeinsurer);
+                Thread.sleep(3000);
                 String existingValue1 = prepolicytypeinsurer.getText();
                 System.out.println(existingValue1);
                 if (existingValue1 == null || existingValue1.trim().isEmpty()) {
@@ -153,7 +153,7 @@ public class policybazar_page extends TestBase {
                     TestUtil.sendKeys(prepolicytypeinsurer, "Bajaj Allianz" + Keys.ENTER, "");
                 }
 
-                TestUtil.waitUntilVisibilityOfElement(viewpquotes);
+                Thread.sleep(3000);
                 TestUtil.click(viewpquotes, "confirm vehicle");
                 Thread.sleep(30000);
 
@@ -295,7 +295,7 @@ public class policybazar_page extends TestBase {
                 System.out.println(regisdate);
                 String prevpolicytype = "Third Party";
 
-                TestUtil.waitUntilVisibilityOfElement(calendar);
+                Thread.sleep(3000);
                 String existingValue = calendar.getAttribute("value");
                 System.out.println(existingValue);
                 if (existingValue == null || existingValue.trim().isEmpty()) {
@@ -309,10 +309,10 @@ public class policybazar_page extends TestBase {
                     TestUtil.sendKeys(calendar, formattedDate + Keys.ENTER, "entered");
 
                 }
-                TestUtil.waitUntilVisibilityOfElement(newpolicytypeTP);
+                Thread.sleep(3000);
                 TestUtil.click(newpolicytypeTP,"");
 
-                TestUtil.waitUntilVisibilityOfElement(viewpquotes);
+                Thread.sleep(3000);
                 TestUtil.click(viewpquotes, "confirm vehicle");
                 Thread.sleep(30000);
 
