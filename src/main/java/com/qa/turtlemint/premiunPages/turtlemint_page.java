@@ -255,7 +255,7 @@ public class turtlemint_page extends TestBase {
                 if (count == 0 && gotIt.isDisplayed()) {
                     TestUtil.click(gotIt, "");
                 }
-                Thread.sleep(25000);
+                Thread.sleep(3000);
                 js.executeScript("arguments[0].click();", editButton);
                 String vehicleMakeModel = makeModel.getText();
                 String vehicleFuelType = fuel.getText();
@@ -264,6 +264,7 @@ public class turtlemint_page extends TestBase {
                 Thread.sleep(2000);
                 System.out.println(vehicleMakeModel + " ---" + vehicleFuelType + "--- " + vehicleVarient + " ____" + prepolicytype);
                 TestUtil.click(closedButton, "");
+                Thread.sleep(25000);
 
                 WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
                 wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.xpath("//div[@class='logoArea col-xs-6 col-sm-3 text-left']//img[contains(@class, 'client-logo-img')]")));
@@ -347,12 +348,14 @@ public class turtlemint_page extends TestBase {
 
                     addOnsData.add(new String[] { reg, "No Add-Ons Found" });
                 }
-
+                Thread.sleep(2000);
                 actions.moveToElement(hoverIn).perform();
                 actions.moveToElement(isMaxId).perform();
                 TestUtil.click(isMaxId, "click on max id");
+                Thread.sleep(3000);
                 actions.moveByOffset(50, 0).perform();
                 actions.moveToElement(hoverOut).perform();
+                Thread.sleep(3000);
                 TestUtil.click(updateedresult, "ejd");
                 Thread.sleep(25000);
 
@@ -380,6 +383,7 @@ public class turtlemint_page extends TestBase {
 
                         String premium1 = premiumBtn.getText().replace(",", "").replace("₹", "").trim();
                         String premiumidv1 = idvElement.getText().replace(",", "").replace("₹", "").trim();
+                        System.out.println(premiumidv1);
 
                         String[] row1 = {reg, vehicleMakeModel, vehicleFuelType, vehicleVarient, prepolicytype, resgistrationdate, insurerName, premiumidv1, premium1,
 

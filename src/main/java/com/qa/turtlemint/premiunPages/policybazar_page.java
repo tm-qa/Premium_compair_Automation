@@ -174,7 +174,12 @@ public class policybazar_page extends TestBase {
                         WebElement idvactual = IDVActual.get(i);
                         WebElement activityp = actpoint.get(i);
 
-                        String insurerName = logo.getAttribute("alt");
+                        // Alt-based insurer name handling
+                        String insurerName = logo.getAttribute("alt").trim();
+                        if (insurerName.equalsIgnoreCase("insurer")) {
+                            insurerName = "Zuno";
+                        }
+
                         String premium = premiumBtn.getText().replaceAll("[^0-9]", "");
                         String IDVactual = idvactual.getText().replaceAll("[^0-9]", "");
                         String actp = activityp.getText().trim();
@@ -330,7 +335,10 @@ public class policybazar_page extends TestBase {
                         WebElement premiumBtn = insurerPremiums.get(i);
                         WebElement activityp = actpoint.get(i);
 
-                        String insurerName = logo.getAttribute("alt");
+                        String insurerName = logo.getAttribute("alt").trim();
+                        if (insurerName.equalsIgnoreCase("insurer")) {
+                            insurerName = "Zuno";
+                        }
                         String premium = premiumBtn.getText().replaceAll("[^0-9]", "");
                         String actp = activityp.getText().trim();
                         System.out.println(actp);
