@@ -111,6 +111,7 @@ public class insurancedekho_Page extends TestBase {
         LogUtils.info("Opened Website: " + strUrl);
         Thread.sleep(3000);
         TestUtil.sendKeys(MobileNumberID, username, "Mobile Number Entered");
+        Thread.sleep(3000);
         TestUtil.click(startearning, "Start earning pressed");
         Thread.sleep(25000);
 
@@ -306,7 +307,7 @@ public class insurancedekho_Page extends TestBase {
         String dateTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy---HH-mm-ss"));
         // ✅ Save successful data
         //   String outputExcel = "/Users/sayali/Desktop/RenewBuy_premium" + dateTime + ".xlsx";
-      //  String outputExcel = "/Users/nitinrathod/Desktop/InsuranceDekho_COMP_premium" + dateTime + ".xlsx";
+        //String outputExcel = "/Users/nitinrathod/Desktop/InsuranceDekho_COMP_premium" + dateTime + ".xlsx";
         String outputExcel = "C:\\Users\\pradeep.u_turtlemint\\Desktop\\ALLBrokerdata\\InsuranceDekho_COMP_premium"+dateTime+".xlsx";
         if (!premiumData.isEmpty()) {
             TestUtil.writePremiumDataIDCOMP(outputExcel, premiumData,addOnsData);
@@ -383,7 +384,7 @@ public class insurancedekho_Page extends TestBase {
 
                         getDetails.click();
 
-                        TestUtil.waitUntilVisibilityOfElement(preinsurer);
+                        Thread.sleep(3000);
                         TestUtil.sendKeys(preinsurer,"bajaj","clicked on prev insurer dropdown");
                         TestUtil.click(bajajinsurer,"clicked bajaj prev insurer");
                     } else {
@@ -392,7 +393,7 @@ public class insurancedekho_Page extends TestBase {
                 }
 
 
-                TestUtil.waitUntilVisibilityOfElement(calendar);
+                Thread.sleep(3000);
                 String existingValue1 = calendar.getText();
                 if (existingValue1 == null || existingValue1.trim().isEmpty() ) {
                     actions.moveToElement(calendar).doubleClick().perform();
@@ -404,7 +405,7 @@ public class insurancedekho_Page extends TestBase {
                     TestUtil.click(currentdate, "selected date");
 
                 }
-                TestUtil.waitUntilVisibilityOfElement(previousdrop);
+                Thread.sleep(3000);
                 TestUtil.click(previousdrop,"clicked");
 
                 TestUtil.waitUntilVisibilityOfElement(Tp);

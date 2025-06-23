@@ -154,7 +154,7 @@ public class turtlemint_page extends TestBase {
     public void Comppremiumtm() throws InterruptedException {
 
         // String excelPath = "/Users/sayali/Documents/insurer/Premium_compair_Automation/src/test/resources/registration_data.xlsx";
-       // String excelPath = "/Users/nitinrathod/Documents/registration_data.xlsx";
+      //  String excelPath = "/Users/nitinrathod/Documents/registration_data.xlsx";
          String excelPath = "C:\\Users\\pradeep.u_turtlemint\\Downloads\\registration_data.xlsx";
         List<String> regNumbers = TestUtil.getRegistrationNumbers(excelPath);
         System.out.println(regNumbers);
@@ -213,11 +213,11 @@ public class turtlemint_page extends TestBase {
 
                 System.out.println("Selected Policy Type: " + prepolicytype);
 
-                TestUtil.waitUntilVisibilityOfElement(prevClaim);
+                Thread.sleep(3000);
                 TestUtil.click(prevClaim, "select prev Claim as No");
-                TestUtil.waitUntilVisibilityOfElement(ncb);
+                Thread.sleep(3000);
                 TestUtil.click(ncb, "click on ncb dropdown");
-                TestUtil.waitUntilVisibilityOfElement(zeroNCB);
+                Thread.sleep(3000);
                 TestUtil.click(zeroNCB, " NCB : 0% selected");
 
 
@@ -249,13 +249,13 @@ public class turtlemint_page extends TestBase {
                 } catch (Exception e) {
                     System.out.println("Unexpected error occurred: " + e.getMessage());
                 }
-                TestUtil.waitUntilVisibilityOfElement(saveAndCon);
+                Thread.sleep(5000);
                 TestUtil.click(saveAndCon, "");
-                TestUtil.waitUntilVisibilityOfElement(gotIt);
+                Thread.sleep(3000);
                 if (count == 0 && gotIt.isDisplayed()) {
                     TestUtil.click(gotIt, "");
                 }
-                Thread.sleep(25000);
+                Thread.sleep(3000);
                 js.executeScript("arguments[0].click();", editButton);
                 String vehicleMakeModel = makeModel.getText();
                 String vehicleFuelType = fuel.getText();
@@ -264,6 +264,7 @@ public class turtlemint_page extends TestBase {
                 Thread.sleep(2000);
                 System.out.println(vehicleMakeModel + " ---" + vehicleFuelType + "--- " + vehicleVarient + " ____" + prepolicytype);
                 TestUtil.click(closedButton, "");
+                Thread.sleep(25000);
 
                 WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
                 wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.xpath("//div[@class='logoArea col-xs-6 col-sm-3 text-left']//img[contains(@class, 'client-logo-img')]")));
@@ -347,13 +348,16 @@ public class turtlemint_page extends TestBase {
 
                     addOnsData.add(new String[] { reg, "No Add-Ons Found" });
                 }
-
+                Thread.sleep(2000);
                 actions.moveToElement(hoverIn).perform();
                 actions.moveToElement(isMaxId).perform();
                 TestUtil.click(isMaxId, "click on max id");
+                Thread.sleep(3000);
                 actions.moveByOffset(50, 0).perform();
                 actions.moveToElement(hoverOut).perform();
+                Thread.sleep(3000);
                 TestUtil.click(updateedresult, "ejd");
+                Thread.sleep(25000);
 
                 wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.xpath("//div[@class='logoArea col-xs-6 col-sm-3 text-left']//img[contains(@class, 'client-logo-img')]")));
                 wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.xpath("//div[@class=\"priceArea hidden-xs text-center\"]//span[contains(@ng-if , \"multiPlanDropDown[insurer.insurerProvider\")]")));
@@ -379,6 +383,7 @@ public class turtlemint_page extends TestBase {
 
                         String premium1 = premiumBtn.getText().replace(",", "").replace("₹", "").trim();
                         String premiumidv1 = idvElement.getText().replace(",", "").replace("₹", "").trim();
+                        System.out.println(premiumidv1);
 
                         String[] row1 = {reg, vehicleMakeModel, vehicleFuelType, vehicleVarient, prepolicytype, resgistrationdate, insurerName, premiumidv1, premium1,
 
@@ -386,7 +391,7 @@ public class turtlemint_page extends TestBase {
                         maxIDV.add(row1);
                     }
                 }
-                TestUtil.waitUntilVisibilityOfElement(actpointtext);
+                Thread.sleep(5000);
                 TestUtil.click(actpointtext, "");
                 Thread.sleep(5000);
                 List<WebElement> Activitypt1 = driver.findElements(By.xpath("//div[@class=\"flex layout-align-space-between ng-scope\"]"));
@@ -447,7 +452,7 @@ public class turtlemint_page extends TestBase {
 
         // String excelPath = "/Users/sayali/Documents/insurer/Premium_compair_Automation/src/test/resources/registration_data.xlsx";
      //  String excelPath = "/Users/nitinrathod/Documents/registration_data.xlsx";
-          String excelPath = "C:\\Users\\pradeep.u_turtlemint\\Downloads\\registration_data.xlsx";
+        String excelPath = "C:\\Users\\pradeep.u_turtlemint\\Downloads\\registration_data.xlsx";
         List<String> regNumbers = TestUtil.getRegistrationNumbers(excelPath);
         System.out.println(regNumbers);
         List<String[]> addOnsData = new ArrayList<>();
@@ -483,7 +488,7 @@ public class turtlemint_page extends TestBase {
                     TestUtil.click(random, "");
                 }
 
-                TestUtil.waitUntilVisibilityOfElement(previousPolicyTypeTP);
+                Thread.sleep(3000);
                 JavascriptExecutor js = (JavascriptExecutor) driver;
                 js.executeScript("arguments[0].click();", previousPolicyTypeTP);
                 Thread.sleep(2000);
@@ -520,9 +525,9 @@ public class turtlemint_page extends TestBase {
                 } catch (Exception e) {
                     System.out.println("Unexpected error occurred: " + e.getMessage());
                 }
-                TestUtil.waitUntilVisibilityOfElement(saveAndCon);
+                Thread.sleep(5000);
                 TestUtil.click(saveAndCon, "");
-                TestUtil.waitUntilVisibilityOfElement(gotIt);
+                Thread.sleep(3000);
                 if (count == 0 && gotIt.isDisplayed()) {
                     TestUtil.click(gotIt, "");
                 }
@@ -625,7 +630,7 @@ public class turtlemint_page extends TestBase {
 
         // ✅ Save successful data
         //  String outputExcel = "/Users/sayali/Desktop/RenewBuy_premium" + dateTime + ".xlsx";
-       //String outputExcel = "/Users/nitinrathod/Desktop/Turtlemint_TP_premium" + dateTime + ".xlsx";
+      // String outputExcel = "/Users/nitinrathod/Desktop/Turtlemint_TP_premium" + dateTime + ".xlsx";
         String outputExcel = "C:\\Users\\pradeep.u_turtlemint\\Desktop\\ALLBrokerdata\\Turtlemint_TP_premium" + dateTime + ".xlsx";
 
         TestUtil.writePremiumDataTm(outputExcel, premiumData,ActivityP,addOnsData );
