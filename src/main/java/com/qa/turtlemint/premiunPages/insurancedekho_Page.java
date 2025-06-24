@@ -211,13 +211,13 @@ public class insurancedekho_Page extends TestBase {
                 wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.xpath("//button[@class=\"quoteButton\"]")));
                 wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.xpath("//span[@class=\"insurerNameAndButtonWrapper\"]//span[@class=\"idvRangeValue\"]")));
                 wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.xpath("//h2[@class=\"idvCoverValue\"]//span")));
-                wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.xpath("//div[@class='pointEarn']/p[position() mod 2 = 1]")));
+                wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.xpath("(//div[@class='pointEarn']//span)[position() mod 2 = 1]")));
 
                 List<WebElement> insurerLogos = driver.findElements(By.xpath("//span[@class=\"insurerNameAndButtonWrapper\"]//h2"));
                 List<WebElement> insurerPremiums = driver.findElements(By.xpath("//button[@class=\"quoteButton\"]"));
                 List<WebElement> IDVRange = driver.findElements(By.xpath("//span[@class=\"insurerNameAndButtonWrapper\"]//span[@class=\"idvRangeValue\"]"));
                 List<WebElement> IDVActual = driver.findElements(By.xpath("//h2[@class=\"idvCoverValue\"]//span"));
-                List<WebElement> actpoint = driver.findElements(By.xpath("//div[@class='pointEarn']/p[position() mod 2 = 1]"));
+                List<WebElement> actpoint = driver.findElements(By.xpath("(//div[@class='pointEarn']//span)[position() mod 2 = 1]"));
 
                 if (insurerLogos.size() == insurerPremiums.size()) {
                     for (int i = 0; i < insurerLogos.size(); i++) {
@@ -338,8 +338,8 @@ public class insurancedekho_Page extends TestBase {
         Thread.sleep(2000);
         driver.navigate().refresh();
         Thread.sleep(2000);
-       //  String excelPath = "/Users/nitinrathod/Documents/registration_data.xlsx";
-        String excelPath = "C:\\Users\\pradeep.u_turtlemint\\Downloads\\registration_data.xlsx";
+      //   String excelPath = "/Users/nitinrathod/Documents/registration_data.xlsx";
+       String excelPath = "C:\\Users\\pradeep.u_turtlemint\\Downloads\\registration_data.xlsx";
 
         List<String> regNumbers = TestUtil.getRegistrationNumbers(excelPath);
         List<String[]> premiumData = new ArrayList<>(); // successful data
@@ -423,11 +423,11 @@ public class insurancedekho_Page extends TestBase {
                 Thread.sleep(25000);
                 wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.xpath("//span[@class=\"insurerNameAndButtonWrapper\"]//h2")));
                 wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.xpath("//button[@class=\"quoteButton\"]")));
-                wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.xpath("//div[@class='pointEarn']/p[position() mod 2 = 1]")));
+                wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.xpath("(//div[@class='pointEarn']//span)[position() mod 2 = 1]")));
 
                 List<WebElement> insurerLogos = driver.findElements(By.xpath("//span[@class=\"insurerNameAndButtonWrapper\"]//h2"));
                 List<WebElement> insurerPremiums = driver.findElements(By.xpath("//button[@class=\"quoteButton\"]"));
-                List<WebElement> actpoint = driver.findElements(By.xpath("//div[@class='pointEarn']/p[position() mod 2 = 1]"));
+                List<WebElement> actpoint = driver.findElements(By.xpath("(//div[@class='pointEarn']//span)[position() mod 2 = 1]"));
 
                 if (insurerLogos.size() == insurerPremiums.size()) {
                     for (int i = 0; i < insurerLogos.size(); i++) {
@@ -506,7 +506,7 @@ public class insurancedekho_Page extends TestBase {
         String dateTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy-HH-mm-ss"));
         // ✅ Save successful data
         //   String outputExcel = "/Users/sayali/Desktop/RenewBuy_premium" + dateTime + ".xlsx";
-       //  String outputExcel = "/Users/nitinrathod/Desktop/InsuranceDekho_TP_premium" + dateTime + ".xlsx";
+        // String outputExcel = "/Users/nitinrathod/Desktop/InsuranceDekho_TP_premium" + dateTime + ".xlsx";
         String outputExcel = "C:\\Users\\pradeep.u_turtlemint\\Desktop\\ALLBrokerdata\\InsuranceDekho_TP_premium"+dateTime+".xlsx";
 
         if (!premiumData.isEmpty()) {
