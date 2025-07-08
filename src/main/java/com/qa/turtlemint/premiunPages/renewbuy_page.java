@@ -119,7 +119,7 @@ public class renewbuy_page extends TestBase {
     }
 
 
-    public void loginRB() {
+    public void loginRB() throws InterruptedException {
         TestUtil.click(singInWithPassword, "click on sing In with password");
         TestUtil.sendKeys(formEmail, "jagadinsurance@gmail.com", "entered email");
         TestUtil.sendKeys(formPassword, "Jagad@321", "entered password");
@@ -135,6 +135,7 @@ public class renewbuy_page extends TestBase {
         System.out.println("The sum of " + num1 + " and " + num2 + " is: " + sum);
 
         TestUtil.sendKeys(enterSum, totalSum, "entered sum");
+        Thread.sleep(5000);
         TestUtil.click(logIn, "click on login button");
     }
 
@@ -225,13 +226,13 @@ public class renewbuy_page extends TestBase {
                 wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.xpath("//button[contains(@class,'premium-breakup-amount')]")));
                 wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.xpath("//span[@class=\"idv-amount\"]")));
                 wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.xpath("//span[contains(@class,\"idv-choose-amount\")]")));
-                wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.xpath("//div[@class=\"payout-value pb-2\"]")));
+                wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.xpath("(//div[contains(text(),\" You Earn\")])[position() mod 2 = 0]")));
 
                 List<WebElement> insurerLogos = driver.findElements(By.xpath("//img[@class='insurer-logo']"));
                 List<WebElement> insurerPremiums = driver.findElements(By.xpath("//button[contains(@class,'premium-breakup-amount')]"));
                 List<WebElement> IDVRange = driver.findElements(By.xpath("//span[@class=\"idv-amount\"]"));
                 List<WebElement> IDVActual = driver.findElements(By.xpath("//span[contains(@class,\"idv-choose-amount\")]"));
-                List<WebElement> activityPoint = driver.findElements(By.xpath("//div[@class=\"payout-value pb-2\"]"));
+                List<WebElement> activityPoint = driver.findElements(By.xpath("(//div[contains(text(),\" You Earn\")])[position() mod 2 = 0]"));
 
                 List<WebElement> addOns = driver.findElements(By.xpath("(//div[contains(@id,\"cdk-accordion-child\")])[2]//span[@class='mat-checkbox-label']"));
 
@@ -242,6 +243,7 @@ public class renewbuy_page extends TestBase {
                         WebElement premiumBtn = insurerPremiums.get(i);
                         WebElement idvrange = IDVRange.get(i);
                         WebElement idvactual = IDVActual.get(i);
+
                         WebElement activityP = activityPoint.get(i);
 
                         String srcValue = logo.getAttribute("src");
@@ -344,8 +346,8 @@ public class renewbuy_page extends TestBase {
 
     public void premiumRBTp() throws InterruptedException, IOException {
         // String excelPath = "/Users/sayali/Documents/insurer/Premium_compair_Automation/src/test/resources/registration_data.xlsx";
-        //  String excelPath = "/Users/nitinrathod/Documents/registration_data.xlsx";
-        String excelPath = "C:\\Users\\pradeep.u_turtlemint\\Downloads\\registration_data.xlsx";
+         String excelPath = "/Users/nitinrathod/Documents/registration_data.xlsx";
+       // String excelPath = "C:\\Users\\pradeep.u_turtlemint\\Downloads\\registration_data.xlsx";
         List<String> regNumbers = TestUtil.getRegistrationNumbers(excelPath);
         System.out.println(regNumbers);
 
@@ -426,11 +428,11 @@ public class renewbuy_page extends TestBase {
 
                 wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.xpath("//img[@class='insurer-logo']")));
                 wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.xpath("//button[contains(@class,'premium-breakup-amount')]")));
-                wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.xpath("//div[@class=\"payout-value pb-2\"]")));
+                wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.xpath("(//div[contains(text(),\" You Earn\")])[position() mod 2 = 0]")));
 
                 List<WebElement> insurerLogos = driver.findElements(By.xpath("//img[@class='insurer-logo']"));
                 List<WebElement> insurerPremiums = driver.findElements(By.xpath("//button[contains(@class,'premium-breakup-amount')]"));
-                List<WebElement> activityPoint = driver.findElements(By.xpath("//div[@class=\"payout-value pb-2\"]"));
+                List<WebElement> activityPoint = driver.findElements(By.xpath("(//div[contains(text(),\" You Earn\")])[position() mod 2 = 0]"));
 
                 List<WebElement> addOns = driver.findElements(By.xpath("(//div[contains(@id,\"cdk-accordion-child\")])[2]//span[@class='mat-checkbox-label']"));
 
@@ -440,7 +442,6 @@ public class renewbuy_page extends TestBase {
                     for (int i = 0; i < insurerLogos.size(); i++) {
                         WebElement logo = insurerLogos.get(i);
                         WebElement premiumBtn = insurerPremiums.get(i);
-                        WebElement activityP = activityPoint.get(i);
 
                         String srcValue = logo.getAttribute("src");
                         String[] parts = srcValue.split("/");
@@ -451,11 +452,18 @@ public class renewbuy_page extends TestBase {
                         double premiumWithGST = premiumValue * 1.18;
                         String premium = String.valueOf(Math.round(premiumWithGST));  // Final value with 18% GST applied
 
-                        String actP = activityP.getText().trim();
-                        String numberOnly = "0";
+                        String numberOnly = "null"; // default
 
-                        if (actP.matches("^\\d+.*")) {
-                            numberOnly = actP.split("\\*")[0].trim();
+                        if (i < activityPoint.size()) {
+                            WebElement activityP = activityPoint.get(i);
+                            String actP = activityP.getText().trim();
+
+                            if (actP.contains("₹")) {
+                                String[] partss = actP.split("₹");
+                                if (partss.length > 1) {
+                                    numberOnly = partss[1].replaceAll("[^0-9]", "").trim();
+                                }
+                            }
                         }
 
                         String[] row = {
@@ -501,8 +509,8 @@ public class renewbuy_page extends TestBase {
         String dateTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy---HH-mm-ss"));
         //✅ Save successful data
         //   String outputExcel = "/Users/sayali/Desktop/RenewBuy_premium" + dateTime + ".xlsx";
-        //  String outputExcel = "/Users/nitinrathod/Desktop/RenewBuy_TP_premium" + dateTime + ".xlsx";
-        String outputExcel = "C:\\Users\\pradeep.u_turtlemint\\Desktop\\ALLBrokerdata\\RenewBuy_TP_premium"+dateTime+".xlsx";
+          String outputExcel = "/Users/nitinrathod/Desktop/RenewBuy_TP_premium" + dateTime + ".xlsx";
+       // String outputExcel = "C:\\Users\\pradeep.u_turtlemint\\Desktop\\ALLBrokerdata\\RenewBuy_TP_premium"+dateTime+".xlsx";
 
         if (!premiumData.isEmpty()) {
             TestUtil.writePremiumDataRBTP(outputExcel, premiumData,addOnsData);
