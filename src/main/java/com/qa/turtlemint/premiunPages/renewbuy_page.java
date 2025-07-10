@@ -98,17 +98,16 @@ public class renewbuy_page extends TestBase {
     WebElement registrationyear;
 
 
-
     @FindBy(xpath = "//input[@formcontrolname=\"vehicle_variant\"]")
     WebElement variant;
     @FindBy(xpath = "//a[text()=\"Motor Insurance\"]")
     WebElement motorback;
 
     @FindBy(xpath = "//mat-select[@formcontrolname=\"ncb_discount\"]")
-    WebElement prevYearNCB ;
+    WebElement prevYearNCB;
 
     @FindBy(xpath = "//span[text()=\" 0% \"]")
-    WebElement zeroNcb ;
+    WebElement zeroNcb;
 
     @FindBy(xpath = "//div[contains(@id,\"cdk-accordion-child-1\")]//span[contains(@class,\"mat-checkbox-label\")]")
     WebElement addOn;
@@ -119,29 +118,34 @@ public class renewbuy_page extends TestBase {
     }
 
 
-    public void loginRB() {
+    public void loginRB() throws InterruptedException {
         TestUtil.click(singInWithPassword, "click on sing In with password");
         TestUtil.sendKeys(formEmail, "jagadinsurance@gmail.com", "entered email");
         TestUtil.sendKeys(formPassword, "Jagad@321", "entered password");
         String mathText = quetion.getText();
         System.out.println(mathText);
 
-        String[] numbers = mathText.split("\\D+");
+        String[] parts = quetion.getText().replace("?", "").split(" "); // e.g., "What is 10 * 9"
+        int num1 = Integer.parseInt(parts[2]);
+        int num2 = Integer.parseInt(parts[4]);
+        String operator = parts[3];
+        int totalSum = switch (operator) {
+            case "+" -> num1 + num2;
+            case "-" -> num1 - num2;
+            case "*" -> num1 * num2;
+            case "/" -> num2 != 0 ? num1 / num2 : 0;
+            default -> throw new IllegalArgumentException("Unknown operator: " + operator);
+        };
 
-        int num1 = Integer.parseInt(numbers[1]);
-        int num2 = Integer.parseInt(numbers[2]);
-        int sum = num1 + num2;
-        String totalSum = String.valueOf(sum);
-        System.out.println("The sum of " + num1 + " and " + num2 + " is: " + sum);
-
-        TestUtil.sendKeys(enterSum, totalSum, "entered sum");
+        TestUtil.sendKeys(enterSum, String.valueOf(totalSum), "entered sum");
+        Thread.sleep(5000);
         TestUtil.click(logIn, "click on login button");
     }
 
     public void premiumRBComp() throws InterruptedException, IOException {
         //   String excelPath = "/Users/sayali/Documents/insurer/Premium_compair_Automation/src/test/resources/registration_data.xlsx";
-      //  String excelPath = "/Users/nitinrathod/Documents/registration_data.xlsx";
-     String excelPath = "C:\\Users\\pradeep.u_turtlemint\\Downloads\\registration_data.xlsx";
+        //  String excelPath = "/Users/nitinrathod/Documents/registration_data.xlsx";
+        String excelPath = "C:\\Users\\pradeep.u_turtlemint\\Downloads\\registration_data.xlsx";
         List<String> regNumbers = TestUtil.getRegistrationNumbers(excelPath);
         System.out.println(regNumbers);
 
@@ -151,7 +155,8 @@ public class renewbuy_page extends TestBase {
 
         try {
             TestUtil.click(closedButton, "click on close button");
-        }catch (Exception e){}
+        } catch (Exception e) {
+        }
 
         JavascriptExecutor js = (JavascriptExecutor) driver;
         js.executeScript("window.scrollBy(0,800)");
@@ -190,9 +195,9 @@ public class renewbuy_page extends TestBase {
 
                 String prepolicytype = policyExiryTypeCOMP.getText();
                 TestUtil.waitUntilVisibilityOfElement(prevYearNCB);
-                TestUtil.click(prevYearNCB , "click on prevYearNCB ");
+                TestUtil.click(prevYearNCB, "click on prevYearNCB ");
                 TestUtil.waitUntilVisibilityOfElement(zeroNcb);
-                TestUtil.click(zeroNcb , "select 0% ncb");
+                TestUtil.click(zeroNcb, "select 0% ncb");
 
                 TestUtil.waitUntilVisibilityOfElement(previousinsurer);
                 String existingValue = previousinsurer.getAttribute("value");
@@ -217,7 +222,7 @@ public class renewbuy_page extends TestBase {
                     System.out.println("ℹ️ Date already present: " + dateValue);
                 }
 
-               // ✅ Now click the confirm button just once
+                // ✅ Now click the confirm button just once
                 TestUtil.click(aboveDetailsAreCorrectButton, "Clicked on above details are correct button");
                 Thread.sleep(30000);
 
@@ -225,26 +230,44 @@ public class renewbuy_page extends TestBase {
                 wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.xpath("//button[contains(@class,'premium-breakup-amount')]")));
                 wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.xpath("//span[@class=\"idv-amount\"]")));
                 wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.xpath("//span[contains(@class,\"idv-choose-amount\")]")));
-                wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.xpath("//div[@class=\"payout-value pb-2\"]")));
+
 
                 List<WebElement> insurerLogos = driver.findElements(By.xpath("//img[@class='insurer-logo']"));
                 List<WebElement> insurerPremiums = driver.findElements(By.xpath("//button[contains(@class,'premium-breakup-amount')]"));
                 List<WebElement> IDVRange = driver.findElements(By.xpath("//span[@class=\"idv-amount\"]"));
                 List<WebElement> IDVActual = driver.findElements(By.xpath("//span[contains(@class,\"idv-choose-amount\")]"));
-                List<WebElement> activityPoint = driver.findElements(By.xpath("//div[@class=\"payout-value pb-2\"]"));
+
 
                 List<WebElement> addOns = driver.findElements(By.xpath("(//div[contains(@id,\"cdk-accordion-child\")])[2]//span[@class='mat-checkbox-label']"));
 
-
+                  String numberOnly;
                 if (insurerLogos.size() == insurerPremiums.size()) {
                     for (int i = 0; i < insurerLogos.size(); i++) {
                         WebElement logo = insurerLogos.get(i);
                         WebElement premiumBtn = insurerPremiums.get(i);
                         WebElement idvrange = IDVRange.get(i);
                         WebElement idvactual = IDVActual.get(i);
-                        WebElement activityP = activityPoint.get(i);
 
                         String srcValue = logo.getAttribute("src");
+                        System.out.println(srcValue);
+
+                        try {
+                            WebElement ACT = driver.findElement(By.xpath("//*[@src=\""+srcValue+"\"]//..//..//..//div[@class=\"col-lg-6 col-md-6 col-6 idv-range\"]//img//.."));
+                            String point = ACT.getText();
+                            System.out.println(point);
+                            String number = (point.replaceAll("You Earn ₹ ", ""));
+
+                            numberOnly = (number.replaceAll("\\*", ""));
+
+                            System.out.println(numberOnly);
+
+                        } catch (Exception e) {
+                            e.getMessage();
+
+                            numberOnly = "0";
+                        }
+
+
                         String[] parts = srcValue.split("/");
                         String insurerName = parts[parts.length - 1].replace(".png", "");
 
@@ -255,20 +278,13 @@ public class renewbuy_page extends TestBase {
 
                         String IDVactual = idvactual.getText().replaceAll("[^0-9]", "");
 
-                        String IDVrange =  idvrange.getText();
+                        String IDVrange = idvrange.getText();
 
                         String[] numbers = IDVrange.split("₹");
 
                         String IdvMin = numbers[1].split("-")[0].replaceAll("[^0-9]", "");
                         String IdvMax = numbers[2].replaceAll("[^0-9]", "");
 
-                        String actP = activityP.getText().trim();
-                        String numberOnly = "0";
-
-                        if (actP.matches("^\\d+.*")) {
-                            numberOnly = actP.split("\\*")[0].trim();
-                        }
-                        System.out.println(numberOnly);
 
                         String[] row = {
                                 reg,
@@ -297,12 +313,12 @@ public class renewbuy_page extends TestBase {
                 if (addOns.size() > 0) {
                     for (WebElement addOn : addOns) {
                         String addOnName = addOn.getText().trim();
-                        addOnsData.add(new String[] { reg, addOnName });
+                        addOnsData.add(new String[]{reg, addOnName});
                     }
                     System.out.println("addons data added in sheet");
                 } else {
 
-                    addOnsData.add(new String[] { reg, "No Add-Ons Found" });
+                    addOnsData.add(new String[]{reg, "No Add-Ons Found"});
                 }
 
 
@@ -319,10 +335,10 @@ public class renewbuy_page extends TestBase {
 
         // ✅ Save successful data
         //    String outputExcel = "/Users/sayali/Desktop/RenewBuy_premium" + dateTime + ".xlsx";
-      //  String outputExcel = "/Users/nitinrathod/Desktop/RenewBuy_COMP_premium" + dateTime + ".xlsx";
-      String outputExcel = "C:\\Users\\pradeep.u_turtlemint\\Desktop\\ALLBrokerdata\\RenewBuy_COMP_premium"+dateTime+".xlsx";
+        //  String outputExcel = "/Users/nitinrathod/Desktop/RenewBuy_COMP_premium" + dateTime + ".xlsx";
+        String outputExcel = "C:\\Users\\pradeep.u_turtlemint\\Desktop\\ALLBrokerdata\\RenewBuy_COMP_premium" + dateTime + ".xlsx";
         if (!premiumData.isEmpty()) {
-            TestUtil.writePremiumDataRBCOMP_Add1(outputExcel, premiumData , addOnsData);
+            TestUtil.writePremiumDataRBCOMP_Add1(outputExcel, premiumData, addOnsData);
             System.out.println("✅ Premium data written to Excel successfully.");
         } else {
             System.out.println("⚠️ No premium data collected to write.");
@@ -338,14 +354,13 @@ public class renewbuy_page extends TestBase {
     }
 
 
-
     //-----------------------------------TP-----------------------------------------
 
 
     public void premiumRBTp() throws InterruptedException, IOException {
         // String excelPath = "/Users/sayali/Documents/insurer/Premium_compair_Automation/src/test/resources/registration_data.xlsx";
-        //  String excelPath = "/Users/nitinrathod/Documents/registration_data.xlsx";
-        String excelPath = "C:\\Users\\pradeep.u_turtlemint\\Downloads\\registration_data.xlsx";
+       // String excelPath = "/Users/nitinrathod/Documents/registration_data.xlsx";
+         String excelPath = "C:\\Users\\pradeep.u_turtlemint\\Downloads\\registration_data.xlsx";
         List<String> regNumbers = TestUtil.getRegistrationNumbers(excelPath);
         System.out.println(regNumbers);
 
@@ -373,7 +388,7 @@ public class renewbuy_page extends TestBase {
             try {
                 wait.until(ExpectedConditions.elementToBeClickable(registrationNumber)).sendKeys(reg);
                 TestUtil.waitUntilVisibilityOfElement(getVehicleDetailsIdButton);
-               TestUtil.click(getVehicleDetailsIdButton,"click on vehicle details button");
+                TestUtil.click(getVehicleDetailsIdButton, "click on vehicle details button");
 
                 Thread.sleep(5000);
                 String vehicleMake = make.getAttribute("value");
@@ -423,26 +438,40 @@ public class renewbuy_page extends TestBase {
                 Thread.sleep(30000);
 
 
-
                 wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.xpath("//img[@class='insurer-logo']")));
                 wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.xpath("//button[contains(@class,'premium-breakup-amount')]")));
-                wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.xpath("//div[@class=\"payout-value pb-2\"]")));
+
 
                 List<WebElement> insurerLogos = driver.findElements(By.xpath("//img[@class='insurer-logo']"));
                 List<WebElement> insurerPremiums = driver.findElements(By.xpath("//button[contains(@class,'premium-breakup-amount')]"));
-                List<WebElement> activityPoint = driver.findElements(By.xpath("//div[@class=\"payout-value pb-2\"]"));
+
 
                 List<WebElement> addOns = driver.findElements(By.xpath("(//div[contains(@id,\"cdk-accordion-child\")])[2]//span[@class='mat-checkbox-label']"));
 
 
-
+                String numberOnly;
                 if (insurerLogos.size() == insurerPremiums.size()) {
                     for (int i = 0; i < insurerLogos.size(); i++) {
                         WebElement logo = insurerLogos.get(i);
                         WebElement premiumBtn = insurerPremiums.get(i);
-                        WebElement activityP = activityPoint.get(i);
+                        // WebElement activityP = activityPoint.get(i);
 
                         String srcValue = logo.getAttribute("src");
+                        try {
+                            WebElement ACT = driver.findElement(By.xpath("//*[@src=\"" + srcValue + "\"]//..//..//..//..//div[@class=\"col-lg-6 col-md-6 web-checkbox\"]//img//.."));
+                            String point = ACT.getText();
+                            String number = (point.replaceAll("You Earn ₹ ", ""));
+                            numberOnly = (number.replaceAll("\\*", ""));
+
+                            System.out.println(numberOnly);
+
+                        } catch (Exception e) {
+                            e.getMessage();
+
+                            numberOnly = "0";
+                        }
+
+
                         String[] parts = srcValue.split("/");
                         String insurerName = parts[parts.length - 1].replace(".png", "");
 
@@ -451,12 +480,6 @@ public class renewbuy_page extends TestBase {
                         double premiumWithGST = premiumValue * 1.18;
                         String premium = String.valueOf(Math.round(premiumWithGST));  // Final value with 18% GST applied
 
-                        String actP = activityP.getText().trim();
-                        String numberOnly = "0";
-
-                        if (actP.matches("^\\d+.*")) {
-                            numberOnly = actP.split("\\*")[0].trim();
-                        }
 
                         String[] row = {
                                 reg,
@@ -482,12 +505,12 @@ public class renewbuy_page extends TestBase {
                 if (addOns.size() > 0) {
                     for (WebElement addOn : addOns) {
                         String addOnName = addOn.getText().trim();
-                        addOnsData.add(new String[] { reg, addOnName });
+                        addOnsData.add(new String[]{reg, addOnName});
                     }
                     System.out.println("addons data added in sheet");
                 } else {
 
-                    addOnsData.add(new String[] { reg, "No Add-Ons Found" });
+                    addOnsData.add(new String[]{reg, "No Add-Ons Found"});
                 }
 
             } catch (Exception e) {
@@ -501,11 +524,11 @@ public class renewbuy_page extends TestBase {
         String dateTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy---HH-mm-ss"));
         //✅ Save successful data
         //   String outputExcel = "/Users/sayali/Desktop/RenewBuy_premium" + dateTime + ".xlsx";
-        //  String outputExcel = "/Users/nitinrathod/Desktop/RenewBuy_TP_premium" + dateTime + ".xlsx";
+        //String outputExcel = "/Users/nitinrathod/Desktop/RenewBuy_TP_premium" + dateTime + ".xlsx";
         String outputExcel = "C:\\Users\\pradeep.u_turtlemint\\Desktop\\ALLBrokerdata\\RenewBuy_TP_premium"+dateTime+".xlsx";
 
         if (!premiumData.isEmpty()) {
-            TestUtil.writePremiumDataRBTP(outputExcel, premiumData,addOnsData);
+            TestUtil.writePremiumDataRBTP(outputExcel, premiumData, addOnsData);
             System.out.println("✅ Premium data written to Excel successfully.");
         } else {
             System.out.println("⚠️ No premium data collected to write.");
