@@ -44,9 +44,9 @@ public class renewbuy_page extends TestBase {
     @FindBy(xpath = "//button[text()=\" Log In \"]")
     WebElement logIn;
 
-    @FindBy(xpath = "//div[@class=\"close-button\"]//img")
+    @FindBy(xpath = "//div[@id=\"cdk-overlay-1\"]//div[@class=\"close-button\"]//img")
     WebElement closedButton;
-    @FindBy(xpath = "//div[text()=\" Motor \"]")
+    @FindBy(xpath = "(//p[text()=\"Motor\"])[1]")
     WebElement motor;
     @FindBy(xpath = "//input[@id-automation=\"registration_number\"]")
     WebElement registrationNumber;
@@ -148,17 +148,17 @@ public class renewbuy_page extends TestBase {
         String excelPath = "C:\\Users\\pradeep.u_turtlemint\\Downloads\\registration_data.xlsx";
         List<String> regNumbers = TestUtil.getRegistrationNumbers(excelPath);
         System.out.println(regNumbers);
+        JavascriptExecutor js = (JavascriptExecutor) driver;
 
         List<String[]> addOnsData = new ArrayList<>();
         List<String[]> premiumData = new ArrayList<>(); // successful data
         List<String> failedRegs = new ArrayList<>();    // failed registrations
 
-        try {
-            TestUtil.click(closedButton, "click on close button");
-        } catch (Exception e) {
-        }
 
-        JavascriptExecutor js = (JavascriptExecutor) driver;
+            Thread.sleep(5000);
+            js.executeScript("arguments[0].click();", closedButton);
+
+
         js.executeScript("window.scrollBy(0,800)");
         TestUtil.waitUntilVisibilityOfElement(motor);
         js.executeScript("arguments[0].click();", motor);
@@ -363,14 +363,15 @@ public class renewbuy_page extends TestBase {
          String excelPath = "C:\\Users\\pradeep.u_turtlemint\\Downloads\\registration_data.xlsx";
         List<String> regNumbers = TestUtil.getRegistrationNumbers(excelPath);
         System.out.println(regNumbers);
+        JavascriptExecutor js = (JavascriptExecutor) driver;
 
         List<String[]> addOnsData = new ArrayList<>();
         List<String[]> premiumData = new ArrayList<>(); // successful data
         List<String> failedRegs = new ArrayList<>();    // failed registrations
 
-        TestUtil.click(closedButton, "click on close button");
+        Thread.sleep(5000);
+        js.executeScript("arguments[0].click();", closedButton);
 
-        JavascriptExecutor js = (JavascriptExecutor) driver;
         js.executeScript("window.scrollBy(0,800)");
         TestUtil.waitUntilVisibilityOfElement(motor);
         js.executeScript("arguments[0].click();", motor);
