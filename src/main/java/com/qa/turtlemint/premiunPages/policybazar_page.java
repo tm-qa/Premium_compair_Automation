@@ -35,32 +35,32 @@ public class policybazar_page extends TestBase {
     WebElement regisnumber;
     @FindBy(xpath = "//button[@id=\"btnGetQuotes\"]")
     WebElement viewprice;
-    @FindBy(xpath = "//span[text()=\"VIEW QUOTES\"]//parent::button")
+    @FindBy(xpath = "//button[text()=\"View Quotes\"]//parent::button")
     WebElement viewpquotes;
-    @FindBy(xpath = "//input[@name='Existing Policy Expiry Date']")
+    @FindBy(xpath = "//div[text()='Policy Expiry Date']//..//div//div//div//input")
     WebElement calendar;
     @FindBy(xpath = "//img[@alt=\"policybazaar\"]")
     WebElement resultback;
     @FindBy(xpath = "(//button[text()=\"See all \"])[1]")
     WebElement seeall;
-    @FindBy(xpath = "//label[text()=\"Third Party Only\"]//following-sibling::label[@class=\"switch\"]")
+    @FindBy(xpath = "(//span[text()=\"Third Party\"]//following-sibling::input)[1]")
     WebElement newpolicytypeTP;
-    @FindBy(xpath = "//label[text()=\"Third Party\"]//following-sibling::label[@class=\"switch\"]")
-    WebElement prepolicytypeTP;
+    @FindBy(xpath = "//li[text()=\"0%\"]")
+    WebElement prevNCBzero;
 
 
-    @FindBy(xpath = "(//label[text()='Make Model']/following-sibling::div//div//div//div)[1]")
+    @FindBy(xpath = "(//div[text()='Make Model']/following-sibling::div//div//div//div)[1]")
     WebElement makemodel;
 
-    @FindBy(xpath = "//label[text()='FUEL']/following-sibling::div//div[contains(@class, 'customSelectSingleValue')]")
+    @FindBy(xpath = "//div[text()='Fuel']/following-sibling::div//div[contains(@class, 'customSelectSingleValue')]")
     WebElement fuletype;
 
-    @FindBy(xpath = "//label[text()='Variant']/following-sibling::div//div[contains(@class, 'customSelectSingleValue')]")
+    @FindBy(xpath = "//div[text()='Variant']/following-sibling::div//div[contains(@class, 'customSelectSingleValue')]")
     WebElement variant;
 
-    @FindBy(xpath = "//input[@name=\"Registration Date\"]")
+    @FindBy(xpath = "//div[text()=\"Registration Date\"]")
     WebElement registartiondate;
-    @FindBy(xpath = "//label[text()=\"Previous Insurer\"]//..//div[@class=\"customSelectSingleValue css-1dimb5e-singleValue\"]")
+    @FindBy(xpath = "//div[text()=\"Previous Insurer\"]//..//div[@class=\"customSelectSingleValue css-1dimb5e-singleValue\"]")
     WebElement prepolicytypeinsurer;
 
 
@@ -70,9 +70,7 @@ public class policybazar_page extends TestBase {
     }
 
     public void logininPB() throws InterruptedException {
-        new WebDriverWait(driver, Duration.ofSeconds(10)).until(
-                d -> ((JavascriptExecutor) d).executeScript("return document.readyState").equals("complete")
-        );
+
         Thread.sleep(10000);
         TestUtil.sendKeys(mobileno, "9975655749", "Mobile number entered");
 
@@ -80,7 +78,7 @@ public class policybazar_page extends TestBase {
         actions.moveToElement(getotp).doubleClick().perform();
 
         System.out.println("OTP sent");
-        Thread.sleep(30000);
+        Thread.sleep(60000);
 
 
     }
@@ -97,8 +95,7 @@ public class policybazar_page extends TestBase {
         List<String[]> addOnsData = new ArrayList<>();
 
         JavascriptExecutor js = (JavascriptExecutor) driver;
-        js.executeScript("window.scrollBy(0,800)");
-        TestUtil.waitUntilVisibilityOfElement(selectCar);
+        Thread.sleep(5000);
         js.executeScript("arguments[0].click();", selectCar);
 
         Set<String> windowHandles = driver.getWindowHandles();
@@ -126,7 +123,7 @@ public class policybazar_page extends TestBase {
                 String vehicleFuel = fuletype.getText();
                 System.out.println(vehicleFuel);
                 act.moveToElement(registartiondate).build().perform();
-                String regisdate = registartiondate.getAttribute("value");
+                String regisdate = registartiondate.getText();
                 System.out.println(regisdate);
                 String prevpolicytype = "Comprehensive";
 
@@ -152,6 +149,8 @@ public class policybazar_page extends TestBase {
                     Thread.sleep(4000);
                     TestUtil.sendKeys(prepolicytypeinsurer, "Bajaj Allianz" + Keys.ENTER, "");
                 }
+
+                TestUtil.click(prevNCBzero,"NCB selected as zero");
 
                 Thread.sleep(3000);
                 TestUtil.click(viewpquotes, "confirm vehicle");
@@ -237,7 +236,7 @@ public class policybazar_page extends TestBase {
         String dateTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy---HH-mm-ss"));
         // ✅ Save successful data
         //   String outputExcel = "/Users/sayali/Desktop/RenewBuy_premium" + dateTime + ".xlsx";
-        //String outputExcel = "/Users/nitinrathod/Desktop/PolicyBazar_COMP_premium" + dateTime + ".xlsx";
+      //  String outputExcel = "/Users/nitinrathod/Desktop/PolicyBazar_COMP_premium" + dateTime + ".xlsx";
         String outputExcel = "C:\\Users\\pradeep.u_turtlemint\\Desktop\\ALLBrokerdata\\PolicyBazar_COMP_premium"+dateTime+".xlsx";
         if (!premiumData.isEmpty()) {
             TestUtil.writePremiumDataPBCOMP(outputExcel, premiumData,addOnsData);
@@ -296,7 +295,7 @@ public class policybazar_page extends TestBase {
                 String vehicleFuel = fuletype.getText();
                 System.out.println(vehicleFuel);
                 act.moveToElement(registartiondate).build().perform();
-                String regisdate = registartiondate.getAttribute("value");
+                String regisdate = registartiondate.getText();
                 System.out.println(regisdate);
                 String prevpolicytype = "Third Party";
 
