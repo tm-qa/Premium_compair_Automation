@@ -6,6 +6,7 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.jaxen.pattern.Pattern;
 import org.openqa.selenium.*;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -111,6 +112,10 @@ public class renewbuy_page extends TestBase {
 
     @FindBy(xpath = "//div[contains(@id,\"cdk-accordion-child-1\")]//span[contains(@class,\"mat-checkbox-label\")]")
     WebElement addOn;
+    @FindBy(xpath = "//div[@class=\"mat-slider-thumb\"]")
+    WebElement slider;
+    @FindBy(xpath = "//button[text()=\" Update \"]")
+    WebElement update;
 
 
     public renewbuy_page() throws IOException {
@@ -145,7 +150,8 @@ public class renewbuy_page extends TestBase {
     public void premiumRBComp() throws InterruptedException, IOException {
         //   String excelPath = "/Users/sayali/Documents/insurer/Premium_compair_Automation/src/test/resources/registration_data.xlsx";
         //  String excelPath = "/Users/nitinrathod/Documents/registration_data.xlsx";
-        String excelPath = "C:\\Users\\pradeep.u_turtlemint\\Downloads\\registration_data.xlsx";
+          String excelPath = "/Users/pi/Documents/registration_data.xlsx";
+        //String excelPath = "C:\\Users\\pradeep.u_turtlemint\\Downloads\\registration_data.xlsx";
         List<String> regNumbers = TestUtil.getRegistrationNumbers(excelPath);
         System.out.println(regNumbers);
         JavascriptExecutor js = (JavascriptExecutor) driver;
@@ -224,7 +230,19 @@ public class renewbuy_page extends TestBase {
 
                 // ✅ Now click the confirm button just once
                 TestUtil.click(aboveDetailsAreCorrectButton, "Clicked on above details are correct button");
-                Thread.sleep(30000);
+                Thread.sleep(15000);
+
+                //  TestUtil.click(slider, "Clicked on slider");
+
+                Actions actions = new Actions(driver);
+                for (int i = 0; i < 40; i++) {
+                    TestUtil.click(slider, "");
+                    actions.sendKeys(Keys.ARROW_LEFT);
+                }
+                // actions.perform();
+                TestUtil.click(update,"Clicked on update");
+
+                Thread.sleep(20000);
 
                 wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.xpath("//img[@class='insurer-logo']")));
                 wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.xpath("//button[contains(@class,'premium-breakup-amount')]")));
@@ -336,7 +354,8 @@ public class renewbuy_page extends TestBase {
         // ✅ Save successful data
         //    String outputExcel = "/Users/sayali/Desktop/RenewBuy_premium" + dateTime + ".xlsx";
         //  String outputExcel = "/Users/nitinrathod/Desktop/RenewBuy_COMP_premium" + dateTime + ".xlsx";
-        String outputExcel = "C:\\Users\\pradeep.u_turtlemint\\Desktop\\ALLBrokerdata\\RenewBuy_COMP_premium" + dateTime + ".xlsx";
+        String outputExcel = "/Users/pi/Desktop/RenewBuy_COMP_premium" + dateTime + ".xlsx";
+        //String outputExcel = "C:\\Users\\pradeep.u_turtlemint\\Desktop\\ALLBrokerdata\\RenewBuy_COMP_premium" + dateTime + ".xlsx";
         if (!premiumData.isEmpty()) {
             TestUtil.writePremiumDataRBCOMP_Add1(outputExcel, premiumData, addOnsData);
             System.out.println("✅ Premium data written to Excel successfully.");
@@ -360,7 +379,8 @@ public class renewbuy_page extends TestBase {
     public void premiumRBTp() throws InterruptedException, IOException {
         // String excelPath = "/Users/sayali/Documents/insurer/Premium_compair_Automation/src/test/resources/registration_data.xlsx";
        // String excelPath = "/Users/nitinrathod/Documents/registration_data.xlsx";
-         String excelPath = "C:\\Users\\pradeep.u_turtlemint\\Downloads\\registration_data.xlsx";
+         String excelPath = "/Users/pi/Documents/registration_data.xlsx";
+        // String excelPath = "C:\\Users\\pradeep.u_turtlemint\\Downloads\\registration_data.xlsx";
         List<String> regNumbers = TestUtil.getRegistrationNumbers(excelPath);
         System.out.println(regNumbers);
         JavascriptExecutor js = (JavascriptExecutor) driver;
@@ -526,7 +546,8 @@ public class renewbuy_page extends TestBase {
         //✅ Save successful data
         //   String outputExcel = "/Users/sayali/Desktop/RenewBuy_premium" + dateTime + ".xlsx";
         //String outputExcel = "/Users/nitinrathod/Desktop/RenewBuy_TP_premium" + dateTime + ".xlsx";
-        String outputExcel = "C:\\Users\\pradeep.u_turtlemint\\Desktop\\ALLBrokerdata\\RenewBuy_TP_premium"+dateTime+".xlsx";
+        String outputExcel = "/Users/pi/Desktop/RenewBuy_TP_premium" + dateTime + ".xlsx";
+        //String outputExcel = "C:\\Users\\pradeep.u_turtlemint\\Desktop\\ALLBrokerdata\\RenewBuy_TP_premium"+dateTime+".xlsx";
 
         if (!premiumData.isEmpty()) {
             TestUtil.writePremiumDataRBTP(outputExcel, premiumData, addOnsData);
