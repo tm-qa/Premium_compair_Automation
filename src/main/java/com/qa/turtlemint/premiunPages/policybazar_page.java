@@ -62,6 +62,9 @@ public class policybazar_page extends TestBase {
     WebElement registartiondate;
     @FindBy(xpath = "//div[text()=\"Previous Insurer\"]//..//div[@class=\"customSelectSingleValue css-1dimb5e-singleValue\"]")
     WebElement prepolicytypeinsurer;
+    @FindBy(xpath = "//button[text()=\"Login\"]")
+    WebElement loginregi;
+
 
 
 
@@ -72,7 +75,8 @@ public class policybazar_page extends TestBase {
     public void logininPB() throws InterruptedException {
 
         Thread.sleep(10000);
-        TestUtil.sendKeys(mobileno, "9975655749", "Mobile number entered");
+       // TestUtil.sendKeys(mobileno, "9975655749", "Mobile number entered");
+        TestUtil.sendKeys(mobileno, "9923177694", "Mobile number entered");
 
         Actions actions = new Actions(driver);
         actions.moveToElement(getotp).doubleClick().perform();
@@ -105,6 +109,12 @@ public class policybazar_page extends TestBase {
 
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
 
+        Thread.sleep(5000);
+//        int count = 0;
+//        if(count==0) {
+//            TestUtil.click(loginregi, "Clicked on login");
+//            Thread.sleep(40000);
+//        }
         for (String reg : regNumbers) {
             try {
                 TestUtil.waitUntilVisibilityOfElement(regisnumber);
@@ -230,6 +240,7 @@ public class policybazar_page extends TestBase {
                 e.printStackTrace();
                 failedRegs.add(reg);
             }
+           // count++;
             Thread.sleep(3000);
             driver.get("https://pbpci.policybazaar.com/?token=o5aMAq6qZ1tLXTODNpDyVbk4MP6pWDnq6hhpN5u%2BmyLrjVGEAn3q7aWL1EWfn%2F8x3QItQRKLV160CZRStA1EzIIjjmh7Rk2wGIclsW0Jh4e8iyJC4B9lkYuTyQwkEaUnucjjquqjcRe1ovoaKdaNpspQRski64oLh7G%2FfumRACxGqPdATVxm9m0OebluKryJjMW939MPhfj2%2FPnBUywm1w%3D%3D&_gl=1*1lkn6ek*_ga*MTM5MzQ1MjQ5LjE3NDcyOTU5MTY.*_ga_HJQ0E2N5FF*czE3NDk0NTU2NTgkbzkkZzEkdDE3NDk0NjEyODAkajIyJGwwJGgw");
             Thread.sleep(3000);
@@ -237,7 +248,7 @@ public class policybazar_page extends TestBase {
         String dateTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy---HH-mm-ss"));
         // ✅ Save successful data
         //   String outputExcel = "/Users/sayali/Desktop/RenewBuy_premium" + dateTime + ".xlsx";
-      //  String outputExcel = "/Users/nitinrathod/Desktop/PolicyBazar_COMP_premium" + dateTime + ".xlsx";
+      // String outputExcel = "/Users/nitinrathod/Desktop/PolicyBazar_COMP_premium" + dateTime + ".xlsx";
           String outputExcel = "/Users/pi/Desktop/PolicyBazar_COMP_premium" + dateTime + ".xlsx";
         // String outputExcel = "C:\\Users\\pradeep.u_turtlemint\\Desktop\\ALLBrokerdata\\PolicyBazar_COMP_premium"+dateTime+".xlsx";
         if (!premiumData.isEmpty()) {
@@ -395,7 +406,7 @@ public class policybazar_page extends TestBase {
         String dateTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy---HH-mm-ss"));
         // ✅ Save successful data
         //   String outputExcel = "/Users/sayali/Desktop/RenewBuy_premium" + dateTime + ".xlsx";
-       // String outputExcel = "/Users/nitinrathod/Desktop/PolicyBazar_TP_premium" + dateTime + ".xlsx";
+        //String outputExcel = "/Users/nitinrathod/Desktop/PolicyBazar_TP_premium" + dateTime + ".xlsx";
          String outputExcel = "/Users/pi/Desktop/PolicyBazar_TP_premium" + dateTime + ".xlsx";
         // String outputExcel = "C:\\Users\\pradeep.u_turtlemint\\Desktop\\ALLBrokerdata\\PolicyBazar_TP_premium"+dateTime+".xlsx";
         if (!premiumData.isEmpty()) {

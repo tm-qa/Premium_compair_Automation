@@ -114,7 +114,7 @@ public class turtlemint_page extends TestBase {
 
     @FindBy(xpath = "//span[text()=\"Bajaj Allianz\"]")
     WebElement getPreviousinsureruiSelect;
-    @FindBy(xpath = "(//img[@class=\"img-file\"])[2]")
+    @FindBy(xpath = "//span[text()=\"Is there a transfer of vehicle ownership?\"]")
     WebElement random;
     @FindBy(xpath = "//div[@ng-mouseenter=\"hoverIn()\"]")
     WebElement hoverIn;
@@ -135,8 +135,8 @@ public class turtlemint_page extends TestBase {
     WebElement actclose;
     @FindBy(xpath = "//div[@class=\"addonlink\"]")
     WebElement addonmore;
-    @FindBy(xpath = "//span[@class=\"set-title\"]")
-    WebElement addons;
+    @FindBy(xpath = "//a[@ng-if=\"premiumRequest.motorPremiumRequest.isIndividual\"]")
+    WebElement crossButton;
 
     public turtlemint_page() {
         PageFactory.initElements(driver, this);
@@ -154,7 +154,7 @@ public class turtlemint_page extends TestBase {
     public void Comppremiumtm() throws InterruptedException {
 
         // String excelPath = "/Users/sayali/Documents/insurer/Premium_compair_Automation/src/test/resources/registration_data.xlsx";
-      //  String excelPath = "/Users/nitinrathod/Documents/registration_data.xlsx";
+       // String excelPath = "/Users/nitinrathod/Documents/registration_data.xlsx";
          String excelPath = "/Users/pi/Documents/registration_data.xlsx";
          //String excelPath = "C:\\Users\\pradeep.u_turtlemint\\Downloads\\registration_data.xlsx";
         List<String> regNumbers = TestUtil.getRegistrationNumbers(excelPath);
@@ -221,7 +221,6 @@ public class turtlemint_page extends TestBase {
                 Thread.sleep(3000);
                 TestUtil.click(zeroNCB, " NCB : 0% selected");
 
-
                 try {
 
                     WebDriverWait shortWait = new WebDriverWait(driver, Duration.ofSeconds(5));
@@ -265,15 +264,24 @@ public class turtlemint_page extends TestBase {
                 Thread.sleep(2000);
                 System.out.println(vehicleMakeModel + " ---" + vehicleFuelType + "--- " + vehicleVarient + " ____" + prepolicytype);
                 TestUtil.click(closedButton, "");
-                Thread.sleep(25000);
+                Thread.sleep(15000);
+
+                Actions actions = new Actions(driver);
+                actions.moveToElement(hoverIn).perform();
+                js.executeScript("arguments[0].click();", crossButton);
+                actions.moveToElement(hoverOut).perform();
+                Thread.sleep(3000);
+                TestUtil.click(updateedresult, "ejd");
+
+                Thread.sleep(30000);
 
                 WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
                 wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.xpath("//div[@class='logoArea col-xs-6 col-sm-3 text-left']//img[contains(@class, 'client-logo-img')]")));
-                wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.xpath("//div[@class=\"priceArea hidden-xs text-center\"]//span[contains(@ng-if , \"multiPlanDropDown[insurer.insurerProvider\")]")));
+                wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.xpath("//div[contains(@class,\"priceArea h\")]//span[contains(@ng-if , \"multiPlanDropDown[insurer.insurerProvider\")]")));
                 wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.xpath("//span[@class=\"bold vehicleIdv ng-binding\"]")));
 
                 List<WebElement> insurerLogos = driver.findElements(By.xpath("//div[@class='logoArea col-xs-6 col-sm-3 text-left']//img[contains(@class, 'client-logo-img')]"));
-                List<WebElement> insurerPremiums = driver.findElements(By.xpath("//div[@class=\"priceArea hidden-xs text-center\"]//span[contains(@ng-if , \"multiPlanDropDown[insurer.insurerProvider\")]"));
+                List<WebElement> insurerPremiums = driver.findElements(By.xpath("//div[contains(@class,\"priceArea h\")]//span[contains(@ng-if , \"multiPlanDropDown[insurer.insurerProvider\")]"));
                 List<WebElement> premiumIdv = driver.findElements(By.xpath("//span[@class=\"bold vehicleIdv ng-binding\"]"));
 
 
@@ -331,7 +339,6 @@ public class turtlemint_page extends TestBase {
                 String id = parts1[parts1.length - 1];  // Get the last part after the last "/"
                 System.out.println("Extracted ID: " + id);
 
-                Actions actions = new Actions(driver);
                 actions.moveToElement(hoverIn).perform();
                    TestUtil.click(addonmore,"");
                 List<WebElement> addOns = driver.findElements(By.xpath("(//div[@class=\"sidePanelCommonHeaderContent clearfix\"])[2]//a//span[@class=\"set-title\"]"));
@@ -361,11 +368,11 @@ public class turtlemint_page extends TestBase {
                 Thread.sleep(25000);
 
                 wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.xpath("//div[@class='logoArea col-xs-6 col-sm-3 text-left']//img[contains(@class, 'client-logo-img')]")));
-                wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.xpath("//div[@class=\"priceArea hidden-xs text-center\"]//span[contains(@ng-if , \"multiPlanDropDown[insurer.insurerProvider\")]")));
+                wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.xpath("//div[contains(@class,\"priceArea h\")]//span[contains(@ng-if , \"multiPlanDropDown[insurer.insurerProvider\")]")));
                 wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.xpath("//span[@class=\"bold vehicleIdv ng-binding\"]")));
 
                 List<WebElement> insurerLogos1 = driver.findElements(By.xpath("//div[@class='logoArea col-xs-6 col-sm-3 text-left']//img[contains(@class, 'client-logo-img')]"));
-                List<WebElement> insurerPremiums1 = driver.findElements(By.xpath("//div[@class=\"priceArea hidden-xs text-center\"]//span[contains(@ng-if , \"multiPlanDropDown[insurer.insurerProvider\")]"));
+                List<WebElement> insurerPremiums1 = driver.findElements(By.xpath("//div[contains(@class,\"priceArea h\")]//span[contains(@ng-if , \"multiPlanDropDown[insurer.insurerProvider\")]"));
                 List<WebElement> premiumIdv1 = driver.findElements(By.xpath("//span[@class=\"bold vehicleIdv ng-binding\"]"));
 
                 System.out.println("Logos found: " + insurerLogos1.size());
@@ -453,7 +460,7 @@ public class turtlemint_page extends TestBase {
     public void Tppremiumtm() throws InterruptedException {
 
         // String excelPath = "/Users/sayali/Documents/insurer/Premium_compair_Automation/src/test/resources/registration_data.xlsx";
-     //  String excelPath = "/Users/nitinrathod/Documents/registration_data.xlsx";
+      // String excelPath = "/Users/nitinrathod/Documents/registration_data.xlsx";
           String excelPath = "/Users/pi/Documents/registration_data.xlsx";
         //String excelPath = "C:\\Users\\pradeep.u_turtlemint\\Downloads\\registration_data.xlsx";
         List<String> regNumbers = TestUtil.getRegistrationNumbers(excelPath);
@@ -551,13 +558,19 @@ public class turtlemint_page extends TestBase {
                 String id = parts2[parts2.length - 1];  // Get the last part after the last "/"
                 System.out.println("Extracted ID: " + id);
 
+                Actions actions = new Actions(driver);
+                actions.moveToElement(hoverIn).perform();
+                js.executeScript("arguments[0].click();", crossButton);
+                actions.moveToElement(hoverOut).perform();
+                Thread.sleep(3000);
+                TestUtil.click(updateedresult, "ejd");
 
                 WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
                 wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.xpath("//div[@class='logoArea col-xs-6 col-sm-3 text-left']//img[contains(@class, 'client-logo-img')]")));
-                wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.xpath("//div[@class=\"priceArea hidden-xs text-center\"]//span[contains(@ng-if , \"multiPlanDropDown[insurer.insurerProvider\")]")));
+                wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.xpath("//div[contains(@class,\"priceArea h\")]//span[contains(@ng-if , \"multiPlanDropDown[insurer.insurerProvider\")]")));
 
                 List<WebElement> insurerLogos = driver.findElements(By.xpath("//div[@class='logoArea col-xs-6 col-sm-3 text-left']//img[contains(@class, 'client-logo-img')]"));
-                List<WebElement> insurerPremiums = driver.findElements(By.xpath("//div[@class=\"priceArea hidden-xs text-center\"]//span[contains(@ng-if , \"multiPlanDropDown[insurer.insurerProvider\")]"));
+                List<WebElement> insurerPremiums = driver.findElements(By.xpath("//div[contains(@class,\"priceArea h\")]//span[contains(@ng-if , \"multiPlanDropDown[insurer.insurerProvider\")]"));
 
 
 
@@ -603,7 +616,6 @@ public class turtlemint_page extends TestBase {
                 }
                 TestUtil.click(actclose, "");
                 Thread.sleep(2000);
-                Actions actions = new Actions(driver);
                 actions.moveToElement(hoverIn).perform();
               //  TestUtil.click(addonmore,"");
                 List<WebElement> addOns = driver.findElements(By.xpath("(//div[@class=\"sidePanelCommonHeaderContent clearfix\"])[2]//a//span[@class=\"set-title\"]"));
