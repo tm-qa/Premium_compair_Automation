@@ -90,7 +90,7 @@ public class policybazar_page extends TestBase {
 
     public void premiumPBComp() throws InterruptedException, IOException {
         // String excelPath = "/Users/sayali/Documents/insurer/Premium_compair_Automation/src/test/resources/registration_data.xlsx";
-       // String excelPath = "/Users/nitinrathod/Documents/registration_data.xlsx";
+      //  String excelPath = "/Users/nitinrathod/Documents/registration_data.xlsx";
          String excelPath = "/Users/pi/Documents/registration_data.xlsx";
         //String excelPath = "C:\\Users\\pradeep.u_turtlemint\\Downloads\\registration_data.xlsx";
         List<String> regNumbers = TestUtil.getRegistrationNumbers(excelPath);
@@ -109,9 +109,9 @@ public class policybazar_page extends TestBase {
 
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
 
-        Thread.sleep(5000);
+       Thread.sleep(5000);
 //        int count = 0;
-//        if(count==0) {
+//        if(count==1) {
 //            TestUtil.click(loginregi, "Clicked on login");
 //            Thread.sleep(40000);
 //        }
@@ -170,46 +170,59 @@ public class policybazar_page extends TestBase {
                 wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.xpath("//img[@class=\"imgLogo\"]")));
                 wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.xpath("//span[@class=\"btnContent premium-text\"]")));
                 wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.xpath("//p[text()=\"IDV\"]//parent::div//div")));
-                wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.xpath("//p[text()=\"Activity Points\"]//..//div[@class=\"headingV3 fontNormal\"]")));
+              //  wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.xpath("//p[text()=\"Activity Points\"]//..//div[@class=\"headingV3 fontNormal\"]")));
 
                 List<WebElement> insurerLogos = driver.findElements(By.xpath("//img[@class=\"imgLogo\"]"));
                 List<WebElement> insurerPremiums = driver.findElements(By.xpath("//span[@class=\"btnContent premium-text\"]"));
                 List<WebElement> IDVActual = driver.findElements(By.xpath("//p[text()=\"IDV\"]//parent::div//div"));
-                List<WebElement> actpoint = driver.findElements(By.xpath("//p[text()=\"Activity Points\"]//..//div[@class=\"headingV3 fontNormal\"]"));
+               // List<WebElement> actpoint = driver.findElements(By.xpath("//p[text()=\"Activity Points\"]//..//div[@class=\"headingV3 fontNormal\"]"));
 
                 if (insurerLogos.size() == insurerPremiums.size()) {
                     for (int i = 0; i < insurerLogos.size(); i++) {
-                        WebElement logo = insurerLogos.get(i);
-                        WebElement premiumBtn = insurerPremiums.get(i);
-                        WebElement idvactual = IDVActual.get(i);
-                        WebElement activityp = actpoint.get(i);
+                        try {
+                            WebElement logo = insurerLogos.get(i);
+                            WebElement premiumBtn = insurerPremiums.get(i);
+                            WebElement idvactual = IDVActual.get(i);
+                            //  WebElement activityp = actpoint.get(i);
+                            // ✅ Safely handle missing activity points
+//                            String actp = "N/A";
+//                            if (i < actpoint.size()) {
+//                                WebElement activityp = actpoint.get(i);
+//                                actp = activityp.getText().trim();
+//                            } else {
+//                                System.out.println("⚠️ Activity Points not found for index: " + i);
+//                            }
 
-                        // Alt-based insurer name handling
-                        String insurerName = logo.getAttribute("alt").trim();
-                        if (insurerName.equalsIgnoreCase("insurer")) {
-                            insurerName = "Zuno";
+                            // Alt-based insurer name handling
+                            String insurerName = logo.getAttribute("alt").trim();
+                            if (insurerName.equalsIgnoreCase("insurer")) {
+                                insurerName = "Zuno";
+                            }
+
+                            String premium = premiumBtn.getText().replaceAll("[^0-9]", "");
+                            String IDVactual = idvactual.getText().replaceAll("[^0-9]", "");
+                            //  String actp = activityp.getText().trim();
+                           // System.out.println(actp);
+
+
+                            String[] row = {
+                                    reg,
+                                    vehicleMakemodel,
+                                    vehicleVariant,
+                                    vehicleFuel,
+                                    prevpolicytype,
+                                    regisdate,
+                                    insurerName,
+                                    IDVactual,
+                                    premium,
+                                  //  actp
+
+                            };
+                            premiumData.add(row);
+                        } catch (Exception e) {
+                            System.out.println("❌ Failed to capture row data for index " + i + " in reg: " + reg);
+                            e.printStackTrace();
                         }
-
-                        String premium = premiumBtn.getText().replaceAll("[^0-9]", "");
-                        String IDVactual = idvactual.getText().replaceAll("[^0-9]", "");
-                        String actp = activityp.getText().trim();
-                        System.out.println(actp);
-
-
-                        String[] row = {
-                                reg,
-                                vehicleMakemodel,
-                                vehicleVariant,
-                                vehicleFuel,
-                                prevpolicytype,
-                                regisdate,
-                                insurerName,
-                                IDVactual,
-                                premium,
-                                actp
-
-                        };
-                        premiumData.add(row);
                     }
                 } else {
                     System.err.println("Mismatch in insurer and premium count for Reg: " + reg);
@@ -248,7 +261,7 @@ public class policybazar_page extends TestBase {
         String dateTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy---HH-mm-ss"));
         // ✅ Save successful data
         //   String outputExcel = "/Users/sayali/Desktop/RenewBuy_premium" + dateTime + ".xlsx";
-      // String outputExcel = "/Users/nitinrathod/Desktop/PolicyBazar_COMP_premium" + dateTime + ".xlsx";
+       //String outputExcel = "/Users/nitinrathod/Desktop/PolicyBazar_COMP_premium" + dateTime + ".xlsx";
           String outputExcel = "/Users/pi/Desktop/PolicyBazar_COMP_premium" + dateTime + ".xlsx";
         // String outputExcel = "C:\\Users\\pradeep.u_turtlemint\\Desktop\\ALLBrokerdata\\PolicyBazar_COMP_premium"+dateTime+".xlsx";
         if (!premiumData.isEmpty()) {
@@ -336,25 +349,32 @@ public class policybazar_page extends TestBase {
 
                 wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.xpath("//img[@class=\"imgLogo\"]")));
                 wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.xpath("//span[@class=\"btnContent premium-text\"]")));
-                wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.xpath("//p[text()=\"Activity Points\"]//..//div[@class=\"headingV3 fontNormal\"]")));
+               // wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.xpath("//p[text()=\"Activity Points\"]//..//div[@class=\"headingV3 fontNormal\"]")));
 
                 List<WebElement> insurerLogos = driver.findElements(By.xpath("//img[@class=\"imgLogo\"]"));
                 List<WebElement> insurerPremiums = driver.findElements(By.xpath("//span[@class=\"btnContent premium-text\"]"));
-                List<WebElement> actpoint = driver.findElements(By.xpath("//p[text()=\"Activity Points\"]//..//div[@class=\"headingV3 fontNormal\"]"));
+             //   List<WebElement> actpoint = driver.findElements(By.xpath("//p[text()=\"Activity Points\"]//..//div[@class=\"headingV3 fontNormal\"]"));
 
                 if (insurerLogos.size() == insurerPremiums.size()) {
                     for (int i = 0; i < insurerLogos.size(); i++) {
                         WebElement logo = insurerLogos.get(i);
                         WebElement premiumBtn = insurerPremiums.get(i);
-                        WebElement activityp = actpoint.get(i);
+//                        // ✅ Safely handle missing activity points
+//                        String actp = "N/A";
+//                        if (i < actpoint.size()) {
+//                            WebElement activityp = actpoint.get(i);
+//                            actp = activityp.getText().trim();
+//                        } else {
+//                            System.out.println("⚠️ Activity Points not found for index: " + i);
+//                        }
 
                         String insurerName = logo.getAttribute("alt").trim();
                         if (insurerName.equalsIgnoreCase("insurer")) {
                             insurerName = "Zuno";
                         }
                         String premium = premiumBtn.getText().replaceAll("[^0-9]", "");
-                        String actp = activityp.getText().trim();
-                        System.out.println(actp);
+                       // String actp = activityp.getText().trim();
+                       // System.out.println(actp);
 
 
                         String[] row = {
@@ -366,7 +386,7 @@ public class policybazar_page extends TestBase {
                                 regisdate,
                                 insurerName,
                                 premium,
-                                actp
+                              //  actp
 
                         };
                         premiumData.add(row);
@@ -406,7 +426,7 @@ public class policybazar_page extends TestBase {
         String dateTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy---HH-mm-ss"));
         // ✅ Save successful data
         //   String outputExcel = "/Users/sayali/Desktop/RenewBuy_premium" + dateTime + ".xlsx";
-        //String outputExcel = "/Users/nitinrathod/Desktop/PolicyBazar_TP_premium" + dateTime + ".xlsx";
+       // String outputExcel = "/Users/nitinrathod/Desktop/PolicyBazar_TP_premium" + dateTime + ".xlsx";
          String outputExcel = "/Users/pi/Desktop/PolicyBazar_TP_premium" + dateTime + ".xlsx";
         // String outputExcel = "C:\\Users\\pradeep.u_turtlemint\\Desktop\\ALLBrokerdata\\PolicyBazar_TP_premium"+dateTime+".xlsx";
         if (!premiumData.isEmpty()) {
