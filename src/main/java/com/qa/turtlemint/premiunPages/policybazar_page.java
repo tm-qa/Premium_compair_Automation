@@ -87,7 +87,8 @@ public class policybazar_page extends TestBase {
     public void premiumPBComp() throws InterruptedException, IOException {
         // String excelPath = "/Users/sayali/Documents/insurer/Premium_compair_Automation/src/test/resources/registration_data.xlsx";
        // String excelPath = "/Users/nitinrathod/Documents/registration_data.xlsx";
-        String excelPath = "C:\\Users\\pradeep.u_turtlemint\\Downloads\\registration_data.xlsx";
+         String excelPath = "/Users/pi/Documents/registration_data.xlsx";
+        //String excelPath = "C:\\Users\\pradeep.u_turtlemint\\Downloads\\registration_data.xlsx";
         List<String> regNumbers = TestUtil.getRegistrationNumbers(excelPath);
 
         List<String[]> premiumData = new ArrayList<>(); // successful data
@@ -237,7 +238,8 @@ public class policybazar_page extends TestBase {
         // ✅ Save successful data
         //   String outputExcel = "/Users/sayali/Desktop/RenewBuy_premium" + dateTime + ".xlsx";
       //  String outputExcel = "/Users/nitinrathod/Desktop/PolicyBazar_COMP_premium" + dateTime + ".xlsx";
-        String outputExcel = "C:\\Users\\pradeep.u_turtlemint\\Desktop\\ALLBrokerdata\\PolicyBazar_COMP_premium"+dateTime+".xlsx";
+          String outputExcel = "/Users/pi/Desktop/PolicyBazar_COMP_premium" + dateTime + ".xlsx";
+        // String outputExcel = "C:\\Users\\pradeep.u_turtlemint\\Desktop\\ALLBrokerdata\\PolicyBazar_COMP_premium"+dateTime+".xlsx";
         if (!premiumData.isEmpty()) {
             TestUtil.writePremiumDataPBCOMP(outputExcel, premiumData,addOnsData);
             System.out.println("✅ Premium data written to Excel successfully.");
@@ -258,7 +260,8 @@ public class policybazar_page extends TestBase {
     public void premiumPBTP() throws InterruptedException, IOException {
         // String excelPath = "/Users/sayali/Documents/insurer/Premium_compair_Automation/src/test/resources/registration_data.xlsx";
        // String excelPath = "/Users/nitinrathod/Documents/registration_data.xlsx";
-        String excelPath = "C:\\Users\\pradeep.u_turtlemint\\Downloads\\registration_data.xlsx";
+         String excelPath = "/Users/pi/Documents/registration_data.xlsx";
+        //String excelPath = "C:\\Users\\pradeep.u_turtlemint\\Downloads\\registration_data.xlsx";
         List<String> regNumbers = TestUtil.getRegistrationNumbers(excelPath);
 
         List<String[]> premiumData = new ArrayList<>(); // successful data
@@ -393,7 +396,8 @@ public class policybazar_page extends TestBase {
         // ✅ Save successful data
         //   String outputExcel = "/Users/sayali/Desktop/RenewBuy_premium" + dateTime + ".xlsx";
        // String outputExcel = "/Users/nitinrathod/Desktop/PolicyBazar_TP_premium" + dateTime + ".xlsx";
-        String outputExcel = "C:\\Users\\pradeep.u_turtlemint\\Desktop\\ALLBrokerdata\\PolicyBazar_TP_premium"+dateTime+".xlsx";
+         String outputExcel = "/Users/pi/Desktop/PolicyBazar_TP_premium" + dateTime + ".xlsx";
+        // String outputExcel = "C:\\Users\\pradeep.u_turtlemint\\Desktop\\ALLBrokerdata\\PolicyBazar_TP_premium"+dateTime+".xlsx";
         if (!premiumData.isEmpty()) {
             TestUtil.writePremiumDataPBTP(outputExcel, premiumData,addOnsData);
             System.out.println("✅ Premium data written to Excel successfully.");
