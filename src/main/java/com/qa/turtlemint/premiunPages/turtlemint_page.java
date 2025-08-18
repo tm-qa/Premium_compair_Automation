@@ -154,7 +154,7 @@ public class turtlemint_page extends TestBase {
     public void Comppremiumtm() throws InterruptedException {
 
         // String excelPath = "/Users/sayali/Documents/insurer/Premium_compair_Automation/src/test/resources/registration_data.xlsx";
-       // String excelPath = "/Users/nitinrathod/Documents/registration_data.xlsx";
+//        String excelPath = "/Users/nitinrathod/Documents/registration_data.xlsx";
          String excelPath = "/Users/pi/Documents/registration_data.xlsx";
          //String excelPath = "C:\\Users\\pradeep.u_turtlemint\\Downloads\\registration_data.xlsx";
         List<String> regNumbers = TestUtil.getRegistrationNumbers(excelPath);
@@ -183,17 +183,38 @@ public class turtlemint_page extends TestBase {
                 String existingValue = calender.getAttribute("value");
                 System.out.println(existingValue);
 
+                String futuredate = TestUtil.ninjaFutureDate(1);
+                System.out.println(futuredate);
+                SimpleDateFormat inputFormat = new SimpleDateFormat("dd-MM-yyyy");
+                SimpleDateFormat outputFormat = new SimpleDateFormat("dd/MM/yyyy");
+                String formattedDate = outputFormat.format(inputFormat.parse(futuredate));
+                System.out.println(formattedDate);
+
                 if (existingValue == null || existingValue.trim().isEmpty()) {
                     Thread.sleep(2000);
-                    String futuredate = TestUtil.ninjaFutureDate(1);
-                    System.out.println(futuredate);
-                    SimpleDateFormat inputFormat = new SimpleDateFormat("dd-MM-yyyy");
-                    SimpleDateFormat outputFormat = new SimpleDateFormat("dd/MM/yyyy");
-                    String formattedDate = outputFormat.format(inputFormat.parse(futuredate));
-                    System.out.println(formattedDate);
-                    TestUtil.sendKeys(calender, formattedDate, "entered");
-                    Thread.sleep(2000);
-                    TestUtil.click(random, "");
+                    WebElement dateFut = driver.findElement(By.xpath("//input[@id=\"expiryDate-datepicker\"]"));
+
+
+                    String day = formattedDate.split("/")[0];
+                    TestUtil.sendKeys(dateFut, formattedDate+Keys.ENTER, " T + 1 ");
+
+                    WebElement monthend = driver.findElement(By.xpath("//*[text()='" + day + "']"));
+                    TestUtil.click(monthend , " ");
+                }
+
+                else {
+
+                    WebElement dateField = driver.findElement(By.id("expiryDate-datepicker"));
+                    // Clear existing value via JS so Angular updates
+                    JavascriptExecutor js = (JavascriptExecutor) driver;
+                    js.executeScript(
+                            "arguments[0].value = ''; " +
+                                    "arguments[0].dispatchEvent(new Event('input', { bubbles: true })); " +
+                                    "arguments[0].dispatchEvent(new Event('change', { bubbles: true }));",
+                            dateField
+                    );
+                    dateField.sendKeys(formattedDate, "date");
+                    dateField.sendKeys(Keys.TAB);
                 }
 
                 Thread.sleep(2000);
@@ -235,8 +256,8 @@ public class turtlemint_page extends TestBase {
                         if (selectedValue.isEmpty() || selectedValue.equalsIgnoreCase("Select")) {
                             System.out.println("No value is selected, selecting one from dropdown.");
                             TestUtil.click(previousinsureruiSelect, "Clicking to open dropdown");
-                            WebElement option = shortWait.until(ExpectedConditions.elementToBeClickable(By.xpath("//span[text()=\"Bajaj Allianz\"]")));
-                            TestUtil.click(option, "Selecting Bajaj from dropdown");
+                            WebElement option = shortWait.until(ExpectedConditions.elementToBeClickable(By.xpath("//span[text()=\"Acko General Insurance\"]")));
+                            TestUtil.click(option, "Selecting acko from dropdown");
                         }
                     } else {
                         System.out.println("Previous insurer dropdown is not present on this page.");
@@ -469,6 +490,7 @@ public class turtlemint_page extends TestBase {
         List<String[]> ActivityP = new ArrayList<>();
         List<String[]> premiumData = new ArrayList<>();
         List<String> failedRegs = new ArrayList<>();
+        Thread.sleep(10000);
         TestUtil.waitUntilVisibilityOfElement(sellButton);
         TestUtil.click(sellButton, "Clicked on sell button");
         TestUtil.waitUntilVisibilityOfElement(carInsurance);
@@ -485,19 +507,39 @@ public class turtlemint_page extends TestBase {
                 String existingValue = calender.getAttribute("value");
                 System.out.println(existingValue);
 
+                String futuredate = TestUtil.ninjaFutureDate(1);
+                System.out.println(futuredate);
+                SimpleDateFormat inputFormat = new SimpleDateFormat("dd-MM-yyyy");
+                SimpleDateFormat outputFormat = new SimpleDateFormat("dd/MM/yyyy");
+                String formattedDate = outputFormat.format(inputFormat.parse(futuredate));
+                System.out.println(formattedDate);
+
                 if (existingValue == null || existingValue.trim().isEmpty()) {
                     Thread.sleep(2000);
-                    String futuredate = TestUtil.ninjaFutureDate(1);
-                    System.out.println(futuredate);
-                    SimpleDateFormat inputFormat = new SimpleDateFormat("dd-MM-yyyy");
-                    SimpleDateFormat outputFormat = new SimpleDateFormat("dd/MM/yyyy");
-                    String formattedDate = outputFormat.format(inputFormat.parse(futuredate));
-                    System.out.println(formattedDate);
-                    TestUtil.sendKeys(calender, formattedDate, "Date entered");
-                    Thread.sleep(2000);
-                    TestUtil.click(random, "");
+                    WebElement dateFut = driver.findElement(By.xpath("//input[@id=\"expiryDate-datepicker\"]"));
+
+
+                    String day = formattedDate.split("/")[0];
+                    TestUtil.sendKeys(dateFut, formattedDate+Keys.ENTER, " T + 1 ");
+
+                    WebElement monthend = driver.findElement(By.xpath("//*[text()='" + day + "']"));
+                    TestUtil.click(monthend , " ");
                 }
 
+                else {
+
+                    WebElement dateField = driver.findElement(By.id("expiryDate-datepicker"));
+                    // Clear existing value via JS so Angular updates
+                    JavascriptExecutor js = (JavascriptExecutor) driver;
+                    js.executeScript(
+                            "arguments[0].value = ''; " +
+                                    "arguments[0].dispatchEvent(new Event('input', { bubbles: true })); " +
+                                    "arguments[0].dispatchEvent(new Event('change', { bubbles: true }));",
+                            dateField
+                    );
+                    dateField.sendKeys(formattedDate, "date");
+                    dateField.sendKeys(Keys.TAB);
+                }
                 Thread.sleep(3000);
                 JavascriptExecutor js = (JavascriptExecutor) driver;
                 js.executeScript("arguments[0].click();", previousPolicyTypeTP);
@@ -521,8 +563,8 @@ public class turtlemint_page extends TestBase {
 
                             TestUtil.click(previousinsureruiSelect, "Clicking to open dropdown");
 
-                            WebElement option = shortWait.until(ExpectedConditions.elementToBeClickable(By.xpath("//span[text()=\"Bajaj Allianz\"]")));
-                            TestUtil.click(option, "Selecting Bajaj from dropdown");
+                            WebElement option = shortWait.until(ExpectedConditions.elementToBeClickable(By.xpath("//span[text()=\"Acko General Insurance\"]")));
+                            TestUtil.click(option, "Selecting acko from dropdown");
                         }
                     } else {
                         System.out.println("Previous insurer dropdown is not present on this page.");
@@ -557,13 +599,15 @@ public class turtlemint_page extends TestBase {
                 String[] parts2 = currentUrl.split("/");
                 String id = parts2[parts2.length - 1];  // Get the last part after the last "/"
                 System.out.println("Extracted ID: " + id);
-
+                Thread.sleep(10000);
                 Actions actions = new Actions(driver);
                 actions.moveToElement(hoverIn).perform();
                 js.executeScript("arguments[0].click();", crossButton);
                 actions.moveToElement(hoverOut).perform();
                 Thread.sleep(3000);
                 TestUtil.click(updateedresult, "ejd");
+
+                Thread.sleep(30000);
 
                 WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
                 wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.xpath("//div[@class='logoArea col-xs-6 col-sm-3 text-left']//img[contains(@class, 'client-logo-img')]")));
@@ -645,7 +689,7 @@ public class turtlemint_page extends TestBase {
 
         // ✅ Save successful data
         //  String outputExcel = "/Users/sayali/Desktop/RenewBuy_premium" + dateTime + ".xlsx";
-      // String outputExcel = "/Users/nitinrathod/Desktop/Turtlemint_TP_premium" + dateTime + ".xlsx";
+//       String outputExcel = "/Users/nitinrathod/Desktop/Turtlemint_TP_premium" + dateTime + ".xlsx";
          String outputExcel = "/Users/pi/Desktop/Turtlemint_TP_premium" + dateTime + ".xlsx";
         //String outputExcel = "C:\\Users\\pradeep.u_turtlemint\\Desktop\\ALLBrokerdata\\Turtlemint_TP_premium" + dateTime + ".xlsx";
 
