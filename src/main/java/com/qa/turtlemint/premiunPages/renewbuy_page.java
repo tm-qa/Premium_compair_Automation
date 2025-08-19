@@ -83,8 +83,8 @@ public class renewbuy_page extends TestBase {
     @FindBy(xpath = "//input[@aria-label=\"previous_insurer\"]")
     WebElement previousinsurer;
 
-    @FindBy(xpath = "//span[text()=\"Bajaj Allianz General Insurance\"]")
-    WebElement bajajinsurer;
+    @FindBy(xpath = "//span[text()=\"ACKO GENERAL INSURANCE\"]")
+    WebElement ackoinsurer;
 
 
     @FindBy(xpath = "//input[@aria-label=\"vehicle_make\"]")
@@ -149,7 +149,7 @@ public class renewbuy_page extends TestBase {
 
     public void premiumRBComp() throws InterruptedException, IOException {
         //   String excelPath = "/Users/sayali/Documents/insurer/Premium_compair_Automation/src/test/resources/registration_data.xlsx";
-        //  String excelPath = "/Users/nitinrathod/Documents/registration_data.xlsx";
+//          String excelPath = "/Users/nitinrathod/Documents/registration_data.xlsx";
           String excelPath = "/Users/pi/Documents/registration_data.xlsx";
         //String excelPath = "C:\\Users\\pradeep.u_turtlemint\\Downloads\\registration_data.xlsx";
         List<String> regNumbers = TestUtil.getRegistrationNumbers(excelPath);
@@ -210,22 +210,30 @@ public class renewbuy_page extends TestBase {
                 System.out.println(existingValue);
                 if (existingValue == null || existingValue.trim().isEmpty()) {
                     Thread.sleep(2000);
-                    previousinsurer.sendKeys("bajaj");
+                    previousinsurer.sendKeys("acko");
                     Thread.sleep(2000);
-                    TestUtil.click(bajajinsurer, "");
+                    TestUtil.click(ackoinsurer, "acko insurer selected");
                 }
+
                 String dateValue = policyExiryDate.getAttribute("value");
+                String futuredate = TestUtil.ninjaFutureDate(1);
+                String newdate = futuredate.replaceAll("-", "");
+
                 if (dateValue == null || dateValue.trim().isEmpty()) {
-                    // Date is missing, fill it before clicking confirm
+                    // Date is missing, fill it
                     TestUtil.click(policyExiryDate, "clicked on calendar");
-                    String futuredate = TestUtil.ninjaFutureDate(1);
-                    String newdate = futuredate.replaceAll("-", "");
                     TestUtil.click(mand, "");
                     policyExiryDate.clear();
                     TestUtil.sendKeys(policyExiryDate, newdate, "entered");
-                    System.out.println("✅ New date entered: " + newdate);
+                    System.out.println("✅ New date entered (blank case): " + newdate);
                 } else {
-                    System.out.println("ℹ️ Date already present: " + dateValue);
+                    // Date already present → clear & enter new date
+                    System.out.println("ℹ️ Date already present: " + dateValue + " → Replacing with new date.");
+                    TestUtil.click(policyExiryDate, "clicked on calendar");
+                    TestUtil.click(mand, "");
+                    policyExiryDate.clear();
+                    TestUtil.sendKeys(policyExiryDate, newdate, "entered");
+                    System.out.println("✅ New date entered (replacement case): " + newdate);
                 }
 
                 // ✅ Now click the confirm button just once
@@ -353,7 +361,7 @@ public class renewbuy_page extends TestBase {
 
         // ✅ Save successful data
         //    String outputExcel = "/Users/sayali/Desktop/RenewBuy_premium" + dateTime + ".xlsx";
-        //  String outputExcel = "/Users/nitinrathod/Desktop/RenewBuy_COMP_premium" + dateTime + ".xlsx";
+//          String outputExcel = "/Users/nitinrathod/Desktop/RenewBuy_COMP_premium" + dateTime + ".xlsx";
         String outputExcel = "/Users/pi/Desktop/RenewBuy_COMP_premium" + dateTime + ".xlsx";
         //String outputExcel = "C:\\Users\\pradeep.u_turtlemint\\Desktop\\ALLBrokerdata\\RenewBuy_COMP_premium" + dateTime + ".xlsx";
         if (!premiumData.isEmpty()) {
@@ -378,7 +386,7 @@ public class renewbuy_page extends TestBase {
 
     public void premiumRBTp() throws InterruptedException, IOException {
         // String excelPath = "/Users/sayali/Documents/insurer/Premium_compair_Automation/src/test/resources/registration_data.xlsx";
-       // String excelPath = "/Users/nitinrathod/Documents/registration_data.xlsx";
+//        String excelPath = "/Users/nitinrathod/Documents/registration_data.xlsx";
          String excelPath = "/Users/pi/Documents/registration_data.xlsx";
         // String excelPath = "C:\\Users\\pradeep.u_turtlemint\\Downloads\\registration_data.xlsx";
         List<String> regNumbers = TestUtil.getRegistrationNumbers(excelPath);
@@ -434,23 +442,30 @@ public class renewbuy_page extends TestBase {
                 String existingValue = previousinsurer.getAttribute("value");
                 if (existingValue == null || existingValue.trim().isEmpty()) {
                     Thread.sleep(2000);
-                    previousinsurer.sendKeys("bajaj");
+                    previousinsurer.sendKeys("acko");
                     Thread.sleep(2000);
-                    TestUtil.click(bajajinsurer, "Bajaj insurer selected");
+                    TestUtil.click(ackoinsurer, "acko insurer selected");
                 }
 
                 String dateValue = policyExiryDate.getAttribute("value");
+                String futuredate = TestUtil.ninjaFutureDate(1);
+                String newdate = futuredate.replaceAll("-", "");
+
                 if (dateValue == null || dateValue.trim().isEmpty()) {
-                    // Date is missing, fill it before clicking confirm
+                    // Date is missing, fill it
                     TestUtil.click(policyExiryDate, "clicked on calendar");
-                    String futuredate = TestUtil.ninjaFutureDate(1);
-                    String newdate = futuredate.replaceAll("-", "");
                     TestUtil.click(mand, "");
                     policyExiryDate.clear();
                     TestUtil.sendKeys(policyExiryDate, newdate, "entered");
-                    System.out.println("✅ New date entered: " + newdate);
+                    System.out.println("✅ New date entered (blank case): " + newdate);
                 } else {
-                    System.out.println("ℹ️ Date already present: " + dateValue);
+                    // Date already present → clear & enter new date
+                    System.out.println("ℹ️ Date already present: " + dateValue + " → Replacing with new date.");
+                    TestUtil.click(policyExiryDate, "clicked on calendar");
+                    TestUtil.click(mand, "");
+                    policyExiryDate.clear();
+                    TestUtil.sendKeys(policyExiryDate, newdate, "entered");
+                    System.out.println("✅ New date entered (replacement case): " + newdate);
                 }
 
                 TestUtil.click(aboveDetailsAreCorrectButton, "Clicked on above details are correct button");
@@ -545,7 +560,7 @@ public class renewbuy_page extends TestBase {
         String dateTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy---HH-mm-ss"));
         //✅ Save successful data
         //   String outputExcel = "/Users/sayali/Desktop/RenewBuy_premium" + dateTime + ".xlsx";
-        //String outputExcel = "/Users/nitinrathod/Desktop/RenewBuy_TP_premium" + dateTime + ".xlsx";
+//        String outputExcel = "/Users/nitinrathod/Desktop/RenewBuy_TP_premium" + dateTime + ".xlsx";
         String outputExcel = "/Users/pi/Desktop/RenewBuy_TP_premium" + dateTime + ".xlsx";
         //String outputExcel = "C:\\Users\\pradeep.u_turtlemint\\Desktop\\ALLBrokerdata\\RenewBuy_TP_premium"+dateTime+".xlsx";
 

@@ -3,6 +3,7 @@ package com.qa.turtlemint.premiunPages;
 import com.qa.turtlemint.base.TestBase;
 import com.qa.turtlemint.util.LogUtils;
 import com.qa.turtlemint.util.TestUtil;
+import org.apache.commons.beanutils.converters.LongArrayConverter;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebElement;
@@ -13,6 +14,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.Duration;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -41,8 +43,8 @@ public class insurancedekho_Page extends TestBase {
     WebElement calendar;
     @FindBy(xpath = "//label[text()=\"Previous Insurer\"]//..//input")
     WebElement preinsurer;
-    @FindBy(xpath = "//li[text()=\"Bajaj Allianz\"]")
-    WebElement bajajinsurer;
+    @FindBy(xpath = "//li[text()=\"ACKO\"]")
+    WebElement ackoinsurer;
 
 
 
@@ -54,6 +56,9 @@ public class insurancedekho_Page extends TestBase {
 
     @FindBy(xpath = "//div[@class=\"addoneListWrapper \"]//h2[1]")
     WebElement addoneListWrapper;
+    @FindBy(xpath = "//span[text()=\"2025\"]")
+    WebElement year;
+
 
     @FindBy(xpath = "//h3[text()=\"Policy Expiry Date\"]//..//li[not(contains(@class,\" year disabled\"))]")
     WebElement currentyear;
@@ -127,7 +132,7 @@ public class insurancedekho_Page extends TestBase {
         TestUtil.click(selectcar, "Clicked on car");
         Thread.sleep(2000);
         driver.navigate().refresh();
-       //  String excelPath = "/Users/nitinrathod/Documents/registration_data.xlsx";
+//         String excelPath = "/Users/nitinrathod/Documents/registration_data.xlsx";
           String excelPath = "/Users/pi/Documents/registration_data.xlsx";
        // String excelPath = "C:\\Users\\pradeep.u_turtlemint\\Downloads\\registration_data.xlsx";
         List<String> regNumbers = TestUtil.getRegistrationNumbers(excelPath);
@@ -172,17 +177,17 @@ public class insurancedekho_Page extends TestBase {
 
                         getDetails.click();
                         TestUtil.waitUntilVisibilityOfElement(preinsurer);
-                        TestUtil.sendKeys(preinsurer,"bajaj","clicked on prev insurer dropdown");
-                        TestUtil.click(bajajinsurer,"clicked bajaj prev insurer");
+                        TestUtil.sendKeys(preinsurer,"acko","clicked on prev insurer dropdown");
+                        TestUtil.click(ackoinsurer,"clicked acko prev insurer");
                     } else {
                         System.out.println("Neither button is available.");
                     }
                 }
-
-
+                Thread.sleep(20000);
                 TestUtil.waitUntilVisibilityOfElement(calendar);
-                String existingValue1 = calendar.getText();
-                if (existingValue1 == null || existingValue1.trim().isEmpty() )
+                String existingValue1 = calendar.getAttribute("value");
+                LogUtils.info(existingValue1);
+                if (existingValue1 == null )
                 {
                     js.executeScript("arguments[0].click();", calendar);
                     Thread.sleep(2000);
@@ -191,7 +196,27 @@ public class insurancedekho_Page extends TestBase {
                     js.executeScript("arguments[0].click();", currentmonth);
                     Thread.sleep(2000);
                     js.executeScript("arguments[0].click();", currentdate);
+                    System.out.println("New date is entered");
+                }
+                else {
+                    // Date already present → clear & enter new date
+                    System.out.println("ℹ️ Date already present: " + existingValue1 + " → Replacing with new date.");
+                    int day = LocalDate.now().getDayOfMonth();
+                    System.out.println(day);
+                    int da =day+1;
+                    LogUtils.info(String.valueOf(da));
+                    js.executeScript("arguments[0].click();", calendar);
+                    Thread.sleep(2000);
+                    TestUtil.click(year,"");
+                    js.executeScript("arguments[0].click();", calendar);
+                    Thread.sleep(2000);
+                    js.executeScript("arguments[0].click();", currentyear);
+                    Thread.sleep(2000);
+                    js.executeScript("arguments[0].click();", currentmonth);
+                    Thread.sleep(2000);
+                    driver.findElement(By.xpath("//li[text()=\""+da+"\"]")).click();
 
+                    System.out.println("Existing date removed and "+da+" entered new date");
                 }
                 TestUtil.waitUntilVisibilityOfElement(previousdrop);
                 TestUtil.click(previousdrop,"clicked");
@@ -308,7 +333,7 @@ public class insurancedekho_Page extends TestBase {
         String dateTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy---HH-mm-ss"));
         // ✅ Save successful data
         //   String outputExcel = "/Users/sayali/Desktop/RenewBuy_premium" + dateTime + ".xlsx";
-        //String outputExcel = "/Users/nitinrathod/Desktop/InsuranceDekho_COMP_premium" + dateTime + ".xlsx";
+//        String outputExcel = "/Users/nitinrathod/Desktop/InsuranceDekho_COMP_premium" + dateTime + ".xlsx";
         String outputExcel = "/Users/pi/Desktop/InsuranceDekho_COMP_premium" + dateTime + ".xlsx";
         //String outputExcel = "C:\\Users\\pradeep.u_turtlemint\\Desktop\\ALLBrokerdata\\InsuranceDekho_COMP_premium"+dateTime+".xlsx";
         if (!premiumData.isEmpty()) {
@@ -340,7 +365,7 @@ public class insurancedekho_Page extends TestBase {
         Thread.sleep(2000);
         driver.navigate().refresh();
         Thread.sleep(2000);
-      //   String excelPath = "/Users/nitinrathod/Documents/registration_data.xlsx";
+//         String excelPath = "/Users/nitinrathod/Documents/registration_data.xlsx";
           String excelPath = "/Users/pi/Documents/registration_data.xlsx";
        // String excelPath = "C:\\Users\\pradeep.u_turtlemint\\Downloads\\registration_data.xlsx";
 
@@ -386,34 +411,53 @@ public class insurancedekho_Page extends TestBase {
                         regisdate = registrationyear1.getAttribute("value");
 
                         getDetails.click();
-
                         Thread.sleep(3000);
-                        TestUtil.sendKeys(preinsurer,"bajaj","clicked on prev insurer dropdown");
-                        TestUtil.click(bajajinsurer,"clicked bajaj prev insurer");
+                        TestUtil.sendKeys(preinsurer,"acko","clicked on prev insurer dropdown");
+                        TestUtil.click(ackoinsurer,"clicked bajaj prev insurer");
                     } else {
                         System.out.println("Neither button is available.");
                     }
                 }
-
-
                 Thread.sleep(3000);
-                String existingValue1 = calendar.getText();
-                if (existingValue1 == null || existingValue1.trim().isEmpty() ) {
-                    actions.moveToElement(calendar).doubleClick().perform();
+                TestUtil.waitUntilVisibilityOfElement(calendar);
+                String existingValue1 = calendar.getAttribute("value");
+                LogUtils.info(existingValue1);
+                if (existingValue1 == null )
+                {
+                    js.executeScript("arguments[0].click();", calendar);
                     Thread.sleep(2000);
-                    TestUtil.click(currentyear, "selected year");
+                    js.executeScript("arguments[0].click();", currentyear);
                     Thread.sleep(2000);
-                    TestUtil.click(currentmonth, "selected month");
+                    js.executeScript("arguments[0].click();", currentmonth);
                     Thread.sleep(2000);
-                    TestUtil.click(currentdate, "selected date");
+                    js.executeScript("arguments[0].click();", currentdate);
+                    System.out.println("New date is entered");
+                }
+                else {
+                    // Date already present → clear & enter new date
+                    System.out.println("Date already present: " + existingValue1 + " → Replacing with new date.");
+                    int day = LocalDate.now().getDayOfMonth();
+                    System.out.println(day);
+                    int da =day+1;
+                    LogUtils.info(String.valueOf(da));
+                    js.executeScript("arguments[0].click();", calendar);
+                    Thread.sleep(2000);
+                    TestUtil.click(year,"");
+                    js.executeScript("arguments[0].click();", calendar);
+                    Thread.sleep(2000);
+                    js.executeScript("arguments[0].click();", currentyear);
+                    Thread.sleep(2000);
+                    js.executeScript("arguments[0].click();", currentmonth);
+                    Thread.sleep(2000);
+                    driver.findElement(By.xpath("//li[text()=\""+da+"\"]")).click();
 
+                    System.out.println("Existing date removed and "+da+" entered new date");
                 }
                 Thread.sleep(3000);
                 TestUtil.click(previousdrop,"clicked");
 
                 TestUtil.waitUntilVisibilityOfElement(Tp);
                 TestUtil.click(Tp,"selectec TP");
-
                 String prevpolicytype = "Third Party";
                 System.out.println(prevpolicytype);
                 TestUtil.waitUntilVisibilityOfElement(confirm);
@@ -503,13 +547,13 @@ public class insurancedekho_Page extends TestBase {
             }
             driver.get("https://pos.insurancedekho.com/core/sell/car");
             Thread.sleep(2000);
-            driver.navigate().refresh();
+            //driver.navigate().refresh();
             Thread.sleep(2000);
         }
         String dateTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy-HH-mm-ss"));
         // ✅ Save successful data
         //   String outputExcel = "/Users/sayali/Desktop/RenewBuy_premium" + dateTime + ".xlsx";
-       //  String outputExcel = "/Users/nitinrathod/Desktop/InsuranceDekho_TP_premium" + dateTime + ".xlsx";
+//         String outputExcel = "/Users/nitinrathod/Desktop/InsuranceDekho_TP_premium" + dateTime + ".xlsx";
         String outputExcel = "/Users/pi/Desktop/InsuranceDekho_TP_premium" + dateTime + ".xlsx";
        // String outputExcel = "C:\\Users\\pradeep.u_turtlemint\\Desktop\\ALLBrokerdata\\InsuranceDekho_TP_premium"+dateTime+".xlsx";
 
