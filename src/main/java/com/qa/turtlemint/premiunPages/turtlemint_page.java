@@ -155,8 +155,8 @@ public class turtlemint_page extends TestBase {
 
         // String excelPath = "/Users/sayali/Documents/insurer/Premium_compair_Automation/src/test/resources/registration_data.xlsx";
 //        String excelPath = "/Users/nitinrathod/Documents/registration_data.xlsx";
-         String excelPath = "/Users/pi/Documents/registration_data.xlsx";
-         //String excelPath = "C:\\Users\\pradeep.u_turtlemint\\Downloads\\registration_data.xlsx";
+//         String excelPath = "/Users/pi/Documents/registration_data.xlsx";
+         String excelPath = "C:\\Users\\pradeep.u_turtlemint\\Downloads\\registration_data.xlsx";
         List<String> regNumbers = TestUtil.getRegistrationNumbers(excelPath);
         System.out.println(regNumbers);
 
@@ -459,9 +459,9 @@ public class turtlemint_page extends TestBase {
 
         // ✅ Save successful data
         // String outputExcel = "/Users/sayali/Desktop/RenewBuy_premium" + dateTime + ".xlsx";
-       // String outputExcel = "/Users/nitinrathod/Desktop/Turtlemint_COMP_premium" + dateTime + ".xlsx";
-         String outputExcel = "/Users/pi/Desktop/Turtlemint_COMP_premium" + dateTime + ".xlsx";
-        // String outputExcel = "C:\\Users\\pradeep.u_turtlemint\\Desktop\\ALLBrokerdata\\Turtlemint_COMP_premium" + dateTime + ".xlsx";
+//        String outputExcel = "/Users/nitinrathod/Desktop/Turtlemint_COMP_premium" + dateTime + ".xlsx";
+        // String outputExcel = "/Users/pi/Desktop/Turtlemint_COMP_premium" + dateTime + ".xlsx";
+         String outputExcel = "C:\\Users\\pradeep.u_turtlemint\\Desktop\\ALLBrokerdata\\Turtlemint_COMP_premium" + dateTime + ".xlsx";
 
 
         TestUtil.writeCombinedSheetTM_Comp(outputExcel, premiumData, maxIDV, ActivityP, ActivityP2,addOnsData);
@@ -481,9 +481,9 @@ public class turtlemint_page extends TestBase {
     public void Tppremiumtm() throws InterruptedException {
 
         // String excelPath = "/Users/sayali/Documents/insurer/Premium_compair_Automation/src/test/resources/registration_data.xlsx";
-      // String excelPath = "/Users/nitinrathod/Documents/registration_data.xlsx";
-          String excelPath = "/Users/pi/Documents/registration_data.xlsx";
-        //String excelPath = "C:\\Users\\pradeep.u_turtlemint\\Downloads\\registration_data.xlsx";
+//       String excelPath = "/Users/nitinrathod/Documents/registration_data.xlsx";
+       //   String excelPath = "/Users/pi/Documents/registration_data.xlsx";
+        String excelPath = "C:\\Users\\pradeep.u_turtlemint\\Downloads\\registration_data.xlsx";
         List<String> regNumbers = TestUtil.getRegistrationNumbers(excelPath);
         System.out.println(regNumbers);
         List<String[]> addOnsData = new ArrayList<>();
@@ -689,9 +689,9 @@ public class turtlemint_page extends TestBase {
 
         // ✅ Save successful data
         //  String outputExcel = "/Users/sayali/Desktop/RenewBuy_premium" + dateTime + ".xlsx";
-//       String outputExcel = "/Users/nitinrathod/Desktop/Turtlemint_TP_premium" + dateTime + ".xlsx";
-         String outputExcel = "/Users/pi/Desktop/Turtlemint_TP_premium" + dateTime + ".xlsx";
-        //String outputExcel = "C:\\Users\\pradeep.u_turtlemint\\Desktop\\ALLBrokerdata\\Turtlemint_TP_premium" + dateTime + ".xlsx";
+//         String outputExcel = "/Users/nitinrathod/Desktop/Turtlemint_TP_premium" + dateTime + ".xlsx";
+       //  String outputExcel = "/Users/pi/Desktop/Turtlemint_TP_premium" + dateTime + ".xlsx";
+        String outputExcel = "C:\\Users\\pradeep.u_turtlemint\\Desktop\\ALLBrokerdata\\Turtlemint_TP_premium" + dateTime + ".xlsx";
 
         TestUtil.writePremiumDataTm(outputExcel, premiumData,ActivityP,addOnsData );
         // Optional: Print or save failed registrations
