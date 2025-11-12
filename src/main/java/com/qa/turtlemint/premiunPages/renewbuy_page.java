@@ -151,7 +151,7 @@ public class renewbuy_page extends TestBase {
         //   String excelPath = "/Users/sayali/Documents/insurer/Premium_compair_Automation/src/test/resources/registration_data.xlsx";
 //          String excelPath = "/Users/nitinrathod/Documents/registration_data.xlsx";
 //          String excelPath = "/Users/pi/Documents/registration_data.xlsx";
-        String excelPath = "C:\\Users\\pradeep.u_turtlemint\\Downloads\\registration_data.xlsx";
+         String excelPath = "C:\\Users\\pradeep.u_turtlemint\\Downloads\\registration_data.xlsx";
         List<String> regNumbers = TestUtil.getRegistrationNumbers(excelPath);
         System.out.println(regNumbers);
         JavascriptExecutor js = (JavascriptExecutor) driver;
