@@ -201,9 +201,13 @@ public class renewbuy_page extends TestBase {
 
                 String prepolicytype = policyExiryTypeCOMP.getText();
                 TestUtil.waitUntilVisibilityOfElement(prevYearNCB);
+                Thread.sleep(2000);
                 TestUtil.click(prevYearNCB, "click on prevYearNCB ");
+                Thread.sleep(2000);
                 TestUtil.waitUntilVisibilityOfElement(zeroNcb);
+                Thread.sleep(2000);
                 TestUtil.click(zeroNcb, "select 0% ncb");
+                Thread.sleep(2000);
 
                 TestUtil.waitUntilVisibilityOfElement(previousinsurer);
                 String existingValue = previousinsurer.getAttribute("value");

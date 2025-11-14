@@ -62,8 +62,8 @@ public class policybazar_page extends TestBase {
     WebElement registartiondate;
     @FindBy(xpath = "//div[text()=\"Previous Insurer\"]//..//div[@class=\"customSelectSingleValue css-1dimb5e-singleValue\"]")
     WebElement prepolicytypeinsurer;
-    @FindBy(xpath = "//button[text()=\"Login\"]")
-    WebElement loginregi;
+    @FindBy(xpath = "//button[text()=\"Clear all\"]")
+    WebElement clear;
 
 
 
@@ -75,8 +75,8 @@ public class policybazar_page extends TestBase {
     public void logininPB() throws InterruptedException {
 
         Thread.sleep(10000);
-       // TestUtil.sendKeys(mobileno, "9975655749", "Mobile number entered");
-        TestUtil.sendKeys(mobileno, "9923177694", "Mobile number entered");
+        TestUtil.sendKeys(mobileno, "9975655749", "Mobile number entered");
+//        TestUtil.sendKeys(mobileno, "9923177694", "Mobile number entered");
 
         Actions actions = new Actions(driver);
         actions.moveToElement(getotp).doubleClick().perform();
@@ -90,8 +90,8 @@ public class policybazar_page extends TestBase {
 
     public void premiumPBComp() throws InterruptedException, IOException {
         // String excelPath = "/Users/sayali/Documents/insurer/Premium_compair_Automation/src/test/resources/registration_data.xlsx";
-      //  String excelPath = "/Users/nitinrathod/Documents/registration_data.xlsx";
-         String excelPath = "/Users/pi/Documents/registration_data.xlsx";
+        String excelPath = "/Users/nitinrathod/Documents/registration_data1.xlsx";
+        // String excelPath = "/Users/pi/Documents/registration_data.xlsx";
         //String excelPath = "C:\\Users\\pradeep.u_turtlemint\\Downloads\\registration_data.xlsx";
         List<String> regNumbers = TestUtil.getRegistrationNumbers(excelPath);
 
@@ -110,11 +110,17 @@ public class policybazar_page extends TestBase {
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
 
        Thread.sleep(5000);
-//        int count = 0;
-//        if(count==1) {
-//            TestUtil.click(loginregi, "Clicked on login");
-//            Thread.sleep(40000);
-//        }
+        List<WebElement> loginButtons = driver.findElements(By.xpath("//button[text()='Login']"));
+
+        if (!loginButtons.isEmpty()) {
+            WebElement loginregi = loginButtons.get(0);
+            Actions actions = new Actions(driver);
+            actions.moveToElement(loginregi).click().perform();
+            System.out.println("Login button found and clicked.");
+            Thread.sleep(40000);
+        } else {
+            System.out.println("Login button not visible, continuing...");
+        }
         for (String reg : regNumbers) {
             try {
                 TestUtil.waitUntilVisibilityOfElement(regisnumber);
@@ -139,19 +145,46 @@ public class policybazar_page extends TestBase {
                 String prevpolicytype = "Comprehensive";
 
                 Thread.sleep(3000);
-                String existingValue = calendar.getAttribute("value");
-                System.out.println(existingValue);
-                if (existingValue == null || existingValue.trim().isEmpty()) {
-                    Thread.sleep(6000);
-                    String futuredate = TestUtil.ninjaFutureDate(3);
-                    System.out.println(futuredate);
-                    SimpleDateFormat inputFormat = new SimpleDateFormat("dd-MM-yyyy");
-                    SimpleDateFormat outputFormat = new SimpleDateFormat("dd/MM/yyyy");
-                    String formattedDate = outputFormat.format(inputFormat.parse(futuredate));
-                    System.out.println(formattedDate);
-                    TestUtil.sendKeys(calendar, formattedDate + Keys.ENTER, "entered");
+//                String existingValue = calendar.getAttribute("value");
+//                System.out.println(existingValue);
+//                if (existingValue == null || existingValue.trim().isEmpty()) {
+//                    Thread.sleep(6000);
+//                    String futuredate = TestUtil.ninjaFutureDate(3);
+//                    System.out.println(futuredate);
+//                    SimpleDateFormat inputFormat = new SimpleDateFormat("dd-MM-yyyy");
+//                    SimpleDateFormat outputFormat = new SimpleDateFormat("dd/MM/yyyy");
+//                    String formattedDate = outputFormat.format(inputFormat.parse(futuredate));
+//                    System.out.println(formattedDate);
+//                    TestUtil.sendKeys(calendar, formattedDate + Keys.ENTER, "entered");
+//                }
 
+                String existingValue = calendar.getAttribute("value");
+                System.out.println(" Existing value: " + existingValue);
+
+                // Calculate future date once
+                String futuredate = TestUtil.ninjaFutureDate(3);
+                System.out.println(" Future raw date: " + futuredate);
+
+                SimpleDateFormat inputFormat = new SimpleDateFormat("dd-MM-yyyy");
+                SimpleDateFormat outputFormat = new SimpleDateFormat("dd/MM/yyyy");
+                String formattedDate = outputFormat.format(inputFormat.parse(futuredate));
+                System.out.println(" Formatted date: " + formattedDate);
+
+                if (existingValue == null || existingValue.trim().isEmpty()) {
+                    // Case: No date present → just enter new one
+                    Thread.sleep(6000);
+                    TestUtil.sendKeys(calendar, formattedDate + Keys.ENTER, "entered");
+                    System.out.println(" New date entered (blank case): " + formattedDate);
+                } else {
+                    // Case: Date already present → clear & enter new one
+                    System.out.println(" Replacing existing date: " + existingValue + " → " + formattedDate);
+                    calendar.clear();
+                    Thread.sleep(2000);
+                    TestUtil.sendKeys(calendar, formattedDate + Keys.ENTER, "entered");
+                    System.out.println(" New date entered (replacement case): " + formattedDate);
                 }
+
+
                 Thread.sleep(3000);
                 String existingValue1 = prepolicytypeinsurer.getText();
                 System.out.println(existingValue1);
@@ -170,12 +203,12 @@ public class policybazar_page extends TestBase {
                 wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.xpath("//img[@class=\"imgLogo\"]")));
                 wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.xpath("//span[@class=\"btnContent premium-text\"]")));
                 wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.xpath("//p[text()=\"IDV\"]//parent::div//div")));
-              //  wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.xpath("//p[text()=\"Activity Points\"]//..//div[@class=\"headingV3 fontNormal\"]")));
+                wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.xpath("//p[text()=\"Activity Points\"]//..//div[@class=\"headingV3 fontNormal\"]")));
 
                 List<WebElement> insurerLogos = driver.findElements(By.xpath("//img[@class=\"imgLogo\"]"));
                 List<WebElement> insurerPremiums = driver.findElements(By.xpath("//span[@class=\"btnContent premium-text\"]"));
                 List<WebElement> IDVActual = driver.findElements(By.xpath("//p[text()=\"IDV\"]//parent::div//div"));
-               // List<WebElement> actpoint = driver.findElements(By.xpath("//p[text()=\"Activity Points\"]//..//div[@class=\"headingV3 fontNormal\"]"));
+                List<WebElement> actpoint = driver.findElements(By.xpath("//p[text()=\"Activity Points\"]//..//div[@class=\"headingV3 fontNormal\"]"));
 
                 if (insurerLogos.size() == insurerPremiums.size()) {
                     for (int i = 0; i < insurerLogos.size(); i++) {
@@ -183,7 +216,7 @@ public class policybazar_page extends TestBase {
                             WebElement logo = insurerLogos.get(i);
                             WebElement premiumBtn = insurerPremiums.get(i);
                             WebElement idvactual = IDVActual.get(i);
-                            //  WebElement activityp = actpoint.get(i);
+                              WebElement activityp = actpoint.get(i);
                             // ✅ Safely handle missing activity points
 //                            String actp = "N/A";
 //                            if (i < actpoint.size()) {
@@ -201,8 +234,8 @@ public class policybazar_page extends TestBase {
 
                             String premium = premiumBtn.getText().replaceAll("[^0-9]", "");
                             String IDVactual = idvactual.getText().replaceAll("[^0-9]", "");
-                            //  String actp = activityp.getText().trim();
-                           // System.out.println(actp);
+                            String actp = activityp.getText().trim();
+                            System.out.println(actp);
 
 
                             String[] row = {
@@ -215,7 +248,7 @@ public class policybazar_page extends TestBase {
                                     insurerName,
                                     IDVactual,
                                     premium,
-                                  //  actp
+                                    actp
 
                             };
                             premiumData.add(row);
@@ -261,8 +294,8 @@ public class policybazar_page extends TestBase {
         String dateTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy---HH-mm-ss"));
         // ✅ Save successful data
         //   String outputExcel = "/Users/sayali/Desktop/RenewBuy_premium" + dateTime + ".xlsx";
-       //String outputExcel = "/Users/nitinrathod/Desktop/PolicyBazar_COMP_premium" + dateTime + ".xlsx";
-          String outputExcel = "/Users/pi/Desktop/PolicyBazar_COMP_premium" + dateTime + ".xlsx";
+       String outputExcel = "/Users/nitinrathod/Desktop/PolicyBazar_COMP_premium" + dateTime + ".xlsx";
+         // String outputExcel = "/Users/pi/Desktop/PolicyBazar_COMP_premium" + dateTime + ".xlsx";
         // String outputExcel = "C:\\Users\\pradeep.u_turtlemint\\Desktop\\ALLBrokerdata\\PolicyBazar_COMP_premium"+dateTime+".xlsx";
         if (!premiumData.isEmpty()) {
             TestUtil.writePremiumDataPBCOMP(outputExcel, premiumData,addOnsData);
@@ -283,8 +316,8 @@ public class policybazar_page extends TestBase {
 
     public void premiumPBTP() throws InterruptedException, IOException {
         // String excelPath = "/Users/sayali/Documents/insurer/Premium_compair_Automation/src/test/resources/registration_data.xlsx";
-       // String excelPath = "/Users/nitinrathod/Documents/registration_data.xlsx";
-         String excelPath = "/Users/pi/Documents/registration_data.xlsx";
+        String excelPath = "/Users/nitinrathod/Documents/registration_data.xlsx";
+        // String excelPath = "/Users/pi/Documents/registration_data.xlsx";
         //String excelPath = "C:\\Users\\pradeep.u_turtlemint\\Downloads\\registration_data.xlsx";
         List<String> regNumbers = TestUtil.getRegistrationNumbers(excelPath);
 
@@ -302,6 +335,18 @@ public class policybazar_page extends TestBase {
         driver.switchTo().window(tabs.get(1));
 
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+        Thread.sleep(5000);
+        List<WebElement> loginButtons = driver.findElements(By.xpath("//button[text()='Login']"));
+
+        if (!loginButtons.isEmpty()) {
+            WebElement loginregi = loginButtons.get(0);
+            Actions actions = new Actions(driver);
+            actions.moveToElement(loginregi).click().perform();
+            System.out.println("Login button found and clicked.");
+            Thread.sleep(40000);
+        } else {
+            System.out.println("Login button not visible, continuing...");
+        }
 
         for (String reg : regNumbers) {
             try {
@@ -309,6 +354,15 @@ public class policybazar_page extends TestBase {
                 TestUtil.sendKeys(regisnumber, reg, "entered registration number");
                 TestUtil.waitUntilVisibilityOfElement(viewprice);
                 TestUtil.click(viewprice, "click on vehicle details button");
+
+                WebElement tpToggle = driver.findElement(By.xpath("(//span[text()='Third Party']//following-sibling::input)[1]"));
+
+                if (tpToggle.isSelected()) {
+                    System.out.println("Third Party is already selected.");
+                } else {
+                    System.out.println("Selecting Third Party...");
+                    tpToggle.click();
+                }
 
                 Thread.sleep(5000);
                 Actions act =  new Actions(driver);
@@ -345,20 +399,23 @@ public class policybazar_page extends TestBase {
 
                 Thread.sleep(3000);
                 TestUtil.click(viewpquotes, "confirm vehicle");
-                Thread.sleep(30000);
+                Thread.sleep(15000);
+                TestUtil.click(clear,"Removed PA addon");
+                Thread.sleep(25000);
 
                 wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.xpath("//img[@class=\"imgLogo\"]")));
                 wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.xpath("//span[@class=\"btnContent premium-text\"]")));
-               // wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.xpath("//p[text()=\"Activity Points\"]//..//div[@class=\"headingV3 fontNormal\"]")));
+                wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.xpath("//p[text()=\"Activity Points\"]//..//div[@class=\"headingV3 fontNormal\"]")));
 
                 List<WebElement> insurerLogos = driver.findElements(By.xpath("//img[@class=\"imgLogo\"]"));
                 List<WebElement> insurerPremiums = driver.findElements(By.xpath("//span[@class=\"btnContent premium-text\"]"));
-             //   List<WebElement> actpoint = driver.findElements(By.xpath("//p[text()=\"Activity Points\"]//..//div[@class=\"headingV3 fontNormal\"]"));
+                List<WebElement> actpoint = driver.findElements(By.xpath("//p[text()=\"Activity Points\"]//..//div[@class=\"headingV3 fontNormal\"]"));
 
                 if (insurerLogos.size() == insurerPremiums.size()) {
                     for (int i = 0; i < insurerLogos.size(); i++) {
                         WebElement logo = insurerLogos.get(i);
                         WebElement premiumBtn = insurerPremiums.get(i);
+                        WebElement activityp = actpoint.get(i);
 //                        // ✅ Safely handle missing activity points
 //                        String actp = "N/A";
 //                        if (i < actpoint.size()) {
@@ -373,8 +430,8 @@ public class policybazar_page extends TestBase {
                             insurerName = "Zuno";
                         }
                         String premium = premiumBtn.getText().replaceAll("[^0-9]", "");
-                       // String actp = activityp.getText().trim();
-                       // System.out.println(actp);
+                        String actp = activityp.getText().trim();
+                        System.out.println(actp);
 
 
                         String[] row = {
@@ -386,7 +443,7 @@ public class policybazar_page extends TestBase {
                                 regisdate,
                                 insurerName,
                                 premium,
-                              //  actp
+                                actp
 
                         };
                         premiumData.add(row);
@@ -426,8 +483,8 @@ public class policybazar_page extends TestBase {
         String dateTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy---HH-mm-ss"));
         // ✅ Save successful data
         //   String outputExcel = "/Users/sayali/Desktop/RenewBuy_premium" + dateTime + ".xlsx";
-       // String outputExcel = "/Users/nitinrathod/Desktop/PolicyBazar_TP_premium" + dateTime + ".xlsx";
-         String outputExcel = "/Users/pi/Desktop/PolicyBazar_TP_premium" + dateTime + ".xlsx";
+        String outputExcel = "/Users/nitinrathod/Desktop/PolicyBazar_TP_premium" + dateTime + ".xlsx";
+        // String outputExcel = "/Users/pi/Desktop/PolicyBazar_TP_premium" + dateTime + ".xlsx";
         // String outputExcel = "C:\\Users\\pradeep.u_turtlemint\\Desktop\\ALLBrokerdata\\PolicyBazar_TP_premium"+dateTime+".xlsx";
         if (!premiumData.isEmpty()) {
             TestUtil.writePremiumDataPBTP(outputExcel, premiumData,addOnsData);
