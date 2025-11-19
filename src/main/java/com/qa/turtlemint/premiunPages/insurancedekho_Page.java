@@ -215,28 +215,27 @@ public class insurancedekho_Page extends TestBase {
                     System.out.println("ℹ️ Date already present: " + existingValue1 + " → Replacing with new date.");
                     int day = LocalDate.now().getDayOfMonth();
                     System.out.println(day);
-                    int da =day+1;
+                    int da = day + 1;
                     LogUtils.info(String.valueOf(da));
                     js.executeScript("arguments[0].click();", calendar);
                     Thread.sleep(2000);
-                    TestUtil.click(year,"");
+                    TestUtil.click(year, "");
                     js.executeScript("arguments[0].click();", calendar);
                     Thread.sleep(2000);
                     js.executeScript("arguments[0].click();", currentyear);
                     Thread.sleep(2000);
                     js.executeScript("arguments[0].click();", currentmonth);
                     Thread.sleep(2000);
-                    driver.findElement(By.xpath("//li[text()=\""+da+"\"]")).click();
+                    driver.findElement(By.xpath("//li[text()=\"" + da + "\"]")).click();
 
-                    System.out.println("Existing date removed and "+da+" entered new date");
+                    System.out.println("Existing date removed and " + da + " entered new date");
                 }
 
-                    Thread.sleep(3000);
 
                 String prevpolicytype = "Comprehensive";
                 System.out.println(prevpolicytype);
                 TestUtil.click(ncb,"Ncb selected as zero");
-                Thread.sleep(2000);
+                Thread.sleep(3000);
                 TestUtil.waitUntilVisibilityOfElement(confirm);
                 TestUtil.click(confirm, "Clicked on confirmed to get quotes");
                 Thread.sleep(30000);
