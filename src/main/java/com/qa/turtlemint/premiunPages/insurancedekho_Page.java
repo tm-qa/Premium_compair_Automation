@@ -3,6 +3,7 @@ package com.qa.turtlemint.premiunPages;
 import com.qa.turtlemint.base.TestBase;
 import com.qa.turtlemint.util.LogUtils;
 import com.qa.turtlemint.util.TestUtil;
+import junit.framework.Test;
 import org.apache.commons.beanutils.converters.LongArrayConverter;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
@@ -68,6 +69,10 @@ public class insurancedekho_Page extends TestBase {
     WebElement currentdate;
     @FindBy(xpath = "(//div[text()=\"Third Party\"]//div)[1]")
     WebElement previousdrop;
+    @FindBy(xpath = "//p[text()=\"Comprehensive\"]")
+    WebElement compresult;
+    @FindBy(xpath = "//*[text()=\"Third Party\"]")
+    WebElement tpresult;
     @FindBy(xpath = "//li[contains(@class, 'MuiAutocomplete-option') and contains(text(), 'Comprehensive')]")
     WebElement comp;
     @FindBy(xpath = "(//div[text()=\"Third Party\"]//div)[2]")
@@ -473,6 +478,10 @@ public class insurancedekho_Page extends TestBase {
                 Thread.sleep(3000);
                 TestUtil.waitUntilVisibilityOfElement(confirm);
                 TestUtil.click(confirm, "Clicked on confirmed to get quotes");
+                Thread.sleep(10000);
+                TestUtil.click(compresult,"clicked on dropdown");
+                Thread.sleep(2000);
+                TestUtil.click(tpresult,"clicked on TP");
 
                 Thread.sleep(25000);
                 wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.xpath("//span[@class=\"insurerNameAndButtonWrapper\"]//h2")));
